@@ -1,0 +1,41 @@
+version: '3'
+networks:
+  proxy:
+  dbnet:
+    internal: true
+
+services:
+  back:
+    build:
+      context: ./back/
+      dockerfile: Dockerfile
+    container_name: back-biller
+    tty: true
+    restart: always
+    networks:
+      - proxy
+      - dbnet
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: exit $$( curl -so /dev/null --fail http://127.0.0.1:8080 && echo 0 || echo 1 )
+      interval: 30s
+      timeout: 1s
+      retries: 1
+    volumes:
+      - ./back/src:/home/api:ro
+      - ./back/source:/source:ro
+
+  rethink:
+    image: rethinkdb:latest
+    container_name: rethink-service_sell
+    restart: always
+    ports:
+      - 8080:8081
+    expose:
+      - 28015
+    volumes:
+      - ./db/rethink/data:/data:rw
+    command: rethinkdb --bind all -d /data
+    networks:
+      - dbnet
