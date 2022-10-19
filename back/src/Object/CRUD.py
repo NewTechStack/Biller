@@ -64,7 +64,7 @@ class Crud:
 
     def exist(self):
         if self.red.get(self.id).run() is None:
-            return [False, f"{self.__class__.__name__} \"{self.id}\" doesn't exist", 404]
+            return [False, f"{self.__class__.__name__} '{self.id}' doesn't exist", 404]
         return [True, {}, None]
 
     def _push(self, data):
