@@ -3,7 +3,7 @@ import uuid
 
 class Client(Crud):
     def __init__(self, id = None):
-        super().__init__(id, 'folder')
+        super().__init__(id, 'clients')
 
     def new(self, client_id):
         self.id = str(uuid.uuid4())
