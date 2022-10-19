@@ -5,23 +5,23 @@ from Model.timesheet import *
 from Model.sso import *
 
 def setuproute(app, call):
-    @app.route('/sso',                                  ['OPTIONS', 'GET'],           lambda x = None: call([sso_url])                               )
-    @app.route('/sso/conn/<>',                          ['OPTIONS', 'GET'],           lambda x = None: call([sso_token])                             )
+    @app.route('/sso',                                  ['OPTIONS', 'GET'],           lambda x = None: call([sso_url])                                               )
+    @app.route('/sso/conn/<>',                          ['OPTIONS', 'GET'],           lambda x = None: call([sso_token])                                             )
 
-    @app.route('/users',                                ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, user_get_all])                       )
+    @app.route('/users',                                ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, user_get_all])                        )
     @app.route('/user/<>',                              ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, user_set_by_id, user_get])            )
     @app.route('/user/<>',                              ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, user_set_by_id, user_edit])           )
     @app.route('/user/<>',                              ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, user_set_by_id, user_delete])         )
 
-    # @app.route('/clients',                              ['OPTIONS', 'POST'],           lambda x = None: call([sso_verify_token])                      )
-    # @app.route('/client',                               ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token])                      )
-    # @app.route('/client/<>',                            ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token])                      )
-    # @app.route('/client/<>',                            ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token])                      )
-    # @app.route('/client/<>',                            ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token])                      )
+    @app.route('/clients',                              ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_get_all])                      )
+    @app.route('/client',                               ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_new, client_edit])             )
+    @app.route('/client/<>',                            ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_get])        )
+    @app.route('/client/<>',                            ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_edit])       )
+    @app.route('/client/<>',                            ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_delete])     )
 
     @app.route('/client/<>/folders',                    ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, folder_get_all])                      )
     @app.route('/client/<>/folder',                     ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, folder_new, folder_edit])             )
-    @app.route('/client/<>/folder/<>',                  ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, folder_set_by_id, folder_get])  )
+    @app.route('/client/<>/folder/<>',                  ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, folder_set_by_id, folder_get])        )
     @app.route('/client/<>/folder/<>',                  ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, folder_set_by_id, folder_edit])       )
     @app.route('/client/<>/folder/<>',                  ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, folder_set_by_id, folder_delete])     )
 
