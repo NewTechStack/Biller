@@ -1,7 +1,7 @@
 from .CRUD import Crud
 import uuid
 
-class Folder(Crud):
+class Client(Crud):
     def __init__(self, id = None):
         super().__init__(id, 'folder')
 
