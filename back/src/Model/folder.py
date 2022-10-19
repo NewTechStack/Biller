@@ -28,6 +28,10 @@ def folder_get(cn, nextc):
     err = cn.private['folder'].get()
     return cn.call_next(nextc, err)
 
+def folder_exist(cn, nextc):
+    err = cn.private['folder'].exist()
+    return cn.call_next(nextc, err)
+
 def folder_edit(cn, nextc):
     cn.pr = check.setnoneopt(cn.pr, ["name", "conterpart", "autrepartie", "associate", "price"])
     err = cn.private['folder'].edit(cn.pr["name"], cn.pr["conterpart"], cn.pr["autrepartie"], cn.pr["associate"], cn.pr["price"])

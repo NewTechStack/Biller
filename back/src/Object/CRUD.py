@@ -62,6 +62,11 @@ class Crud:
         ret = self.red.filter({'id': self.id}).delete().run()
         return [True, {'id': self.id}, None]
 
+    def exist(self):
+        if self.red.get(self.id).run() is None:
+            return [False, "Object doesn't exist", 404]
+        return [True, {}, None]
+
     def _push(self, data):
         if self.id is None:
             return [False, "Invalid id", 404]

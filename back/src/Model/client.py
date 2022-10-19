@@ -21,6 +21,10 @@ def client_set_by_id(cn, nextc):
     err = [True, {}, None]
     return cn.call_next(nextc, err)
 
+def client_exist(cn, nextc):
+    err = cn.private['client'].exist()
+    return cn.call_next(nextc, err)
+
 def client_get(cn, nextc):
     err = cn.private['client'].get()
     return cn.call_next(nextc, err)
