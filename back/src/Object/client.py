@@ -3,7 +3,7 @@ import uuid
 
 class Client(Crud):
     def __init__(self, id = None):
-        super().__init__(id, 'clients')
+        super().__init__(id, 'client')
 
     def new(self, client_id):
         self.id = str(uuid.uuid4())
