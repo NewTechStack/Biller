@@ -1,5 +1,5 @@
 from Controller.basic import check
-from Object.folder import Folder
+from Object.timesheet import timesheet
 
 def timesheet_get_all(cn, nextc):
     page = int(cn.get.get('page', 1))
@@ -9,13 +9,13 @@ def timesheet_get_all(cn, nextc):
     err = check.contain(cn.pr, ["filter", "exclude"])
     if not err[0]:
         return cn.toret.add_error(err[1], err[2])
-    err = Folder().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match)
+    err = Timesheet().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match)
     return cn.call_next(nextc, err)
 
 def timsheet_new(cn, nextc):
     client_id = cn.rt["client"]
     folder_id = cn.rt["folder"]
-    cn.private['timesheet'] = Folder()
+    cn.private['timesheet'] = Timesheet()
     err = cn.private['timesheet'].new(client_id, folder_id)
     return cn.call_next(nextc, err)
 
@@ -23,7 +23,7 @@ def timesheet_set_by_id(cn, nextc):
     client_id = cn.rt["client"]
     folder_id = cn.rt["folder"]
     timesheet_id = cn.rt["timesheet"]
-    cn.private['timesheet'] = Folder(f"{client_id}/{folder_id}/{timesheet_id}")
+    cn.private['timesheet'] = Timesheet(f"{client_id}/{folder_id}/{timesheet_id}")
     err = [True, {}, None]
     return cn.call_next(nextc, err)
 
