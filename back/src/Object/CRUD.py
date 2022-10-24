@@ -1,4 +1,5 @@
 from .rethink import get_conn, r
+from datetime import datetime
 import math
 
 class Crud:
@@ -71,5 +72,7 @@ class Crud:
         if self.id is None:
             return [False, "Invalid id", 404]
         data['id'] = self.id
+        if self.red.get(self.id).run() is None:
+            data['created_at'] = self.r.expr(datetime.now(r.make_timezone('+02:00')))
         res = dict(self.red.insert([data], conflict="update").run())
         return [True, {"id": self.id}, None]
