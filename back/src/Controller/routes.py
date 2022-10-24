@@ -29,7 +29,7 @@ def setuproute(app, call):
 
     @app.route('/user/<>/timesheets',                   ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, user_set_by_id, timesheet_get_all])                      )
     @app.route('/client/<>/timesheets',                 ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, timesheet_get_all])                      )
-    @app.route('/client/<>/folder/<>/timesheets',       ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_get_all])                      )
+    @app.route('/client/<>/folder/<>/timesheets',       ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, folder_new, timesheet_edit])                      )
     @app.route('/client/<>/folder/<>timesheet/<>',      ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_set_by_id, timesheet_exist, timesheet_get])                      )
     @app.route('/client/<>/folder/<>timesheet/<>',      ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_set_by_id, timesheet_exist, timesheet_edit])                      )
     @app.route('/client/<>/folder/<>timesheet/<>',      ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_set_by_id, timesheet_exist, timesheet_delete])                      )
