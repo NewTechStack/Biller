@@ -21,6 +21,7 @@ def setuproute(app, call):
     @app.route('/client/<>',                            ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, client_delete])     )
 
     @app.route('/folders',                              ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, folder_get_all]) )
+    @app.route('/user/<>/folders',                      ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, user_set_by_id, user_exist, folder_get_by_user]) )
     @app.route('/client/<>/folders',                    ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, folder_get_all])                      )
     @app.route('/client/<>/folder',                     ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_new, folder_edit])             )
     @app.route('/client/<>/folder/<>',                  ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, folder_get])        )
