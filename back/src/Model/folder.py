@@ -4,7 +4,7 @@ from Object.folder import Folder
 def folder_get_all(cn, nextc):
     page = int(cn.get.get('page', 1))
     number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
-    match = {'field': 'id', "value": cn.rt["client"] + "/"} if 'client' in cn.rt else none
+    match = {'field': 'id', "value": cn.rt["client"] + "/"} if 'client' in cn.rt else None
     err = check.contain(cn.pr, ["filter", "exclude"])
     if not err[0]:
         return cn.toret.add_error(err[1], err[2])
@@ -14,7 +14,7 @@ def folder_get_all(cn, nextc):
 def folder_get_by_user(cn, nextc):
     page = int(cn.get.get('page', 1))
     number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
-    match = {'field': 'associate', "value": cn.rt["user"] + "/"} if 'user' in cn.rt else none
+    match = {'field': 'associate', "value": cn.rt["user"] + "/"} if 'user' in cn.rt else None
     err = check.contain(cn.pr, ["filter", "exclude"])
     if not err[0]:
         return cn.toret.add_error(err[1], err[2])
