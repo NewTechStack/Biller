@@ -73,7 +73,7 @@ class Crud:
             return [False, "Invalid id", 404]
         data['id'] = self.id
         if self.red.get(self.id).run() is None:
-            data['created_at'] = self.r.expr(datetime.now(r.make_timezone('+02:00')))
+            data['created_at'] = r.expr(datetime.now(r.make_timezone('+02:00')))
             data['created_by'] = "test@test.fr"
         res = dict(self.red.insert([data], conflict="update").run())
         return [True, {"id": self.id}, None]
