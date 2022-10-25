@@ -11,6 +11,16 @@ def folder_get_all(cn, nextc):
     err = Folder().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match)
     return cn.call_next(nextc, err)
 
+def folder_get_by_user(cn, nextc):
+    page = int(cn.get.get('page', 1))
+    number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
+    match = {'field': 'associate', "value": cn.rt["user"] + "/"} if 'user' in cn.rt else none
+    err = check.contain(cn.pr, ["filter", "exclude"])
+    if not err[0]:
+        return cn.toret.add_error(err[1], err[2])
+    err = Folder().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match)
+    return cn.call_next(nextc, err)
+
 def folder_new(cn, nextc):
     client_id = cn.rt["client"]
     cn.private['folder'] = Folder()
