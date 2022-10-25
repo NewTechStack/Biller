@@ -19,6 +19,10 @@ def user_get(cn, nextc):
     err = cn.private['ged_user'].get()
     return cn.call_next(nextc, err)
 
+def user_exist(cn, nextc):
+    err = cn.private['ged_user'].exist()
+    return cn.call_next(nextc, err)
+
 def user_edit(cn, nextc):
     cn.pr = check.setnoneopt(cn.pr, ["first_name", "last_name", "email", "phone", "image", "price", "index"])
     err = cn.private['ged_user'].edit(cn.pr['first_name'], cn.pr['last_name'], cn.pr['email'], cn.pr['phone'], cn.pr['image'], cn.pr['price'], cn.pr['index'])
