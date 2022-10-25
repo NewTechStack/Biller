@@ -97,19 +97,19 @@ class Sso:
                 algorithms=['RS256']
             )
         except jwt.ExpiredSignatureError:
-            return [False, "Signature expired", 403]
+            return [False, "SSO: Signature expired", 403]
         except jwt.InvalidSignatureError:
-            return  [False, "Invalid signature", 400]
+            return  [False, "SSO: Invalid signature", 400]
         except jwt.InvalidIssuedAtError:
-            return [False, "Invalid time", 400]
+            return [False, "SSO: Invalid time", 400]
         except jwt.InvalidIssuerError:
-            return [False, "Invalid issuer", 403]
+            return [False, "SSO: Invalid issuer", 403]
         except jwt.InvalidAudienceError:
-            return [False, "Invalid audience", 401]
+            return [False, "SSO: Invalid audience", 401]
         except jwt.ImmatureSignatureError:
-            return [False, "Invalid time", 400]
+            return [False, "SSO: Invalid time", 400]
         except jwt.DecodeError:
-            return [False, "Invalid jwt", 400]
+            return [False, "SSO: Invalid jwt", 400]
         if get_data == True:
             return [True, {"data": data}, None]
         return [True, {"usrtoken": token}, None, {"usrtoken": token}]
