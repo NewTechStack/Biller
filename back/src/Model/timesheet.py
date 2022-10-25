@@ -4,7 +4,7 @@ from Object.timesheet import Timesheet
 def timesheet_get_all(cn, nextc):
     page = int(cn.get.get('page', 1))
     number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
-    match = {'field': 'id', "value": cn.rt["client"] + "/*/"} if 'client' in cn.rt else none
+    match = {'field': 'id', "value": cn.rt["client"] + "/*/"} if 'client' in cn.rt else None
     match = {'field': 'id', "value": "*/" + cn.rt["folder"] + "/" } if 'folder' in cn.rt else match
     err = check.contain(cn.pr, ["filter", "exclude"])
     if not err[0]:
