@@ -10,7 +10,7 @@ class Crud:
         except:
             self.red = None
 
-    def get_all(self, page, number, filter = {}, exclude={}, match = None):
+    def get_all(self, page, number, filter = {}, exclude={}, match = None, inside = None):
         if page < 1:
             page = 1
         page -= 1
@@ -35,6 +35,10 @@ class Crud:
             if match is not None:
                 req = req.filter(
                     lambda object: object[match['field']].match(match['value'])
+                )
+            if inside is not None:
+                req = req.filter(
+                    lambda object: object[inside['field']].contains(inside['value'])
                 )
             total = int(req.count().run())
             max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
