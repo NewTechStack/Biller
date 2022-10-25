@@ -1,5 +1,5 @@
 from Controller.basic import check
-from Object.timesheet import timesheet
+from Object.timesheet import Timesheet
 
 def timesheet_get_all(cn, nextc):
     page = int(cn.get.get('page', 1))
