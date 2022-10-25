@@ -10,9 +10,9 @@ def setuproute(app, call):
     @app.route('/sso/conn/<>',                          ['OPTIONS', 'GET'],           lambda x = None: call([sso_token])                                             )
 
     @app.route('/users',                                ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, user_get_all])                        )
-    @app.route('/user/<>',                              ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, user_set_by_id, user_get])            )
-    @app.route('/user/<>',                              ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, user_set_by_id, user_edit])           )
-    @app.route('/user/<>',                              ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, user_set_by_id, user_delete])         )
+    @app.route('/user/<>',                              ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, user_set_by_id, user_exist, user_get])            )
+    @app.route('/user/<>',                              ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, user_set_by_id, user_exist, user_edit])           )
+    @app.route('/user/<>',                              ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, user_set_by_id, user_exist, user_delete])         )
 
     @app.route('/clients',                              ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_get_all])                      )
     @app.route('/client',                               ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_new, client_edit])             )
