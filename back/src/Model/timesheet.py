@@ -12,7 +12,7 @@ def timesheet_get_all(cn, nextc):
     err = Timesheet().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match)
     return cn.call_next(nextc, err)
 
-def timsheet_new(cn, nextc):
+def timesheet_new(cn, nextc):
     client_id = cn.rt["client"]
     folder_id = cn.rt["folder"]
     cn.private['timesheet'] = Timesheet()
