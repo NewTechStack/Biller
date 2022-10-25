@@ -217,7 +217,7 @@ class callnext:
             for cookie in self.cookie:
                 self.resp.set_cookie(cookie, self.cookie[cookie], path='/')
             self.resp.content_type = 'application/json'
-            return JSON.dumps(self.toret.ret(self.raw))
+            return JSON.dumps(self.toret.ret(self.raw), default=str)
         return self.toret.ret(self.raw)
 
     def __merge_cookie(self, cookies):
