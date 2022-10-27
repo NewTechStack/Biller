@@ -7,9 +7,9 @@ def timesheet_get_all(cn, nextc):
     match = {'field': 'id', "value": cn.rt["client"] + "/*/"} if 'client' in cn.rt else None
     match = {'field': 'id', "value": "*/" + cn.rt["folder"] + "/" } if 'folder' in cn.rt else match
     match = {'field': 'id', "value": cn.rt["client"]  + "/" + cn.rt["folder"] + "/" } if 'folder' in cn.rt and "client" in cn.rt else match
-    greater = None if "greater" not in cn.pr else greater
+    greater = None if "greater" not in cn.pr else cn.pr["greater"]
     greater = None if greater is None or "field" not in greater or "value" not in greater else greater 
-    less = None if "less" not in cn.pr else less
+    less = None if "less" not in cn.pr else cn.pr["less"]
     less = None if less is None or "field" not in less or "value" not in less else less 
     err = check.contain(cn.pr, ["filter", "exclude"])
     if not err[0]:
