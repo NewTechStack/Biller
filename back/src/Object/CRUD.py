@@ -10,7 +10,7 @@ class Crud:
         except:
             self.red = None
 
-    def get_all(self, page, number, filter = {}, exclude={}, match = None, inside = None):
+    def get_all(self, page, number, filter = {}, exclude={}, match = None, inside = None, greater = None, less = None):
         if page < 1:
             page = 1
         page -= 1
@@ -32,6 +32,14 @@ class Crud:
             }
         else:
             req = self.red.filter(filter)
+            if greater is not None:
+                req = req.filter(
+                    lambda object: object[greater['field']] > (greater['value'])
+                )
+            if less is not None:
+                req = req.filter(
+                    lambda object: object[less['field']] > (less['value'])
+                )
             if match is not None:
                 req = req.filter(
                     lambda object: object[match['field']].match(match['value'])
