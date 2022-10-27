@@ -38,7 +38,7 @@ class Crud:
                 )
             if less is not None:
                 req = req.filter(
-                    lambda object: object[less['field']] > (less['value'])
+                    lambda object: object[less['field']] < (less['value'])
                 )
             if match is not None:
                 req = req.filter(
