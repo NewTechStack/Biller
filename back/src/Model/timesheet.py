@@ -14,15 +14,15 @@ def timesheet_get_all(cn, nextc):
     return cn.call_next(nextc, err)
 
 def timesheet_new(cn, nextc):
-    client_id = cn.rt["client"].id
-    folder_id = cn.rt["folder"].id
+    client_id = cn.rt["client"]
+    folder_id = cn.rt["folder"]
     cn.private['timesheet'] = Timesheet()
     err = cn.private['timesheet'].new(client_id, folder_id)
     return cn.call_next(nextc, err)
 
 def timesheet_set_by_id(cn, nextc):
-    client_id = cn.rt["client"].id
-    folder_id = cn.rt["folder"].id
+    client_id = cn.rt["client"]
+    folder_id = cn.rt["folder"]
     timesheet_id = cn.rt["timesheet"]
     cn.private['timesheet'] = Timesheet(f"{client_id}/{folder_id}/{timesheet_id}")
     err = [True, {}, None]
