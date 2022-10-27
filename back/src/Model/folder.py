@@ -22,14 +22,14 @@ def folder_get_by_user(cn, nextc):
     return cn.call_next(nextc, err)
 
 def folder_new(cn, nextc):
-    client_id = cn.rt["client"]
+    client_id = cn.rt["client"].id
     cn.private['folder'] = Folder()
     err = cn.private['folder'].new(client_id)
     return cn.call_next(nextc, err)
 
 def folder_set_by_id(cn, nextc):
-    client_id = cn.rt["client"]
-    folder_id = cn.rt["folder"]
+    client_id = cn.rt["client"].id
+    folder_id = cn.rt["folder"].id
     cn.private['folder'] = Folder(f"{client_id}/{folder_id}")
     err = [True, {}, None]
     return cn.call_next(nextc, err)
