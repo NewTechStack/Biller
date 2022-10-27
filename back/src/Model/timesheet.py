@@ -7,10 +7,14 @@ def timesheet_get_all(cn, nextc):
     match = {'field': 'id', "value": cn.rt["client"] + "/*/"} if 'client' in cn.rt else None
     match = {'field': 'id', "value": "*/" + cn.rt["folder"] + "/" } if 'folder' in cn.rt else match
     match = {'field': 'id', "value": cn.rt["client"]  + "/" + cn.rt["folder"] + "/" } if 'folder' in cn.rt and "client" in cn.rt else match
+    greater = None if "greater" not in cn.pr else greater
+    greater = None if "field" not in greater or "value" not in greater else greater 
+    less = None if "less" not in cn.pr else less
+    less = None if "field" not in less or "value" not in less else less 
     err = check.contain(cn.pr, ["filter", "exclude"])
     if not err[0]:
         return cn.toret.add_error(err[1], err[2])
-    err = Timesheet().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match)
+    err = Timesheet().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match, greater=greater, less=less)
     return cn.call_next(nextc, err)
 
 def timesheet_new(cn, nextc):
