@@ -40,6 +40,7 @@ def setuproute(app, call):
     @app.route('/client/<>/folder/<>/bills',        ['OPTIONS', 'POST'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_get_all])                      )
     @app.route('/client/<>/folder/<>/bill',         ['OPTIONS', 'POST'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_new, bill_edit])                      )
     @app.route('/client/<>/folder/<>/bill/<>',         ['OPTIONS', 'GET'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_exist, bill_get])                      )
+    @app.route('/client/<>/folder/<>/bill/<>',         ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_exist, bill_delete])                      )
     
     def base():
         return
