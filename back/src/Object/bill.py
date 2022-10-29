@@ -18,7 +18,7 @@ class Bill(Crud):
         if not "TVA" in data or not isinstance(data["TVA"], bool):
           return [False, "Invalid 'TVA'", 400]
         tva = data["TVA"]
-        if not "timesheet" in data or not isinstnace(data["timesheet"], list) or not all([isinstance(x, str) for x in data['timesheet']]):
+        if not "timesheet" in data or not isinstance(data["timesheet"], list) or not all([isinstance(x, str) for x in data['timesheet']]):
           return [False, "Invalid 'timesheet' list", 400]
         timesheet = data["timesheet"]
         return self._push(data)
