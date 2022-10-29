@@ -4,6 +4,7 @@ from Model.folder import *
 from Model.timesheet import *
 from Model.sso import *
 from Model.timesheet import *
+from Model.bill import *
 
 def setuproute(app, call):
     @app.route('/sso',                                  ['OPTIONS', 'GET'],           lambda x = None: call([sso_url])                                               )
@@ -35,5 +36,10 @@ def setuproute(app, call):
     @app.route('/client/<>/folder/<>/timesheet/<>',      ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_set_by_id, timesheet_exist, timesheet_get])                      )
     @app.route('/client/<>/folder/<>/timesheet/<>',      ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_set_by_id, timesheet_exist, timesheet_edit])                      )
     @app.route('/client/<>/folder/<>/timesheet/<>',      ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_set_by_id, timesheet_exist, timesheet_delete])                      )
+
+    @app.route('/client/<>/folder/<>/bills',        ['OPTIONS', 'POST'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_get_all])                      )
+    @app.route('/client/<>/folder/<>/bill',         ['OPTIONS', 'POST'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_new, bill_edit])                      )
+    @app.route('/client/<>/folder/<>/bill/<>',         ['OPTIONS', 'GET'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_exist, bill_get])                      )
+    
     def base():
         return
