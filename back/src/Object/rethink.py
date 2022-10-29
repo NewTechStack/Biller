@@ -7,7 +7,8 @@ dbs = {
         "user",
         "client",
         "folder",
-        "timesheet"
+        "timesheet",
+        "bill"
        ]
     }
 
