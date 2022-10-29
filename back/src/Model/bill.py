@@ -1,3 +1,6 @@
+from Controller.basic import check
+from Object.bill import Bill
+
 def bill_get_all(cn, nextc):
     page = int(cn.get.get('page', 1))
     number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
