@@ -13,7 +13,7 @@ class Bill(Crud):
     def edit(self, data):
         data['id'] = self.id
         if not "type" in data or data["type"] not in ["invoice", "provision", "retainer"]:
-          return [False, "Invalid 'type', 404]
+          return [False, "Invalid 'type'", 404]
         type = data["type"]
         if not "TVA" in data or not isinstance(data["TVA"], bool):
           return [False, "Invalid 'TVA'", 400]
