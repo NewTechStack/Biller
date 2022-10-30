@@ -28,7 +28,7 @@ class Bill(Crud):
             if not "timesheet" in data or not isinstance(data["timesheet"], list) or not all([isinstance(x, str) for x in data['timesheet']]):
               return [False, "Invalid 'timesheet' list", 400]
             timesheets = data["timesheet"]
-            if len(timesheets) > 0:
+            if len(timesheets) == 0:
                 return [False, "Invalid 'timsheet' list", 400]
             base_id = self.id.rsplit('/', 1)[0]
             data["price"]["HT"] = 0.00
