@@ -55,9 +55,9 @@ class Bill(Crud):
                 price_HT =  price if not data["TVA_inc"] else (price - taxes)
                 lines.append({
                     "timesheet_id": t_id,
-                    "price_HT": price_HT
-                    "taxes": taxes
-                    "TVA": tva
+                    "price_HT": price_HT,
+                    "taxes": taxes,
+                    "TVA": tva,
                     "price": price_HT + taxes
                 })
                 data["price"]["HT"] += price_HT
