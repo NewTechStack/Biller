@@ -31,6 +31,7 @@ class Bill(Crud):
             if len(timesheets) == 0:
                 return [False, "Invalid 'timsheet' list", 400]
             base_id = self.id.rsplit('/', 1)[0]
+            data["price"] = {}
             data["price"]["HT"] = 0.00
             for id in timesheets:
                 id = base_id + id
