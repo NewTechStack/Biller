@@ -37,7 +37,7 @@ class Bill(Crud):
                 return [False, "Duplicates in 'timesheet' list", 400]
             base_id = self.id.rsplit('/', 1)[0]
             data["price"] = {
-                "HT": 0.0
+                "HT": 0.0,
                 "taxes": 0.0,
                 "total": 0.0
             }
