@@ -20,8 +20,8 @@ class Bill(Crud):
         data['id'] = self.id
         if not "type" in data or data["type"] not in ["invoice", "provision", "retainer"]:
           return [False, "Invalid 'type'", 404]
-        if not "TVA" in data or not any([isinstance(data["TVA"], x) for x in [int, float]]):
-          return [False, "Invalid 'TVA'", 400]
+        if not "TVA" in data or not isinstance(data["TVA"], float):
+          return [False, "Invalid 'TVA' float", 400]
         tva = data["TVA"]
         data["TVA"] = float(tva)
         if type == "invoice":
