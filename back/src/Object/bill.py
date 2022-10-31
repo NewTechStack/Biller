@@ -34,9 +34,37 @@ class Bill(Crud):
             if ret[0] is False:
                 return ret
             data = ret[1]
+        if data["type"] == "provision":
+            ret = self.__provision(data)
+            if ret[0] is False:
+                return ret
+            data = ret[1]
         data["url"] = "/docuement/soon"
         data["status"] = 0
         return self._push(data)
+    
+    def __provision(self, data):
+        if not "prov_amount" in data or not isinstance(data["prov_amount"], float):
+            return [False, "Invalid 'prov_amount' float", 400]
+        prov_amount = data["prov_amount"]
+        data["price"] = {
+            "HT": self.__HT_price(float(prov_amount), data["TVA"], data["TVA_inc"]) 
+            "taxes": 0.0, 
+            "total": 0.0
+        }
+        ret = self.__calc__fees(data)
+        if ret[0] is False:
+            return ret
+        data = ret[1]
+        ret = self.__calc_reductions(data)
+        if ret[0] is False:
+            return ret
+        data = ret[1]
+        data["price"]["HT"] = round(data["price"]["HT"], 2)
+        data["price"]["taxes"] = round(data["price"]["HT"] * data["TVA"] / 100, 2)
+        data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
+        data["timesheet"] = lines
+        return [True, data, None]
     
     def __invoice(self, data):
         if not "timesheet" in data or not isinstance(data["timesheet"], list) or not all([isinstance(x, str) for x in data['timesheet']]):
