@@ -112,7 +112,7 @@ class Bill(Crud):
         price_HT =  self.__HT_price(float(d[1]["price"]), data["TVA"], data["TVA_inc"])
         taxes = self.__taxe(price_HT, data["TVA"])
         line = {
-            "timesheet_id": t_id,
+            "timesheet_id": timsheet_id,
             "price_HT": round(price_HT, 2),
             "taxes": round(taxes, 2),
             "TVA": data["TVA"],
