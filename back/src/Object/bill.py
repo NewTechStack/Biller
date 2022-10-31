@@ -55,37 +55,8 @@ class Bill(Crud):
                 return ret
             lines.append(ret[1])
             data["price"]["HT"] += ret[1]["price_HT"]
-        if "fees" in data and isinstance(data["fees"], float) and data["fees"] > 0.0:
-            price_HT = data["price"]["HT"] * data["fees"] / 100
-            data["fees"] = {
-                "fees": data["fees"],
-                "price_HT": round(price_HT, 2),
-                "taxes": round(data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2),
-                "TVA": data["TVA"],
-                "price": round(data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2)
-            }
-            data["price"]["HT"] += price_HT
-        if "reduction" in data:
-            if "fix" in data["reduction"]:
-                if not isinstance(data["reduction"]["fix"], float):
-                    return [False, "Invalid reduction.fix float", 400]
-                taxes = data["reduction"]["fix"] * data["TVA"] / 100
-                data["reduction"]["fix"] = {
-                    "amount": data["reduction"]["fix"],
-                    "value_HT": round(data["reduction"]["fix"], 2)
-                }
-                if data["TVA_inc"]:
-                    data["reduction"]["fix"]["value_HT"] = round(data["reduction"]["fix"]["amount"] / (1+(data["TVA"]/100)), 2)
-                data["price"]["HT"] -= data["reduction"]["fix"]["value_HT"]
-            if "percentage" in data["reduction"]:
-                if not isinstance(data["reduction"]["percentage"], float):
-                    return [False, "Invalid reduction.percentage float", 400]
-                price = data["price"]["HT"] * data["reduction"]["percentage"] / 100
-                data["reduction"]["percentage"] = {
-                    "amount": data["reduction"]["percentage"],
-                    "value_HT": round(price, 2)
-                }
-                data["price"]["HT"] -= price
+        data = self.__calc__fees(data)
+        data = self.__calc__reductions(data)
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(data["price"]["HT"] * data["TVA"] / 100, 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
@@ -119,3 +90,40 @@ class Bill(Crud):
             "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2)
         }
         return [True, line, None]
+    
+    def __calc__fees(self, data):
+        if "fees" in data and isinstance(data["fees"], float) and data["fees"] > 0.0:
+            price_HT = data["price"]["HT"] * data["fees"] / 100
+            data["fees"] = {
+                "fees": data["fees"],
+                "price_HT": round(price_HT, 2),
+                "taxes": round(data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2),
+                "TVA": data["TVA"],
+                "price": round(data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2)
+            }
+            data["price"]["HT"] += price_HT
+        return data
+    
+    def __calc_reductions(self, data):
+        if "reduction" in data:
+            if "fix" in data["reduction"]:
+                if not isinstance(data["reduction"]["fix"], float):
+                    return [False, "Invalid reduction.fix float", 400]
+                taxes = data["reduction"]["fix"] * data["TVA"] / 100
+                data["reduction"]["fix"] = {
+                    "amount": data["reduction"]["fix"],
+                    "value_HT": round(data["reduction"]["fix"], 2)
+                }
+                if data["TVA_inc"]:
+                    data["reduction"]["fix"]["value_HT"] = round(data["reduction"]["fix"]["amount"] / (1+(data["TVA"]/100)), 2)
+                data["price"]["HT"] -= data["reduction"]["fix"]["value_HT"]
+            if "percentage" in data["reduction"]:
+                if not isinstance(data["reduction"]["percentage"], float):
+                    return [False, "Invalid reduction.percentage float", 400]
+                price = data["price"]["HT"] * data["reduction"]["percentage"] / 100
+                data["reduction"]["percentage"] = {
+                    "amount": data["reduction"]["percentage"],
+                    "value_HT": round(price, 2)
+                }
+                data["price"]["HT"] -= price
+        return data
