@@ -24,7 +24,7 @@ class Bill(Crud):
           return [False, "Invalid 'TVA' float", 400]
         tva = data["TVA"]
         data["TVA"] = float(tva)
-        if not "TVA_inc" in data or not isinstance(data["TVA"], bool):
+        if not "TVA_inc" in data or not isinstance(data["TVA_inc"], bool):
           return [False, "Invalid 'TVA_inc' bool", 400]
         data["TVA_inc"] = bool(data["TVA_inc"])
         if data["type"] == "invoice":
