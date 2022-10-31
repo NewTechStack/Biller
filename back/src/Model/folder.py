@@ -43,8 +43,27 @@ def folder_exist(cn, nextc):
     return cn.call_next(nextc, err)
 
 def folder_edit(cn, nextc):
-    cn.pr = check.setnoneopt(cn.pr, ["name", "conterpart", "autrepartie", "associate", "price"])
-    err = cn.private['folder'].edit(cn.pr["name"], cn.pr["conterpart"], cn.pr["autrepartie"], cn.pr["associate"], cn.pr["price"])
+    cn.pr = check.setnoneopt(
+        cn.pr, 
+        [
+            "name", 
+            "conterpart", 
+            "autrepartie", 
+            "associate", 
+            "price", 
+            "user_in_charge", 
+            "user_in_charge_price"
+        ]
+    )
+    err = cn.private['folder'].edit(
+        cn.pr["name"], 
+        cn.pr["conterpart"], 
+        cn.pr["autrepartie"], 
+        cn.pr["associate"], 
+        cn.pr["price"], 
+        cn.pr["user_in_charge"], 
+        cn.pr["user_in_charge_price"]
+    )
     return cn.call_next(nextc, err)
 
 def folder_delete(cn, nextc):
