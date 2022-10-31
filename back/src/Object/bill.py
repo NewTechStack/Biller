@@ -59,7 +59,7 @@ class Bill(Crud):
         if ret[0] is False:
             return ret
         data = ret[1]
-        ret = self.__calc__reductions(data)
+        ret = self.__calc_reductions(data)
         if ret[0] is False:
             return ret
         data = ret[1]
