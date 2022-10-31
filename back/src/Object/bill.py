@@ -79,6 +79,9 @@ class Bill(Crud):
     
     def __TTC_price(self, price, tva):
         return price + self.__taxe(price, tva)
+    
+    def __fees_price(self, price, tva):
+        return self.__taxe(price, tva)
    
     def __calc_timesheet(self, timsheet_id, data):
         d = Timesheet(timsheet_id).get()
@@ -101,13 +104,13 @@ class Bill(Crud):
         if "fees" in data:
             if not isinstance(data["fees"], float) and data["fees"] > 0.0:
                 return [False, "Invalid fees value, float", 400]
-            price_HT = data["price"]["HT"] * data["fees"] / 100
+            price_HT = self.__fees_price(data["price"]["HT"], data["fees"])
             data["fees"] = {
                 "fees": data["fees"],
                 "price_HT": round(price_HT, 2),
-                "taxes": round(data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2),
+                "taxes": round(self.__taxe(price_HT, data["TVA"]), 2),
                 "TVA": data["TVA"],
-                "price": round(data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2)
+                "price": round(self.__TTC_price(price_HT, data["TVA"]), 2)
             }
             data["price"]["HT"] += price_HT
         return [True, data, None]
