@@ -10,7 +10,7 @@ class Folder(Crud):
         self.id = f"{client_id}/{folder_id}"
         return [True, {}, None]
 
-    def edit(self, name, conterpart, autrepartie, associate, price):
+    def edit(self, name, conterpart, autrepartie, associate, price, user_in_charge, user_in_charge_price):
         data = {
             'id': self.id
         }
@@ -24,4 +24,8 @@ class Folder(Crud):
             data['associate'] = associate
         if price is not None:
             data['price'] = price
+        if user_in_charge is not None:
+            data['user_in_charge'] = user_in_charge
+        if user_in_charge_price is not None:
+            data['user_in_charge_price'] = user_in_charge_price      
         return self._push(data)
