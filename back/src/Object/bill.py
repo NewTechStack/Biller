@@ -75,7 +75,7 @@ class Bill(Crud):
         return price
     
     def __taxe(self, price, tva):
-        return __percentage(price, tva)
+        return self.__percentage(price, tva)
     
     def __TTC_price(self, price, tva):
         return price + self.__taxe(price, tva)
