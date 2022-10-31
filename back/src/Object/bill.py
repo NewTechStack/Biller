@@ -83,7 +83,7 @@ class Bill(Crud):
                 if "percentage" in data["reduction"]:
                     if not isinstance(data["reduction"]["percentage"], float):
                         return [False, "Invalid reduction.percentage float", 400]
-                    data["reduction"]["percentage"] = = {
+                    data["reduction"]["percentage"] = {
                         "amount": data["reduction"]["percentage"],
                         "value": data["price"]["HT"] * data["reduction"]["percentage"] / 100
                     }
