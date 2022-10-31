@@ -51,8 +51,10 @@ class Bill(Crud):
                 if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
                     return [False, f"Invalid price in timesheet: '{t_id}'", 400]
                 price = float(d[1]["price"])
+                price_HT =  price
+                if data["TVA_inc"]:
+                    price_HT =  price + price / (1+(tva/100))
                 taxes = price * tva / 100
-                price_HT =  price if not data["TVA_inc"] else (price - taxes)
                 lines.append({
                     "timesheet_id": t_id,
                     "price_HT": price_HT,
@@ -65,9 +67,9 @@ class Bill(Crud):
                 data["fees"] = {
                     "fees": data["fees"],
                     "price_HT": data["price"]["HT"] * data["fees"] / 100,
-                    "taxes": data["price"]["HT"] * data["fees"] / 100 * tva,
+                    "taxes": data["price"]["HT"] * data["fees"] * tva / 10000,
                     "TVA": tva,
-                    "price": data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] / 100 * tva
+                    "price": data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * tva / 10000
                 }
                 data["price"]["HT"] += data["fees"]["price_HT"]
             if "reduction" in data:
@@ -76,20 +78,22 @@ class Bill(Crud):
                         return [False, "Invalid reduction.fix float", 400]
                     taxes = data["reduction"]["fix"] * tva / 100
                     data["reduction"]["fix"] = {
-                        "amount": data["reduction"]["fix"] if not data["TVA_inc"] else (data["reduction"]["fix"] - taxes)
+                        "amount": data["reduction"]["fix"],
+                        "value_HT": data["reduction"]["fix"]
                     }
-                    data["reduction"]["fix"]["value"] = data["reduction"]["fix"]["amount"] 
-                    data["price"]["HT"] -= data["reduction"]["fix"]["value"]
+                    if data["TVA_inc"]:
+                        data["reduction"]["fix"]["value_HT"] = data["reduction"]["fix"]["value_HT"] + data["reduction"]["fix"]["value_HT"] / (1+(tva/100)) 
+                    data["price"]["HT"] -= data["reduction"]["fix"]["value_HT"]
                 if "percentage" in data["reduction"]:
                     if not isinstance(data["reduction"]["percentage"], float):
                         return [False, "Invalid reduction.percentage float", 400]
                     data["reduction"]["percentage"] = {
                         "amount": data["reduction"]["percentage"],
-                        "value": data["price"]["HT"] * data["reduction"]["percentage"] / 100
+                        "value_HT": data["price"]["HT"] * data["reduction"]["percentage"] / 100
                     }
-                    data["price"]["HT"] -= data["reduction"]["fix"]["value"]
+                    data["price"]["HT"] -= data["reduction"]["fix"]["value_Ht"]
             data["price"]["taxes"] = data["price"]["HT"] * tva / 100
-            data["price"]["taxes"] = data["price"]["HT"] + data["price"]["taxes"]
+            data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
             data["timesheet"] = lines
         data["url"] = "/docuement/soon"
         data["status"] = 0
