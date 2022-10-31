@@ -24,6 +24,9 @@ class Bill(Crud):
           return [False, "Invalid 'TVA' float", 400]
         tva = data["TVA"]
         data["TVA"] = float(tva)
+        if not "TVA_inc" in data or not isinstance(data["TVA"], bool):
+          return [False, "Invalid 'TVA_inc' bool", 400]
+        data["TVA_inc"] = bool(data["TVA_inc"])
         if data["type"] == "invoice":
             if not "timesheet" in data or not isinstance(data["timesheet"], list) or not all([isinstance(x, str) for x in data['timesheet']]):
               return [False, "Invalid 'timesheet' list", 400]
@@ -33,18 +36,34 @@ class Bill(Crud):
             if len(timesheets) != len(set(timesheets)):
                 return [False, "Duplicates in 'timesheet' list", 400]
             base_id = self.id.rsplit('/', 1)[0]
-            data["price"] = {}
+            data["price"] = {
+                "HT": 0.0
+                "taxes": 0.0,
+                "total": 0.0
+            }
             data["price"]["HT"] = 0.00
-            for id in timesheets:
-                id = f"{base_id}/{id}"
-                d = Timesheet(id).get()
+            lines = []
+            for t_id in timesheets:
+                t_id = f"{base_id}/{t_id}"
+                d = Timesheet(t_id).get()
                 if d[1] is None:
-                    return [False, f"Invalid timesheet id: '{id}'", 404]
+                    return [False, f"Invalid timesheet id: '{t_id}'", 404]
                 if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
-                    return [False, f"Invalid price in timesheet: '{id}'", 400]
-                data["price"]["HT"] += float(d[1]["price"])
-            data["price"]["taxes"] = data["price"]["HT"] * data["TVA"] / 100
-            data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"] 
+                    return [False, f"Invalid price in timesheet: '{t_id}'", 400]
+                price = float(d[1]["price"])
+                taxes = price * tva / 100
+                price_HT =  price if not data["TVA_inc"] else (price - taxes)
+                lines.append({
+                    "timesheet_id": t_id,
+                    "price_HT": price_HT
+                    "taxes": taxes
+                    "TVA": tva
+                    "price": price_HT + taxes
+                })
+                data["price"]["HT"] += price_HT
+                data["price"]["taxes"] += taxes
+                data["price"]["total"] += price_HT + taxes
+            data["timesheet"] = lines
         data["url"] = "/docuement/soon"
         data["status"] = 0
         return self._push(data)
