@@ -82,7 +82,7 @@ class Bill(Crud):
                 "TVA": data["TVA"],
                 "price": round(data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2)
             }
-            data["price"]["HT"] += price_ht
+            data["price"]["HT"] += price_HT
         if "reduction" in data:
             if "fix" in data["reduction"]:
                 if not isinstance(data["reduction"]["fix"], float):
