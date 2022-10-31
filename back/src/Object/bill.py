@@ -94,6 +94,7 @@ class Bill(Crud):
                         "value_HT": round(price, 2)
                     }
                     data["price"]["HT"] -= price
+            data["price"]["HT"] = round(data["price"]["HT"], 2)
             data["price"]["taxes"] = round(data["price"]["HT"] * tva / 100, 2)
             data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
             data["timesheet"] = lines
