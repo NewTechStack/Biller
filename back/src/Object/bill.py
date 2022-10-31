@@ -61,8 +61,35 @@ class Bill(Crud):
                     "price": price_HT + taxes
                 })
                 data["price"]["HT"] += price_HT
-                data["price"]["taxes"] += taxes
-                data["price"]["total"] += price_HT + taxes
+            if "fees" in data and isinstance(data["fees"], float) and data["fees"] > 0.0:
+                data["fees"] = {
+                    "fees": data["fees"],
+                    "price_HT": data["price"]["HT"] * data["fees"] / 100
+                    "taxes": data["price"]["HT"] * data["fees"] / 100 * tva
+                    "TVA": tva,
+                    "price": data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] / 100 * tva
+                }
+                data["price"]["HT"] += data["fees"]["price_HT"]
+            if "reduction" in data:
+                if "fix" in data["reduction"]:
+                    if not isinstance(data["reduction"]["fix"], float):
+                        return [False, "Invalid reduction.fix float", 400]
+                    taxes = data["reduction"]["fix"] * tva / 100
+                    data["reduction"]["fix"] = {
+                        "amount": data["reduction"]["fix"] if not data["TVA_inc"] else (data["reduction"]["fix"] - taxes),
+                    }
+                    data["reduction"]["fix"]["value"] = data["reduction"]["fix"]["amount"] 
+                    data["price"]["HT"] -= data["reduction"]["fix"]["value"]
+                if "percentage" in data["reduction"]:
+                    if not isinstance(data["reduction"]["percentage"], float):
+                        return [False, "Invalid reduction.percentage float", 400]
+                    data["reduction"]["percentage"] = = {
+                        "amount": data["reduction"]["percentage"],
+                        "value": data["price"]["HT"] * data["reduction"]["percentage"] / 100
+                    }
+                    data["price"]["HT"] -= data["reduction"]["fix"]["value"]
+            data["price"]["taxes"] = data["price"]["HT"] * tva / 100
+            data["price"]["taxes"] = data["price"]["HT"] + data["price"]["taxes"]
             data["timesheet"] = lines
         data["url"] = "/docuement/soon"
         data["status"] = 0
