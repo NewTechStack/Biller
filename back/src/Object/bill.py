@@ -43,8 +43,8 @@ class Bill(Crud):
                 if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
                     return [False, f"Invalid price in timesheet: '{id}'", 400]
                 data["price"]["HT"] += float(d[1]["price"])
-            data["price"]["taxes"] = data["price"]["HT"] * tva / 100
-            data["price"]["total"] = data["price"]["HT"] + taxes
+            data["price"]["taxes"] = data["price"]["HT"] * data["TVA"] / 100
+            data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"] 
         data["url"] = "/docuement/soon"
         data["status"] = 0
         return self._push(data)
