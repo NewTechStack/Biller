@@ -48,7 +48,7 @@ class Bill(Crud):
             return [False, "Invalid 'prov_amount' float", 400]
         prov_amount = data["prov_amount"]
         data["price"] = {
-            "HT": self.__HT_price(float(prov_amount), data["TVA"], data["TVA_inc"]) 
+            "HT": self.__HT_price(float(prov_amount), data["TVA"], data["TVA_inc"]),
             "taxes": 0.0, 
             "total": 0.0
         }
@@ -61,7 +61,7 @@ class Bill(Crud):
             return ret
         data = ret[1]
         data["price"]["HT"] = round(data["price"]["HT"], 2)
-        data["price"]["taxes"] = round(data["price"]["HT"] * data["TVA"] / 100, 2)
+        data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
         return [True, data, None]
@@ -92,7 +92,7 @@ class Bill(Crud):
             return ret
         data = ret[1]
         data["price"]["HT"] = round(data["price"]["HT"], 2)
-        data["price"]["taxes"] = round(data["price"]["HT"] * data["TVA"] / 100, 2)
+        data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
         return [True, data, None]
