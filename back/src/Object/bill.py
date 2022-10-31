@@ -50,7 +50,6 @@ class Bill(Crud):
         data["price"] = {"HT": 0.0, "taxes": 0.0, "total": 0.0}
         lines = []
         for t_id in timesheets:
-            t_id = 
             ret = self.__calc_timesheet(f"{base_id}/{t_id}", data)
             if ret[0] is False:
                 return ret
