@@ -55,8 +55,14 @@ class Bill(Crud):
                 return ret
             lines.append(ret[1])
             data["price"]["HT"] += ret[1]["price_HT"]
-        data = self.__calc__fees(data)
-        data = self.__calc__reductions(data)
+        ret = self.__calc__fees(data)
+        if ret[0] is False:
+            return ret
+        data = ret[1]
+        ret = self.__calc__reductions(data)
+        if ret[0] is False:
+            return ret
+        data = ret[1]
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(data["price"]["HT"] * data["TVA"] / 100, 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
@@ -92,7 +98,9 @@ class Bill(Crud):
         return [True, line, None]
     
     def __calc__fees(self, data):
-        if "fees" in data and isinstance(data["fees"], float) and data["fees"] > 0.0:
+        if "fees" in data:
+            if not isinstance(data["fees"], float) and data["fees"] > 0.0:
+                return [False, "Invalid fees value, float", 400]
             price_HT = data["price"]["HT"] * data["fees"] / 100
             data["fees"] = {
                 "fees": data["fees"],
@@ -102,7 +110,7 @@ class Bill(Crud):
                 "price": round(data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2)
             }
             data["price"]["HT"] += price_HT
-        return data
+        return [True, data, None]
     
     def __calc_reductions(self, data):
         if "reduction" in data:
@@ -126,4 +134,4 @@ class Bill(Crud):
                     "value_HT": round(price, 2)
                 }
                 data["price"]["HT"] -= price
-        return data
+        return [True, data, None]
