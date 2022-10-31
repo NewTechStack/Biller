@@ -54,7 +54,7 @@ class Bill(Crud):
                 price_HT =  price
                 if data["TVA_inc"]:
                     price_HT = price / (1+(tva/100))
-                taxes = price * tva / 100
+                taxes = price_HT * tva / 100
                 lines.append({
                     "timesheet_id": t_id,
                     "price_HT": round(price_HT, 2),
