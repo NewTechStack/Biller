@@ -68,7 +68,7 @@ class Bill(Crud):
                 "price_HT": round(price_HT, 2),
                 "taxes": round(taxes, 2),
                 "TVA": data["TVA"],
-                "price": round(self__TTC_price(price_HT, data["TVA"]) , 2)
+                "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2)
             })
             data["price"]["HT"] += price_HT
         if "fees" in data and isinstance(data["fees"], float) and data["fees"] > 0.0:
