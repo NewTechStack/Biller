@@ -18,8 +18,10 @@ class Bill(Crud):
 
     def edit(self, data):
         data['id'] = self.id
+        if not "lang" in data or data["lang"] not in ["fr", "en"]:
+            return [False, "Invalid 'lang', 'fr' or 'en' only", 400]
         if not "type" in data or data["type"] not in ["invoice", "provision", "retainer"]:
-          return [False, "Invalid 'type'", 404]
+          return [False, "Invalid 'type' of bill", 404]
         if not "TVA" in data or not isinstance(data["TVA"], float):
           return [False, "Invalid 'TVA' float", 400]
         tva = data["TVA"]
