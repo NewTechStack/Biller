@@ -61,16 +61,14 @@ class Bill(Crud):
                 return [False, f"Invalid timesheet id: '{t_id}'", 404]
             if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
                 return [False, f"Invalid price in timesheet: '{t_id}'", 400]
-            price_HT =  float(d[1]["price"])
-            if data["TVA_inc"]:
-                price_HT = price_HT / (1+(data["TVA"]/100))
-            taxes = price_HT * data["TVA"] / 100
+            price_HT =  self.__HT_price(float(d[1]["price"]), data["TVA"], data["TVA_inc"])
+            taxes = self.__taxe(price_HT, data["TVA"])
             lines.append({
                 "timesheet_id": t_id,
                 "price_HT": round(price_HT, 2),
                 "taxes": round(taxes, 2),
                 "TVA": data["TVA"],
-                "price": round(price_HT + taxes, 2)
+                "price": round(self__TTC_price(price_HT, data["TVA"]) , 2)
             })
             data["price"]["HT"] += price_HT
         if "fees" in data and isinstance(data["fees"], float) and data["fees"] > 0.0:
@@ -109,3 +107,14 @@ class Bill(Crud):
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
         return [True, data, None]
+    
+    def __HT_price(self, price, tva, tva_incl):
+        if tva_incl is True:
+            price = price / (1+(tva/100))
+        return price
+    
+    def __taxe(self, price, tva):
+        return price * tva / 100
+    
+    def __TTC_price(self, price, tva):
+        return price + self.__taxe(price, tva)
