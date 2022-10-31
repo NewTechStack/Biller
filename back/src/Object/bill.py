@@ -53,8 +53,8 @@ class Bill(Crud):
                 price = float(d[1]["price"])
                 price_HT =  price
                 if data["TVA_inc"]:
-                    price_HT =  price + price / (1+(tva/100))
-                taxes = price * tva / 100
+                    price_HT = round(price / (1+(tva/100)), 2)
+                taxes = round(price * tva / 100, 2)
                 lines.append({
                     "timesheet_id": t_id,
                     "price_HT": price_HT,
@@ -66,10 +66,10 @@ class Bill(Crud):
             if "fees" in data and isinstance(data["fees"], float) and data["fees"] > 0.0:
                 data["fees"] = {
                     "fees": data["fees"],
-                    "price_HT": data["price"]["HT"] * data["fees"] / 100,
-                    "taxes": data["price"]["HT"] * data["fees"] * tva / 10000,
+                    "price_HT": round(data["price"]["HT"] * data["fees"] / 100, 2),
+                    "taxes": round(data["price"]["HT"] * data["fees"] * tva / 10000, 2),
                     "TVA": tva,
-                    "price": data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * tva / 10000
+                    "price": round(data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * tva / 10000, 2)
                 }
                 data["price"]["HT"] += data["fees"]["price_HT"]
             if "reduction" in data:
@@ -82,17 +82,17 @@ class Bill(Crud):
                         "value_HT": data["reduction"]["fix"]
                     }
                     if data["TVA_inc"]:
-                        data["reduction"]["fix"]["value_HT"] = data["reduction"]["fix"]["value_HT"] + data["reduction"]["fix"]["value_HT"] / (1+(tva/100)) 
+                        data["reduction"]["fix"]["value_HT"] = round(data["reduction"]["fix"]["value_HT"] / (1+(tva/100)), 2)
                     data["price"]["HT"] -= data["reduction"]["fix"]["value_HT"]
                 if "percentage" in data["reduction"]:
                     if not isinstance(data["reduction"]["percentage"], float):
                         return [False, "Invalid reduction.percentage float", 400]
                     data["reduction"]["percentage"] = {
                         "amount": data["reduction"]["percentage"],
-                        "value_HT": data["price"]["HT"] * data["reduction"]["percentage"] / 100
+                        "value_HT": round(data["price"]["HT"] * data["reduction"]["percentage"] / 100, 2)
                     }
                     data["price"]["HT"] -= data["reduction"]["fix"]["value_Ht"]
-            data["price"]["taxes"] = data["price"]["HT"] * tva / 100
+            data["price"]["taxes"] = round(data["price"]["HT"] * tva / 100, 2)
             data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
             data["timesheet"] = lines
         data["url"] = "/docuement/soon"
