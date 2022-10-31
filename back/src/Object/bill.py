@@ -30,11 +30,13 @@ class Bill(Crud):
             timesheets = data["timesheet"]
             if len(timesheets) == 0:
                 return [False, "Invalid 'timsheet' list", 400]
+            if len(timesheets) != len(set(timesheets)):
+                return [False, "Duplicates in 'timesheet' list", 400]
             base_id = self.id.rsplit('/', 1)[0]
             data["price"] = {}
             data["price"]["HT"] = 0.00
             for id in timesheets:
-                id = base_id + id
+                id = f"{base_id}/{id}"
                 d = Timesheet(id).get()
                 if d[1] is None:
                     return [False, f"Invalid timesheet id: '{id}'", 404]
