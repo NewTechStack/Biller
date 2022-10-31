@@ -47,30 +47,15 @@ class Bill(Crud):
         if len(timesheets) != len(set(timesheets)):
             return [False, "Duplicates in 'timesheet' list", 400]
         base_id = self.id.rsplit('/', 1)[0]
-        data["price"] = {
-            "HT": 0.0,
-            "taxes": 0.0,
-            "total": 0.0
-        }
-        data["price"]["HT"] = 0.00
+        data["price"] = {"HT": 0.0, "taxes": 0.0, "total": 0.0}
         lines = []
         for t_id in timesheets:
-            t_id = f"{base_id}/{t_id}"
-            d = Timesheet(t_id).get()
-            if d[1] is None:
-                return [False, f"Invalid timesheet id: '{t_id}'", 404]
-            if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
-                return [False, f"Invalid price in timesheet: '{t_id}'", 400]
-            price_HT =  self.__HT_price(float(d[1]["price"]), data["TVA"], data["TVA_inc"])
-            taxes = self.__taxe(price_HT, data["TVA"])
-            lines.append({
-                "timesheet_id": t_id,
-                "price_HT": round(price_HT, 2),
-                "taxes": round(taxes, 2),
-                "TVA": data["TVA"],
-                "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2)
-            })
-            data["price"]["HT"] += price_HT
+            t_id = 
+            ret = self.__calc_timesheet(f"{base_id}/{t_id}", data)
+            if ret[0] is False:
+                return ret
+            lines.append(ret[1])
+            data["price"]["HT"] += ret[1]["price_HT"]
         if "fees" in data and isinstance(data["fees"], float) and data["fees"] > 0.0:
             price_HT = data["price"]["HT"] * data["fees"] / 100
             data["fees"] = {
@@ -118,3 +103,20 @@ class Bill(Crud):
     
     def __TTC_price(self, price, tva):
         return price + self.__taxe(price, tva)
+   
+    def __calc_timesheet(self, timsheet_id, data):
+        d = Timesheet(timsheet_id).get()
+        if d[1] is None:
+            return [False, f"Invalid timesheet id: '{timsheet_id}'", 404]
+        if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
+            return [False, f"Invalid price in timesheet: '{timsheet_id}'", 400]
+        price_HT =  self.__HT_price(float(d[1]["price"]), data["TVA"], data["TVA_inc"])
+        taxes = self.__taxe(price_HT, data["TVA"])
+        line = {
+            "timesheet_id": t_id,
+            "price_HT": round(price_HT, 2),
+            "taxes": round(taxes, 2),
+            "TVA": data["TVA"],
+            "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2)
+        }
+        return [True, line, None]
