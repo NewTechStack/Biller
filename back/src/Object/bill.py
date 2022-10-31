@@ -75,13 +75,16 @@ class Bill(Crud):
         return price
     
     def __taxe(self, price, tva):
-        return price * tva / 100
+        return __percentage(price, tva)
     
     def __TTC_price(self, price, tva):
         return price + self.__taxe(price, tva)
     
     def __fees_price(self, price, tva):
         return self.__taxe(price, tva)
+    
+    def __percentage(self, total, percentage):
+        return total * percentage / 100
    
     def __calc_timesheet(self, timsheet_id, data):
         d = Timesheet(timsheet_id).get()
@@ -120,18 +123,17 @@ class Bill(Crud):
             if "fix" in data["reduction"]:
                 if not isinstance(data["reduction"]["fix"], float):
                     return [False, "Invalid reduction.fix float", 400]
-                taxes = data["reduction"]["fix"] * data["TVA"] / 100
+                taxes = self.__taxe(data["reduction"]["fix"], data["TVA"])
+                price = self.__HT_price(data["reduction"]["fix"], data["TVA"], data["TVA_inc"])
                 data["reduction"]["fix"] = {
                     "amount": data["reduction"]["fix"],
-                    "value_HT": round(data["reduction"]["fix"], 2)
+                    "value_HT": round(price, 2)
                 }
-                if data["TVA_inc"]:
-                    data["reduction"]["fix"]["value_HT"] = round(data["reduction"]["fix"]["amount"] / (1+(data["TVA"]/100)), 2)
-                data["price"]["HT"] -= data["reduction"]["fix"]["value_HT"]
+                data["price"]["HT"] -= price
             if "percentage" in data["reduction"]:
                 if not isinstance(data["reduction"]["percentage"], float):
                     return [False, "Invalid reduction.percentage float", 400]
-                price = data["price"]["HT"] * data["reduction"]["percentage"] / 100
+                price = self.__percentage(data["price"]["HT"], data["reduction"]["percentage"])
                 data["reduction"]["percentage"] = {
                     "amount": data["reduction"]["percentage"],
                     "value_HT": round(price, 2)
