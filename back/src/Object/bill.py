@@ -108,4 +108,4 @@ class Bill(Crud):
         data["price"]["taxes"] = round(data["price"]["HT"] * data["TVA"] / 100, 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
-        return data
+        return [True, data, None]
