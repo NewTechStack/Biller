@@ -25,7 +25,7 @@ class Bill(Crud):
         if not "TVA" in data or not isinstance(data["TVA"], float):
           return [False, "Invalid 'TVA' float", 400]
         tva = data["TVA"]
-        data["TVA"] = float(tva)
+        data["TVA"] = float(data["TVA"])
         if not "TVA_inc" in data or not isinstance(data["TVA_inc"], bool):
           return [False, "Invalid 'TVA_inc' bool", 400]
         data["TVA_inc"] = bool(data["TVA_inc"])
@@ -63,13 +63,13 @@ class Bill(Crud):
                 return [False, f"Invalid price in timesheet: '{t_id}'", 400]
             price_HT =  float(d[1]["price"])
             if data["TVA_inc"]:
-                price_HT = price_HT / (1+(tva/100))
-            taxes = price_HT * tva / 100
+                price_HT = price_HT / (1+(data["TVA"]/100))
+            taxes = price_HT * data["TVA"] / 100
             lines.append({
                 "timesheet_id": t_id,
                 "price_HT": round(price_HT, 2),
                 "taxes": round(taxes, 2),
-                "TVA": tva,
+                "TVA": data["TVA"],
                 "price": round(price_HT + taxes, 2)
             })
             data["price"]["HT"] += price_HT
@@ -78,22 +78,22 @@ class Bill(Crud):
             data["fees"] = {
                 "fees": data["fees"],
                 "price_HT": round(price_HT, 2),
-                "taxes": round(data["price"]["HT"] * data["fees"] * tva / 10000, 2),
-                "TVA": tva,
-                "price": round(data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * tva / 10000, 2)
+                "taxes": round(data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2),
+                "TVA": data["TVA"],
+                "price": round(data["price"]["HT"] * data["fees"] / 100 + data["price"]["HT"] * data["fees"] * data["TVA"] / 10000, 2)
             }
             data["price"]["HT"] += price_ht
         if "reduction" in data:
             if "fix" in data["reduction"]:
                 if not isinstance(data["reduction"]["fix"], float):
                     return [False, "Invalid reduction.fix float", 400]
-                taxes = data["reduction"]["fix"] * tva / 100
+                taxes = data["reduction"]["fix"] * data["TVA"] / 100
                 data["reduction"]["fix"] = {
                     "amount": data["reduction"]["fix"],
                     "value_HT": round(data["reduction"]["fix"], 2)
                 }
                 if data["TVA_inc"]:
-                    data["reduction"]["fix"]["value_HT"] = round(data["reduction"]["fix"]["amount"] / (1+(tva/100)), 2)
+                    data["reduction"]["fix"]["value_HT"] = round(data["reduction"]["fix"]["amount"] / (1+(data["TVA"]/100)), 2)
                 data["price"]["HT"] -= data["reduction"]["fix"]["value_HT"]
             if "percentage" in data["reduction"]:
                 if not isinstance(data["reduction"]["percentage"], float):
@@ -105,7 +105,7 @@ class Bill(Crud):
                 }
                 data["price"]["HT"] -= price
         data["price"]["HT"] = round(data["price"]["HT"], 2)
-        data["price"]["taxes"] = round(data["price"]["HT"] * tva / 100, 2)
+        data["price"]["taxes"] = round(data["price"]["HT"] * data["TVA"] / 100, 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
         return data
