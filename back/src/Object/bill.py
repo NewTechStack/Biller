@@ -11,9 +11,24 @@ class Bill(Crud):
         self.id = f"{client_id}/{folder_id}/{bill_id}"
         return [True, {}, None]
     
-    def edit_status(self, status):
+    def status_0(self):
+        ret = self.get()
+        if ret[1] is None:
+            retun [False, "error", 500]
+        if int(ret[1]["status"]) != 0:
+            return [False, "Operation only available if status == 0", 400]
+        return [True, {}, None]
+    
+    def change_status(self, status):
         if status not in [0, 1, 2, 3, 4]:
             return [False, f"Status '{status}' not in range(0, 4)", 400]
+        ret = self.get()
+        if ret[1] is None:
+            retun [False, "error", 500]
+        if int(ret[1]["status"]) > status:
+            return [False, "Can't revert status", 401]
+        if int(ret[1]["status"]) + 1 != status:
+            return [False, "Can't skip status", 401]
         return self._push({'status': status})
 
     def edit(self, data):
