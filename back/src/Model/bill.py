@@ -47,3 +47,15 @@ def bill_edit(cn, nextc):
 def bill_delete(cn, nextc):
     err = cn.private['bill'].delete()
     return cn.call_next(nextc, err)
+
+def bill_status_0(cn, nextc):
+    err = cn.private['bill'].status_0()
+    return cn.call_next(nextc, err)
+
+def bill_change_status(cn, nextc):
+    err = check.contain(cn.pr, ["status"])
+    if not err[0]:
+        return cn.toret.add_error(err[1], err[2])
+    err = cn.private['bill'].change_status(cn.pr["status"])
+    return cn.call_next(nextc, err)
+    
