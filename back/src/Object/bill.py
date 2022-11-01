@@ -44,8 +44,8 @@ class Bill(Crud):
         return self._push(data)
     
     def __provision(self, data):
-        if not "prov_amount" in data or not isinstance(data["prov_amount"], float):
-            return [False, "Invalid 'prov_amount' float", 400]
+        if not "prov_amount" in data or not any([isinstance(data["prov_amount"], x) for x in [float, int]]):
+            return [False, "Invalid 'prov_amount' float or int", 400]
         prov_amount = data["prov_amount"]
         data["price"] = {
             "HT": self.__HT_price(float(prov_amount), data["TVA"], data["TVA_inc"]),
@@ -63,7 +63,6 @@ class Bill(Crud):
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
-        data["timesheet"] = lines
         return [True, data, None]
     
     def __invoice(self, data):
