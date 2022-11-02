@@ -83,7 +83,7 @@ def index():
                     {
                         "encoding": "UTF-8",
                         "pageSize": "A4",
-                        "title": title
+                        "title": title.split('/')[-1]
                     }
                 }
             )
