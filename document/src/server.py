@@ -95,7 +95,7 @@ def index():
     )
     client.put_object("files", 
         f"{title}.pdf",  
-        data=pdf.content, 
+        data=io.BytesIO(pdf.content), 
         length=-1, 
         content_type='application/pdf'
     )
