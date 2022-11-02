@@ -118,7 +118,7 @@ class Bill(Crud):
             "variables": {
                 "lines": data["timesheet"],
                 "num": "0",
-                "date": datetime.date.today().strftime("%d/%m/%Y"),
+                "date": datetime.now().strftime("%d/%m/%Y"),
                 "name": "TEST FACTURE",
 
                 "timesheet_sum": sum(t["price_HT"] for t in data["timesheet"]), 
