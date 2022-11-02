@@ -59,7 +59,6 @@ services:
       retries: 1
     volumes:
       - ./document/src:/home/api:ro
-      - ./document/source:/source:ro
       
   pdfgenerator:
     image: kurzdigital/html-to-pdf
