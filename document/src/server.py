@@ -4,6 +4,8 @@ import requests
 import json
 from bottle import static_file
 from jinja2 import Environment, BaseLoader, meta
+from minio import Minio 
+import io
 
 @route('/')
 def index():
@@ -67,7 +69,6 @@ def index():
     f.close()
     template =  Environment(loader=BaseLoader).from_string(template_str)
     html = template.render(**variables)
-    print("ok1")
     pdf = requests.request(
           "POST",
           "http://pdfgenerator:8080",
@@ -86,10 +87,19 @@ def index():
                 }
             )
         )
-    print("ok2")
-    response.content_type = "application/pdf; charset=UTF-8"
-    response.set_header("Content-Disposition", f"attachment; filename={title}.pdf")
-    return pdf.content
+    client = Minio(
+        endpoint="minio:8080",
+        access_key="admin",
+        secret_key="adminadmin",
+        secure=False
+    )
+    client.put_object("files", 
+        "title",  
+        data=io.BytesIO(pdf.content), 
+        length=len(pdf.content), 
+        content_type='application/pdf'
+    )
+    return "ok"
 
 @route('/template/pdf/url', 'POST')
 def index():
