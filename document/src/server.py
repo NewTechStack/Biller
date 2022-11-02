@@ -5,58 +5,6 @@ import json
 from bottle import static_file
 from jinja2 import Environment, BaseLoader, meta
 
-
-class Template():
-    def customize(self, vars, end = True):
-        if not self.__exist():
-            return [False, "Template doesn't exist", 404]
-        if not self.__load():
-            return [False, "Error loading tempalte", 500]
-        for var in self.data['variables']:
-            if var not in vars:
-                return [False, f"Missing {var} in variables", 400]
-        if not self.__render(vars):
-            return [False, "Error rendering template", 500]
-        return [True, self.render, None]
-
-    def __render(self, vars):
-        if self.loaded_template is None:
-            return False
-        self.render = self.loaded_template.render(**vars)
-        return True
-
-    def __load(self):
-        if self.data is None or 'template' not in self.data:
-            return False
-        self.loaded_template = Environment(loader=BaseLoader).from_string(self.data['template'])
-        return True
-
-class Pdf():
-    def __init__(self):
-        self.data = None
-
-    def generate(self, html, title):
-        print(html)
-        response = requests.request(
-          "POST",
-          "http://pdfgenerator:8080",
-          headers = {
-                'Content-Type': 'application/json'
-                },
-          data = json.dumps(
-                {
-                    "content": "<HTML><head></head><body>test</body></HTML>",
-                    "options":
-                    {
-                        "pageSize": "letter",
-                        "title": title
-                    }
-                }
-            )
-        )
-        return [True, response.content, None]
-
-
 @route('/')
 def index():
     return "working" 
@@ -128,7 +76,7 @@ def index():
                 },
           data = json.dumps(
                 {
-                    "content": html,
+                    "content": "<HTML><head></head><body>test</body></HTML>",
                     "options":
                     {
                         "pageSize": "letter",
