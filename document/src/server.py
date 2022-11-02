@@ -4,7 +4,6 @@ import requests
 import json
 from bottle import static_file
 from jinja2 import Environment, BaseLoader, meta
-import pdfkit
 
 @route('/')
 def index():
