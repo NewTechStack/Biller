@@ -103,3 +103,5 @@ def index():
         content_type='application/pdf'
     )
     return json.dumps(client.get_presigned_url("GET", "files", f"{title}.pdf").split("?")[0])
+
+run(host='0.0.0.0', port=8080)
