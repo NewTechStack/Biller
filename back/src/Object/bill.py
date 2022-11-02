@@ -184,7 +184,7 @@ class Bill(Crud):
             "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2),
             "activite": d[1]["desc"],
             "user": d[1]["created_by"],
-            "time": str(int(d[1]['duration'])) + "h" + str(d[1]['duration'] % 1 * 60),
+            "time": str(int(d[1]['duration'])) + "h" + str(int(d[1]['duration'] % 1 * 60)),
             "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y'),
             "rate": "/"
         }
