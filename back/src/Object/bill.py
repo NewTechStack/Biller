@@ -142,7 +142,7 @@ class Bill(Crud):
         headers = {
             'content-type': "application/json",
         }
-        response = requests.request("POST", url, data=payload, headers=headers)
+        response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
         data["url"] = response.text
         return [True, data, None]
     
