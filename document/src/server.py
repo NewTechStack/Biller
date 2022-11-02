@@ -66,7 +66,7 @@ def index():
     template_list = [f for f in os.listdir(source) if not os.path.isfile(os.path.join(source, f))]
     templates = {}
     for template in template_list:
-        path = os.path.join(srouce, template, "template.html")
+        path = os.path.join(source, template, "template.html")
         if os.path.exists(path) and os.path.isfile(path):
             f = open(path, "r")
             templates[template] = {
