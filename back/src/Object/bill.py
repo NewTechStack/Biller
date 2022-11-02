@@ -98,7 +98,7 @@ class Bill(Crud):
             if ret[0] is False:
                 return ret
             lines.append(ret[1])
-            data["price"]["HT"] += ret[1]["priceHT"]
+            data["price"]["HT"] += ret[1]["price_HT"]
         ret = self.__calc__fees(data)
         if ret[0] is False:
             return ret
