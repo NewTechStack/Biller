@@ -144,7 +144,7 @@ class Bill(Crud):
             'content-type': "application/json",
         }
         response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
-        data["url"] = response.text
+        data["url"] = json.loads(response.text)
         return [True, data, None]
     
     def __HT_price(self, price, tva, tva_incl):
