@@ -37,7 +37,7 @@ class Bill(Crud):
             return [False, "Invalid 'lang', 'fr' or 'en' only", 400]
         if not "type" in data or data["type"] not in ["invoice", "provision", "retainer"]:
           return [False, "Invalid 'type' of bill", 404]
-        if not "TVA" in data or not isinstance(data["TVA"], float):
+        if not "TVA" in data or not any([isinstance(data["TVA"], x) for x in [float, int]]):
           return [False, "Invalid 'TVA' float", 400]
         tva = data["TVA"]
         data["TVA"] = float(data["TVA"])
@@ -147,7 +147,7 @@ class Bill(Crud):
     
     def __calc__fees(self, data):
         if "fees" in data:
-            if not isinstance(data["fees"], float) and data["fees"] > 0.0:
+            if not any([isinstance(data["fees"], x) for x in [float, int]]) and data["fees"] > 0.0:
                 return [False, "Invalid fees value, float", 400]
             price_HT = self.__fees_price(data["price"]["HT"], data["fees"])
             data["fees"] = {
@@ -163,7 +163,7 @@ class Bill(Crud):
     def __calc_reductions(self, data):
         if "reduction" in data:
             if "fix" in data["reduction"]:
-                if not isinstance(data["reduction"]["fix"], float):
+                if not any([isinstance(data["reduction"]["fix"], x) for x in [float, int]]):
                     return [False, "Invalid reduction.fix float", 400]
                 taxes = self.__taxe(data["reduction"]["fix"], data["TVA"])
                 price = self.__HT_price(data["reduction"]["fix"], data["TVA"], data["TVA_inc"])
@@ -173,7 +173,7 @@ class Bill(Crud):
                 }
                 data["price"]["HT"] -= price
             if "percentage" in data["reduction"]:
-                if not isinstance(data["reduction"]["percentage"], float):
+                if not any([isinstance(data["reduction"]["percentage"], x) for x in [float, int]]):
                     return [False, "Invalid reduction.percentage float", 400]
                 price = self.__percentage(data["price"]["HT"], data["reduction"]["percentage"])
                 data["reduction"]["percentage"] = {
