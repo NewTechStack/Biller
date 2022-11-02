@@ -124,14 +124,14 @@ class Bill(Crud):
 
                 "timesheet_sum": self.__currency_format(sum(t["price_HT"] for t in data["timesheet"])), 
                 "fees_percent": data["fees"]["fees"] if "fees" in data else 0,
-                "fees_price_ht": self.__currency_format(data["fees"]["priceHT"] if "fees" in data else 0),
+                "fees_price_ht": self.__currency_format(data["fees"]["price_HT"] if "fees" in data else 0),
 
                 "reduction_amount": 0 if "reduction" not in data else  self.__currency_format(data["reduction"]["fix"]["amount"]) if "fix" in data["reduction"] else data["reduction"]["percentage"]["amount"],
                 "reduction_unit": "%" if "reduction" not in data else "CHF" if "fix" in data["reduction"] else "%",
-                "reduction_value": 0 if "reduction" not in data else self.__currency_format(data["reduction"]["fix"]["valueHT"]) if "fix" in data["reduction"] else data["reduction"]["percentage"]["valueHT"],
+                "reduction_value": 0 if "reduction" not in data else data["reduction"]["fix"]["valueHT"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["valueHT"],
 
                 "tva_amount": data["TVA"],
-                "tva_value": data["price"]["taxes"],
+                "tva_value": self.__currency_format(data["price"]["taxes"]),
 
                 "provision": self.__currency_format(0.00),
 
