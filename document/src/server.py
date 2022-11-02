@@ -1,5 +1,5 @@
 import os
-from bottle import route, run
+from bottle import route, run, request, response
 import requests
 import json
 from jinja2 import Environment, BaseLoader, meta
@@ -81,5 +81,21 @@ def index():
             }
             f.close()
     return json.dumps(templates)
+
+@route('/template/html', 'POST')
+def index():
+    source = "./source/"
+    name = request.json.get("name", None)
+    variables = request.json.get("variables", {})
+    if name is None:
+        return "err1"
+    path = os.path.join(source, name, "template.html")
+    if not os.path.exists(path) or not os.path.isfile(path):
+        return "err2"
+    f = open(path, "r")
+    template_str = str(f.read())
+    f.close()
+    template =  Environment(loader=BaseLoader).from_string(template_str)
+    return template.render(**variables)
 
 run(host='0.0.0.0', port=8080)
