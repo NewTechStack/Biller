@@ -88,7 +88,7 @@ def index():
     print("ok2")
     response.content_type = "application/pdf; charset=UTF-8"
     response.headers["Content-Disposition"] = f"attachment; filename={title}.pdf"
-    return [True, response.content, None]
+    return response.content
 
 @route('/template/pdf/url', 'POST')
 def index():
