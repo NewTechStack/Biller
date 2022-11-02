@@ -13,16 +13,14 @@
 <div style="position:absolute;top:4.12in;left:5.20in;width:0.56in;line-height:0.24in;"><span style="font-style:normal;font-weight:bold;font-size:11pt;font-family:Be Vietnam ExtraBold;color:#000000">TAUX*</span><span style="font-style:normal;font-weight:bold;font-size:11pt;font-family:Be Vietnam ExtraBold;color:#000000"> </span><br/></SPAN></div>
 <div style="position:absolute;top:4.12in;left:6.31in;width:0.66in;line-height:0.24in;"><span style="font-style:normal;font-weight:bold;font-size:11pt;font-family:Be Vietnam ExtraBold;color:#000000">HEURES</span><span style="font-style:normal;font-weight:bold;font-size:11pt;font-family:Be Vietnam ExtraBold;color:#000000"> </span><br/></SPAN></div>
 <div style="position:absolute;top:4.12in;left:7.25in;width:0.44in;line-height:0.24in;"><span style="font-style:normal;font-weight:bold;font-size:11pt;font-family:Be Vietnam ExtraBold;color:#000000">CHF*</span><span style="font-style:normal;font-weight:bold;font-size:11pt;font-family:Be Vietnam ExtraBold;color:#000000"> </span><br/></SPAN></div>
-{% set line_number = 0 %}
 {% for line in lines %}
-  {% set top = 4.68 + 0.66 * line_number  %}
+  {% set top = 4.68 + 0.66 * loop.index  %}
   <div style="position:absolute;top:{{top}}in;left:1.05in;width:0.80in;line-height:0.22in;"><span style="font-style:normal;font-weight:bold;font-size:10pt;font-family:Arial;color:#000000">{{line.date}}</span><span style="font-style:normal;font-weight:bold;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
   <div style="position:absolute;top:{{top}}in;left:2.38in;width:1.07in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">{{line.activite}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
   <div style="position:absolute;top:{{top}}in;left:3.84in;width:1.10in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">{{line.user}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
   <div style="position:absolute;top:{{top}}in;left:5.20in;width:0.74in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">CHF {{line.rate}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
   <div style="position:absolute;top:{{top}}in;left:6.31in;width:0.38in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">{{line.time}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
   <div style="position:absolute;top:{{top}}in;left:7.25in;width:0.78in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">CHF {{line.price}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
-  {% set line_number =  line_number + 1 %}
 {% endfor %}
 <img style="position:absolute;top:4.54in;left:0.90in;width:7.23in;height:0.02in" src="ci_4.png" />
 <img style="position:absolute;top:5.10in;left:0.91in;width:7.21in;height:1.32in" src="ci_5.png" />
