@@ -45,7 +45,7 @@ class Pdf():
                 },
           data = json.dumps(
                 {
-                    "content": html,
+                    "content": "<HTML><head></head><body>test</body></HTML>",
                     "options":
                     {
                         "pageSize": "letter",
