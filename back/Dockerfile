@@ -8,4 +8,4 @@ FROM base as biller-back
 COPY ./src/requirements.txt ./
 RUN pip3 install --upgrade -r requirements.txt
 
-ENTRYPOINT python3 -m pip freeze > requirements.txt && python3 server.py;
+ENTRYPOINT python3 -m pip freeze && python3 server.py;
