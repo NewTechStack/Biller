@@ -12,6 +12,12 @@ services:
     container_name: biller-back
     tty: true
     restart: always
+    depends_on:
+      rethink:
+        condition: "service_started"
+#     depends_on:
+#       template:
+#         condition: "service_started"
     networks:
       - proxy
       - dbnet
@@ -40,13 +46,19 @@ services:
     networks:
       - dbnet
       
-  back:
+  template:
     build:
       context: ./document/
       dockerfile: Dockerfile
     container_name: biller-template
     tty: true
     restart: always
+    depends_on:
+      pdfgenerator:
+        condition: "service_started"
+    depends_on:
+      minio:
+        condition: "service_started"
     networks:
       - proxy
       - dbnet
@@ -65,9 +77,6 @@ services:
     container_name: biller-pdfgenerator
     tty: true
     restart: always
-    depends_on:
-      mailer:
-        condition: "service_started"
     networks:
       - dbnet
     expose:
