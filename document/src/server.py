@@ -55,15 +55,16 @@ def index():
 
 @route('/template/pdf', 'POST')
 def index():
+    response.content_type = 'application/json'
     source = "./source/"
     name = request.json.get("name", None)
     title = request.json.get("title", "facture")
     variables = request.json.get("variables", {})
     if name is None:
-        return "err1"
+        return False
     path = os.path.join(source, name, "template.html")
     if not os.path.exists(path) or not os.path.isfile(path):
-        return "err2"
+        return False
     f = open(path, "r")
     template_str = str(f.read())
     f.close()
@@ -93,13 +94,15 @@ def index():
         secret_key="adminadmin",
         secure=False
     )
+    if not client.bucket_exists("files"):
+        client.make_bucket("files")
     client.put_object("files", 
         f"{title}.pdf",  
         data=io.BytesIO(pdf.content), 
         length=len(pdf.content),
         content_type='application/pdf'
     )
-    return "ok"
+    return client.get_presigned_url("GET", "files", f"{title}.pdf").split("?")[0]
 
 @route('/template/pdf/url', 'POST')
 def index():
