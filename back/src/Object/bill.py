@@ -122,22 +122,22 @@ class Bill(Crud):
                 "date": datetime.now().strftime("%d/%m/%Y"),
                 "name": "TEST FACTURE",
 
-                "timesheet_sum": sum(t["priceHT"] for t in data["timesheet"]), 
+                "timesheet_sum": self.__currency_format(sum(t["priceHT"] for t in data["timesheet"])), 
                 "fees_percent": data["fees"]["fees"] if "fees" in data else 0,
-                "fees_price_ht": data["fees"]["priceHT"] if "fees" in data else 0,
+                "fees_price_ht": self.__currency_format(data["fees"]["priceHT"] if "fees" in data else 0),
 
-                "reduction_amount": 0 if "reduction" not in data else  data["reduction"]["fix"]["amount"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["amount"],
+                "reduction_amount": 0 if "reduction" not in data else  self.__currency_format(data["reduction"]["fix"]["amount"]) if "fix" in data["reduction"] else data["reduction"]["percentage"]["amount"],
                 "reduction_unit": "%" if "reduction" not in data else "CHF" if "fix" in data["reduction"] else "%",
-                "reduction_value": 0 if "reduction" not in data else  data["reduction"]["fix"]["valueHT"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["valueHT"],
+                "reduction_value": 0 if "reduction" not in data else self.__currency_format(data["reduction"]["fix"]["valueHT"]) if "fix" in data["reduction"] else data["reduction"]["percentage"]["valueHT"],
 
                 "tva_amount": data["TVA"],
                 "tva_value": data["price"]["taxes"],
 
-                "provision": "0.00",
+                "provision": self.__currency_format(0.00),
 
-                "retainer": "0.00", 
+                "retainer": self.__currency_format(0.00), 
 
-                "total_ttc": data["price"]["total"]
+                "total_ttc": self.__currency_format(data["price"]["total"])
             }
         }
         headers = {
@@ -146,6 +146,9 @@ class Bill(Crud):
         response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
         data["url"] = json.loads(response.text)
         return [True, data, None]
+    
+    def __currency_format(self, price):
+        return f"{price:_.2f}".replace(".00", ".-").replace("_", " ")
     
     def __HT_price(self, price, tva, tva_incl):
         if tva_incl is True:
@@ -174,14 +177,16 @@ class Bill(Crud):
         taxes = self.__taxe(price_HT, data["TVA"])
         line = {
             "timesheet_id": timsheet_id,
-            "priceHT": round(price_HT, 2),
+            "price_HT": round(price_HT, 2),
+            "priceHT": self.__currency_format(round(price_HT, 2)),
             "taxes": round(taxes, 2),
             "TVA": data["TVA"],
             "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2),
             "activite": d[1]["desc"],
             "user": d[1]["created_by"],
-            "time": d[1]["duration"],
-            "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y')
+            "time": f"{d[1]["duration"]}:.2f".split(".")[0] + "h" + str(int(f"{d[1]["duration"]}:.2f".split(".")[1]) * 60 / 10)
+            "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y'),
+            "rate": "/"
         }
         return [True, line, None]
     
@@ -192,7 +197,8 @@ class Bill(Crud):
             price_HT = self.__fees_price(data["price"]["HT"], data["fees"])
             data["fees"] = {
                 "fees": data["fees"],
-                "priceHT": round(price_HT, 2),
+                "price_HT": round(price_HT, 2),
+                "priceHT": self.__currency_format(round(price_HT, 2)),
                 "taxes": round(self.__taxe(price_HT, data["TVA"]), 2),
                 "TVA": data["TVA"],
                 "price": round(self.__TTC_price(price_HT, data["TVA"]), 2)
@@ -209,7 +215,8 @@ class Bill(Crud):
                 price = self.__HT_price(data["reduction"]["fix"], data["TVA"], data["TVA_inc"])
                 data["reduction"]["fix"] = {
                     "amount": data["reduction"]["fix"],
-                    "valueHT": round(price, 2)
+                    "valueHT": self.__currency_format(round(price, 2)),
+                    "value_HT": round(price, 2)
                 }
                 data["price"]["HT"] -= price
             elif "percentage" in data["reduction"]:
@@ -218,7 +225,8 @@ class Bill(Crud):
                 price = self.__percentage(data["price"]["HT"], data["reduction"]["percentage"])
                 data["reduction"]["percentage"] = {
                     "amount": data["reduction"]["percentage"],
-                    "valueHT": round(price, 2)
+                    "valueHT": self.__currency_format(round(price, 2)),
+                    "value_HT": round(price, 2)
                 }
                 data["price"]["HT"] -= price
         return [True, data, None]
