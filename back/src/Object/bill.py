@@ -98,7 +98,7 @@ class Bill(Crud):
             if ret[0] is False:
                 return ret
             lines.append(ret[1])
-            data["price"]["HT"] += ret[1]["price_HT"]
+            data["price"]["HT"] += ret[1]["priceHT"]
         ret = self.__calc__fees(data)
         if ret[0] is False:
             return ret
@@ -122,13 +122,13 @@ class Bill(Crud):
                 "date": datetime.now().strftime("%d/%m/%Y"),
                 "name": "TEST FACTURE",
 
-                "timesheet_sum": sum(t["price_HT"] for t in data["timesheet"]), 
+                "timesheet_sum": sum(t["priceHT"] for t in data["timesheet"]), 
                 "fees_percent": data["fees"]["fees"] if "fees" in data else 0,
-                "fees_price_ht": data["fees"]["price_HT"] if "fees" in data else 0,
+                "fees_price_ht": data["fees"]["priceHT"] if "fees" in data else 0,
 
                 "reduction_amount": 0 if "reduction" not in data else  data["reduction"]["fix"]["amount"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["amount"],
                 "reduction_unit": "%" if "reduction" not in data else "CHF" if "fix" in data["reduction"] else "%",
-                "reduction_value": 0 if "reduction" not in data else  data["reduction"]["fix"]["value_HT"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["value_HT"],
+                "reduction_value": 0 if "reduction" not in data else  data["reduction"]["fix"]["valueHT"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["valueHT"],
 
                 "tva_amount": data["TVA"],
                 "tva_value": data["price"]["taxes"],
@@ -174,7 +174,7 @@ class Bill(Crud):
         taxes = self.__taxe(price_HT, data["TVA"])
         line = {
             "timesheet_id": timsheet_id,
-            "price_HT": round(price_HT, 2),
+            "priceHT": round(price_HT, 2),
             "taxes": round(taxes, 2),
             "TVA": data["TVA"],
             "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2),
@@ -192,7 +192,7 @@ class Bill(Crud):
             price_HT = self.__fees_price(data["price"]["HT"], data["fees"])
             data["fees"] = {
                 "fees": data["fees"],
-                "price_HT": round(price_HT, 2),
+                "priceHT": round(price_HT, 2),
                 "taxes": round(self.__taxe(price_HT, data["TVA"]), 2),
                 "TVA": data["TVA"],
                 "price": round(self.__TTC_price(price_HT, data["TVA"]), 2)
@@ -209,7 +209,7 @@ class Bill(Crud):
                 price = self.__HT_price(data["reduction"]["fix"], data["TVA"], data["TVA_inc"])
                 data["reduction"]["fix"] = {
                     "amount": data["reduction"]["fix"],
-                    "value_HT": round(price, 2)
+                    "valueHT": round(price, 2)
                 }
                 data["price"]["HT"] -= price
             elif "percentage" in data["reduction"]:
@@ -218,7 +218,7 @@ class Bill(Crud):
                 price = self.__percentage(data["price"]["HT"], data["reduction"]["percentage"])
                 data["reduction"]["percentage"] = {
                     "amount": data["reduction"]["percentage"],
-                    "value_HT": round(price, 2)
+                    "valueHT": round(price, 2)
                 }
                 data["price"]["HT"] -= price
         return [True, data, None]
