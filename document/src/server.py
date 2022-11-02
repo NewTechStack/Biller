@@ -103,4 +103,56 @@ def index():
     template =  Environment(loader=BaseLoader).from_string(template_str)
     return template.render(**variables)
 
+@route('/template/pdf', 'POST')
+def index():
+    source = "./source/"
+    name = request.json.get("name", None)
+    title = request.json.get("title", "facture")
+    variables = request.json.get("variables", {})
+    if name is None:
+        return "err1"
+    path = os.path.join(source, name, "template.html")
+    if not os.path.exists(path) or not os.path.isfile(path):
+        return "err2"
+    f = open(path, "r")
+    template_str = str(f.read())
+    f.close()
+    template =  Environment(loader=BaseLoader).from_string(template_str)
+    response = requests.request(
+          "POST",
+          "http://pdfgenerator:8080",
+          headers = {
+                'Content-Type': 'application/json'
+                },
+          data = json.dumps(
+                {
+                    "content": template.render(**variables),
+                    "options":
+                    {
+                        "pageSize": "letter",
+                        "title": title
+                    }
+                }
+            )
+        )
+    response.content_type = "application/pdf; charset=UTF-8"
+    response.set_header("Content-Disposition", f"attachment; filename={title}.pdf")
+    return [True, response.content, None]
+
+@route('/template/pdf/url', 'POST')
+def index():
+    source = "./source/"
+    name = request.json.get("name", None)
+    variables = request.json.get("variables", {})
+    if name is None:
+        return "err1"
+    path = os.path.join(source, name, "template.html")
+    if not os.path.exists(path) or not os.path.isfile(path):
+        return "err2"
+    f = open(path, "r")
+    template_str = str(f.read())
+    f.close()
+    template =  Environment(loader=BaseLoader).from_string(template_str)
+    return template.render(**variables)
+
 run(host='0.0.0.0', port=8080)
