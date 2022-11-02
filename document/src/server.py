@@ -94,7 +94,7 @@ def index():
         secure=False
     )
     client.put_object("files", 
-        "title",  
+        f"{title}.pdf",  
         data=pdf.content, 
         length=-1, 
         content_type='application/pdf'
