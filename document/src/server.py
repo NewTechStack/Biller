@@ -76,7 +76,7 @@ def index():
                 },
           data = json.dumps(
                 {
-                    "content": "<HTML><head></head><body>test</body></HTML>",
+                    "content": '<HTML><head></head><body>test<img style="position:absolute;top:4.13in;left:0.91in;width:7.21in;height:0.28in" src="http://146.59.155.94:8082/static/facture_fr/ci_3.png" /></body></HTML>',
                     "options":
                     {
                         "pageSize": "letter",
