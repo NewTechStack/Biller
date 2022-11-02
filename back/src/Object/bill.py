@@ -126,9 +126,9 @@ class Bill(Crud):
                 "fees_percent": data["fees"]["fees"] if "fees" in data else 0,
                 "fees_price_ht": data["fees"]["price_HT"] if "fees" in data else 0,
 
-                "reduction_amount": "0",
-                "reduction_unit": "%",
-                "reduction_value": 0,
+                "reduction_amount": 0 if "reduction" not in data else  data["reduction"]["fix"]["amount"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["amount"],
+                "reduction_unit": "%" if "reduction" not in data else "CHF" if "fix" in data["reduction"] else "%",
+                "reduction_value": 0 if "reduction" not in data else  data["reduction"]["fix"]["value_HT"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["value_HT"],
 
                 "tva_amount": data["TVA"],
                 "tva_value": data["price"]["taxes"],
@@ -212,7 +212,7 @@ class Bill(Crud):
                     "value_HT": round(price, 2)
                 }
                 data["price"]["HT"] -= price
-            if "percentage" in data["reduction"]:
+            elif "percentage" in data["reduction"]:
                 if not any([isinstance(data["reduction"]["percentage"], x) for x in [float, int]]):
                     return [False, "Invalid reduction.percentage float", 400]
                 price = self.__percentage(data["price"]["HT"], data["reduction"]["percentage"])
