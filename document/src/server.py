@@ -67,7 +67,7 @@ def index():
     templates = {}
     for template in template_list:
         path = os.path.join(srouce, template, "template.html")
-        if os.path.exists(path) and os.path.isfile(path)
+        if os.path.exists(path) and os.path.isfile(path):
             f = open(path, "r")
             templates[template] = {
                  "variables": meta.find_undeclared_variables(
