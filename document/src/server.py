@@ -77,6 +77,6 @@ def index():
                     )
             }
             f.close()
-    return [tempalte_list, templates]
+    return [template_list, templates]
 
 run(host='0.0.0.0', port=8080)
