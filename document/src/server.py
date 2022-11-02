@@ -80,7 +80,7 @@ def index():
                     "options":
                     {
                         "encoding": "UTF-8",
-                        "pageSize": "letter",
+                        "pageSize": "A4",
                         "title": title
                     }
                 }
