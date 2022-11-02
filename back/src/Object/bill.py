@@ -1,6 +1,8 @@
 from .CRUD import Crud
 from .timesheet import Timesheet
+import requests
 import uuid
+from datetime import datetime
 
 class Bill(Crud):
     def __init__(self, id = None):
@@ -54,7 +56,6 @@ class Bill(Crud):
             if ret[0] is False:
                 return ret
             data = ret[1]
-        data["url"] = "/docuement/soon"
         data["status"] = 0
         return self._push(data)
     
@@ -109,6 +110,40 @@ class Bill(Crud):
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
+        url = "http://template:8080/template/pdf"
+        number = 1
+        payload = {
+            "name": f"invoice{data['lang']}.html",
+            "title": f"{base_id}/facture_{number}",
+            "variables": {
+                "lines": data["timesheet"],
+                "num": "0",
+                "date": datetime.date.today().strftime("%d/%m/%Y"),
+                "name": "TEST FACTURE",
+
+                "timesheet_sum": sum(t["price_HT"] for t in data["timesheet"]), 
+                "fees_percent": data["fees"]["fees"] if "fees" in data else 0,
+                "fees_price_ht": data["fees"]["price_HT"] if "fees" in data else 0,
+
+                "reduction_amount": "0",
+                "reduction_unit": "%",
+                "reduction_value": 0,
+
+                "tva_amount": data["TVA"],
+                "tva_value": data["price"]["taxes"],
+
+                "provision": "0.00",
+
+                "retainer": "0.00", 
+
+                "total_ttc": data["price"]["total"]
+            }
+        }
+        headers = {
+            'content-type': "application/json",
+        }
+        response = requests.request("POST", url, data=payload, headers=headers)
+        data["url"] = response.text
         return [True, data, None]
     
     def __HT_price(self, price, tva, tva_incl):
@@ -141,7 +176,11 @@ class Bill(Crud):
             "price_HT": round(price_HT, 2),
             "taxes": round(taxes, 2),
             "TVA": data["TVA"],
-            "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2)
+            "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2),
+            "activite": d[1]["desc"],
+            "user": d[1]["created_by"]
+            "time": d[1]["duration"],
+            "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y')
         }
         return [True, line, None]
     
