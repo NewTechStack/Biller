@@ -77,6 +77,7 @@ def index():
                     )
             }
             f.close()
-    return [template_list, templates]
+    print(templates)
+    return json.dumps([template_list, templates])
 
 run(host='0.0.0.0', port=8080)
