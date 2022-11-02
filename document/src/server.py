@@ -4,6 +4,7 @@ import requests
 import json
 from bottle import static_file
 from jinja2 import Environment, BaseLoader, meta
+import pdfkit
 
 @route('/')
 def index():
@@ -79,6 +80,7 @@ def index():
                     "content": html,
                     "options":
                     {
+                        "encoding": "UTF-8",
                         "pageSize": "letter",
                         "title": title
                     }
