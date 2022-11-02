@@ -68,7 +68,7 @@ def index():
     template =  Environment(loader=BaseLoader).from_string(template_str)
     html = template.render(**variables)
     print("ok1")
-    response = requests.request(
+    pdf = requests.request(
           "POST",
           "http://pdfgenerator:8080",
           headers = {
@@ -87,8 +87,8 @@ def index():
         )
     print("ok2")
     response.content_type = "application/pdf; charset=UTF-8"
-    response.headers["Content-Disposition"] = f"attachment; filename={title}.pdf"
-    return response.content
+    response.set_header("Content-Disposition", f"attachment; filename={title}.pdf")
+    return pdf.content
 
 @route('/template/pdf/url', 'POST')
 def index():
