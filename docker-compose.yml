@@ -70,7 +70,7 @@ services:
       timeout: 1s
       retries: 1
     volumes:
-      - ./document/src:/home/api:ro
+      - ./document/src:/home/api
       
   pdfgenerator:
     image: kurzdigital/html-to-pdf
