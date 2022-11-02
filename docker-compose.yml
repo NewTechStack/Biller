@@ -9,7 +9,7 @@ services:
     build:
       context: ./back/
       dockerfile: Dockerfile
-    container_name: back-biller
+    container_name: biller-back
     tty: true
     restart: always
     networks:
@@ -28,7 +28,7 @@ services:
 
   rethink:
     image: rethinkdb:latest
-    container_name: rethink-service_sell
+    container_name: biller-rethink
     restart: always
     ports:
       - 8080:8081
@@ -40,9 +40,30 @@ services:
     networks:
       - dbnet
       
+  back:
+    build:
+      context: ./documents/
+      dockerfile: Dockerfile
+    container_name: biller-template
+    tty: true
+    restart: always
+    networks:
+      - proxy
+      - dbnet
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: exit $$( curl -so /dev/null --fail http://127.0.0.1:8080 && echo 0 || echo 1 )
+      interval: 30s
+      timeout: 1s
+      retries: 1
+    volumes:
+      - ./back/src:/home/api:ro
+      - ./back/source:/source:ro
+      
   pdfgenerator:
     image: kurzdigital/html-to-pdf
-    container_name: GPE-mailer-pdfgenerator
+    container_name: biller-pdfgenerator
     tty: true
     restart: always
     depends_on:
@@ -60,7 +81,7 @@ services:
 
   minio:
     image: quay.io/minio/minio
-    container_name: GPE-minio
+    container_name: biller-minio
     command: server /data --console-address "0.0.0.0:80" --address "0.0.0.0:8080"
     networks:
       - proxy
@@ -87,6 +108,7 @@ services:
 
   createbuckets:
     image: minio/mc
+    container_name: biller-minio-auto
     depends_on:
       - minio
     networks:
