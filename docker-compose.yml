@@ -105,7 +105,7 @@ services:
       MINIO_ACCESS_KEY: admin
       MINIO_SECRET_KEY: adminadmin
       MINIO_PROMETHEUS_AUTH_TYPE: public
-      MINIO_BROWSER_REDIRECT_URL : http://146.59.155.94:8084/minio-admin/
+      MINIO_BROWSER_REDIRECT_URL : http://146.59.155.94:8084
       MINIO_SERVER_URL : http://146.59.155.94:8083
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/minio/health/live"]
