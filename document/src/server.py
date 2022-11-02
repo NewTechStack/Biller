@@ -2,6 +2,7 @@ import os
 from bottle import route, run, request, response
 import requests
 import json
+from bottle import static_file
 from jinja2 import Environment, BaseLoader, meta
 
 
@@ -59,6 +60,10 @@ class Pdf():
 @route('/')
 def index():
     return "working" 
+
+@route('/static/<template>/<filename>')
+def server_static(template, filename):
+    return static_file(filename, root=os.path.join("./source", template))
 
 @route('/templates')
 def index():
