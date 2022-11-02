@@ -61,10 +61,10 @@ def index():
     title = request.json.get("title", "facture")
     variables = request.json.get("variables", {})
     if name is None:
-        return False
+        return json.dumps(False)
     path = os.path.join(source, name, "template.html")
     if not os.path.exists(path) or not os.path.isfile(path):
-        return False
+        return json.dumps(False)
     f = open(path, "r")
     template_str = str(f.read())
     f.close()
@@ -102,22 +102,4 @@ def index():
         length=len(pdf.content),
         content_type='application/pdf'
     )
-    return client.get_presigned_url("GET", "files", f"{title}.pdf").split("?")[0]
-
-@route('/template/pdf/url', 'POST')
-def index():
-    source = "./source/"
-    name = request.json.get("name", None)
-    variables = request.json.get("variables", {})
-    if name is None:
-        return "err1"
-    path = os.path.join(source, name, "template.html")
-    if not os.path.exists(path) or not os.path.isfile(path):
-        return "err2"
-    f = open(path, "r")
-    template_str = str(f.read())
-    f.close()
-    template =  Environment(loader=BaseLoader).from_string(template_str)
-    return template.render(**variables)
-
-run(host='0.0.0.0', port=8080)
+    return json.dumps(client.get_presigned_url("GET", "files", f"{title}.pdf").split("?")[0])
