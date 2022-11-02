@@ -70,9 +70,12 @@ def index():
         if os.path.exists(path) and os.path.isfile(path):
             f = open(path, "r")
             templates[template] = {
-                 "variables": meta.find_undeclared_variables(
-                        Environment().parse(
-                            str(f.read())
+                 "variables": 
+                    list(
+                        meta.find_undeclared_variables(
+                            Environment().parse(
+                                str(f.read())
+                            )
                         )
                     )
             }
