@@ -42,7 +42,7 @@ services:
       
   back:
     build:
-      context: ./documents/
+      context: ./document/
       dockerfile: Dockerfile
     container_name: biller-template
     tty: true
@@ -58,8 +58,8 @@ services:
       timeout: 1s
       retries: 1
     volumes:
-      - ./back/src:/home/api:ro
-      - ./back/source:/source:ro
+      - ./document/src:/home/api:ro
+      - ./document/source:/source:ro
       
   pdfgenerator:
     image: kurzdigital/html-to-pdf
@@ -104,7 +104,7 @@ services:
       timeout: 20s
       retries: 3
     volumes:
-      - ./WEB/db/minio/data:/data:rw
+      - ./document/data:/data:rw
 
   createbuckets:
     image: minio/mc
