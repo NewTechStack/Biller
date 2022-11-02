@@ -118,6 +118,8 @@ def index():
     template_str = str(f.read())
     f.close()
     template =  Environment(loader=BaseLoader).from_string(template_str)
+    html = template.render(**variables)
+    print("ok1")
     response = requests.request(
           "POST",
           "http://pdfgenerator:8080",
@@ -126,7 +128,7 @@ def index():
                 },
           data = json.dumps(
                 {
-                    "content": template.render(**variables),
+                    "content": html,
                     "options":
                     {
                         "pageSize": "letter",
@@ -135,6 +137,7 @@ def index():
                 }
             )
         )
+    print("ok2")
     response.content_type = "application/pdf; charset=UTF-8"
     response.set_header("Content-Disposition", f"attachment; filename={title}.pdf")
     return [True, response.content, None]
