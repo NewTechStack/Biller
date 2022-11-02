@@ -18,10 +18,10 @@ def server_static(template, filename):
 @route('/templates')
 def index():
     source = "./source/"
-    template_list = [f for f in os.listdir(source) if not os.path.isfile(os.path.join(source, f))]
+    template_list = [f for f in os.listdir(source) if os.path.isfile(os.path.join(source, f))]
     templates = {}
     for template in template_list:
-        path = os.path.join(source, template, "template.html")
+        path = os.path.join(source, template)
         if os.path.exists(path) and os.path.isfile(path):
             f = open(path, "r")
             templates[template] = {
@@ -44,7 +44,7 @@ def index():
     variables = request.json.get("variables", {})
     if name is None:
         return "err1"
-    path = os.path.join(source, name, "template.html")
+    path = os.path.join(source, name)
     if not os.path.exists(path) or not os.path.isfile(path):
         return "err2"
     f = open(path, "r")
@@ -62,7 +62,7 @@ def index():
     variables = request.json.get("variables", {})
     if name is None:
         return json.dumps(False)
-    path = os.path.join(source, name, "template.html")
+    path = os.path.join(source, name)
     if not os.path.exists(path) or not os.path.isfile(path):
         return json.dumps(False)
     f = open(path, "r")
