@@ -102,6 +102,6 @@ def index():
         length=len(pdf.content),
         content_type='application/pdf'
     )
-    return json.dumps(client.get_presigned_url("GET", "files", f"{title}.pdf").split("?")[0])
+    return json.dumps(client.get_presigned_url("GET", "files", f"{title}.pdf").split("?")[0].split("minio:8080")[1])
 
 run(host='0.0.0.0', port=8080)
