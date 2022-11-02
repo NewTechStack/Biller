@@ -39,3 +39,62 @@ services:
     command: rethinkdb --bind all -d /data
     networks:
       - dbnet
+      
+  pdfgenerator:
+    image: kurzdigital/html-to-pdf
+    container_name: GPE-mailer-pdfgenerator
+    tty: true
+    restart: always
+    depends_on:
+      mailer:
+        condition: "service_started"
+    networks:
+      - dbnet
+    expose:
+      - 8080
+    healthcheck:
+      test: exit $$( curl -so /dev/null --fail http://127.0.0.1:8080 && echo 0 || echo 1 )
+      interval: 30s
+      timeout: 1s
+      retries: 1
+
+  minio:
+    image: quay.io/minio/minio
+    container_name: GPE-minio
+    command: server /data --console-address "0.0.0.0:80" --address "0.0.0.0:8080"
+    networks:
+      - proxy
+      - dbnet
+    expose:
+      - "80"
+    ports:
+      - 8080:8082
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: adminadmin
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: adminadmin
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+      MINIO_BROWSER_REDIRECT_URL : http://146.59.155.94:8082/minio-admin/
+      MINIO_SERVER_URL : http://146.59.155.94:8082
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    volumes:
+      - ./WEB/db/minio/data:/data:rw
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    networks:
+      - dbnet
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:8080 admin adminadmin;
+      /usr/bin/mc mb myminio/files;
+      /usr/bin/mc policy set public myminio/files;
+      exit 0;
+      "
