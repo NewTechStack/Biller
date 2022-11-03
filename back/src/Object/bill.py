@@ -81,7 +81,7 @@ class Bill(Crud):
         return [True, data, None]
     
     def __invoice(self, data):
-        folder_id = self.id.split("/")[1]
+        folder_id = base_id = self.id.rsplit('/', 1)[0]
         folder = Folder(folder_id).get()
         if folder[1] is None:
             return [False, f"Invalid folder id: '{folder_id}'", 404]
@@ -92,7 +92,6 @@ class Bill(Crud):
             return [False, "Invalid 'timsheet' list", 400]
         if len(timesheets) != len(set(timesheets)):
             return [False, "Duplicates in 'timesheet' list", 400]
-        base_id = self.id.rsplit('/', 1)[0]
         data["price"] = {"HT": 0.0, "taxes": 0.0, "total": 0.0}
         lines = []
         for t_id in timesheets:
