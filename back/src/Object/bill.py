@@ -1,5 +1,6 @@
 from .CRUD import Crud
 from .timesheet import Timesheet
+from .folder import Folder
 import requests
 import uuid
 from datetime import datetime
