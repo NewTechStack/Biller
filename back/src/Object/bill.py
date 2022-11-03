@@ -44,9 +44,6 @@ class Bill(Crud):
           return [False, "Invalid 'TVA' float", 400]
         tva = data["TVA"]
         data["TVA"] = float(data["TVA"])
-        if not "TVA_inc" in data or not isinstance(data["TVA_inc"], bool):
-          return [False, "Invalid 'TVA_inc' bool", 400]
-        data["TVA_inc"] = bool(data["TVA_inc"])
         if data["type"] == "invoice":
             ret = self.__invoice(data)
             if ret[0] is False:
@@ -65,7 +62,7 @@ class Bill(Crud):
             return [False, "Invalid 'prov_amount' float or int", 400]
         prov_amount = data["prov_amount"]
         data["price"] = {
-            "HT": self.__HT_price(float(prov_amount), data["TVA"], data["TVA_inc"]),
+            "HT": self.__HT_price(prov_amount),
             "taxes": 0.0, 
             "total": 0.0
         }
@@ -150,10 +147,8 @@ class Bill(Crud):
     def __currency_format(self, price):
         return f"{price:_.2f}".replace(".00", ".-").replace("_", " ")
     
-    def __HT_price(self, price, tva, tva_incl):
-        if tva_incl is True:
-            price = price / (1+(tva/100))
-        return price
+    def __HT_price(self, price):
+        return float(price)
     
     def __taxe(self, price, tva):
         return self.__percentage(price, tva)
@@ -173,7 +168,7 @@ class Bill(Crud):
             return [False, f"Invalid timesheet id: '{timsheet_id}'", 404]
         if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
             return [False, f"Invalid price in timesheet: '{timsheet_id}'", 400]
-        price_HT =  self.__HT_price(float(d[1]["price"]), data["TVA"], data["TVA_inc"])
+        price_HT =  self.__HT_price(d[1]["price"])
         taxes = self.__taxe(price_HT, data["TVA"])
         line = {
             "timesheet_id": timsheet_id,
@@ -212,7 +207,7 @@ class Bill(Crud):
                 if not any([isinstance(data["reduction"]["fix"], x) for x in [float, int]]):
                     return [False, "Invalid reduction.fix float", 400]
                 taxes = self.__taxe(data["reduction"]["fix"], data["TVA"])
-                price = self.__HT_price(data["reduction"]["fix"], data["TVA"], data["TVA_inc"])
+                price = self.__HT_price(data["reduction"]["fix"])
                 data["reduction"]["fix"] = {
                     "amount": data["reduction"]["fix"],
                     "valueHT": self.__currency_format(round(price, 2)),
