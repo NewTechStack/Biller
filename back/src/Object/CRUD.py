@@ -48,7 +48,7 @@ class Crud:
                 req = req.filter(
                     lambda object: object[inside['field']].contains(inside['value'])
                 )
-            req = req if int(req.has_fields('date').count().run()) == 0) else req.has_fields('date').order_by(r.desc('date'))
+            req = req if int(req.has_fields('date').count().run()) == 0 else req.has_fields('date').order_by(r.desc('date'))
             total = int(req.count().run())
             max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
             max = max + 1 if max == 0 else max
