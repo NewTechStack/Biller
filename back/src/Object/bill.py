@@ -122,7 +122,7 @@ class Bill(Crud):
                 "lines": data["timesheet"],
                 "num": "0",
                 "date": datetime.now().strftime("%d/%m/%Y"),
-                "name": f"{folder[1]["name"]}",
+                "name": f"{folder[1]['name']}",
 
                 "timesheet_sum": self.__currency_format(sum(t["price_HT"] for t in data["timesheet"])), 
                 "fees_percent": data["fees"]["fees"] if "fees" in data else 0,
