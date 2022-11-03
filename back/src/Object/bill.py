@@ -168,7 +168,7 @@ class Bill(Crud):
             return [False, f"Invalid timesheet id: '{timsheet_id}'", 404]
         if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
             return [False, f"Invalid price in timesheet: '{timsheet_id}'", 400]
-        price_HT =  self.__HT_price(d[1]["price"])
+        price_HT =  self.__HT_price(d[1]["price"] * d[1]["duration"])
         taxes = self.__taxe(price_HT, data["TVA"])
         line = {
             "timesheet_id": timsheet_id,
@@ -181,7 +181,7 @@ class Bill(Crud):
             "user": d[1]["created_by"],
             "time": str(int(d[1]['duration'])) + "h" + str(int(d[1]['duration'] % 1 * 60)),
             "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y'),
-            "rate": "/"
+            "rate": float(d[1]["price"])
         }
         return [True, line, None]
     
