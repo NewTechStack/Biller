@@ -80,6 +80,10 @@ class Bill(Crud):
         return [True, data, None]
     
     def __invoice(self, data):
+        folder_id = self.id.split("/")[1]
+        folder = Folder(folder_id).get()
+        if folder[1] is None:
+            return [False, f"Invalid folder id: '{folder_id}'", 404]
         if not "timesheet" in data or not isinstance(data["timesheet"], list) or not all([isinstance(x, str) for x in data['timesheet']]):
             return [False, "Invalid 'timesheet' list", 400]
         timesheets = data["timesheet"]
@@ -103,6 +107,7 @@ class Bill(Crud):
         ret = self.__calc_reductions(data)
         if ret[0] is False:
             return ret
+        
         data = ret[1]
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
@@ -117,7 +122,7 @@ class Bill(Crud):
                 "lines": data["timesheet"],
                 "num": "0",
                 "date": datetime.now().strftime("%d/%m/%Y"),
-                "name": "TEST FACTURE",
+                "name": f"{folder[1]["name"]}",
 
                 "timesheet_sum": self.__currency_format(sum(t["price_HT"] for t in data["timesheet"])), 
                 "fees_percent": data["fees"]["fees"] if "fees" in data else 0,
