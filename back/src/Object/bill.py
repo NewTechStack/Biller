@@ -92,6 +92,13 @@ class Bill(Crud):
             return [False, "Invalid 'timsheet' list", 400]
         if len(timesheets) != len(set(timesheets)):
             return [False, "Duplicates in 'timesheet' list", 400]
+        if "provisions" in data and isinstance(data["provisions"], list) and all([isinstance(x, str) for x in data['provisions']]):
+            for prov_id in data["provisions"]:
+                prov_id = f"{base_id}/{prov_id}"
+                bill = Bill(prov_id).get()
+                if bill[1] is None or bill[1]["type"] != "provision":
+                    return [False, f"Invalid provision id: '{prov_id}'", 404]
+                
         data["price"] = {"HT": 0.0, "taxes": 0.0, "total": 0.0}
         lines = []
         for t_id in timesheets:
@@ -107,7 +114,6 @@ class Bill(Crud):
         ret = self.__calc_reductions(data)
         if ret[0] is False:
             return ret
-        
         data = ret[1]
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
@@ -186,7 +192,7 @@ class Bill(Crud):
             "user": d[1]["created_by"],
             "time": str(int(d[1]['duration'])) + "h" + str(int(d[1]['duration'] % 1 * 60)),
             "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y'),
-            "rate": float(d[1]["price"])
+            "rate": self.__currency_format(float(d[1]["price"]))
         }
         return [True, line, None]
     
