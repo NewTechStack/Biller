@@ -92,13 +92,21 @@ class Bill(Crud):
             return [False, "Invalid 'timsheet' list", 400]
         if len(timesheets) != len(set(timesheets)):
             return [False, "Duplicates in 'timesheet' list", 400]
+        prov = []
         if "provisions" in data and isinstance(data["provisions"], list) and all([isinstance(x, str) for x in data['provisions']]):
             for prov_id in data["provisions"]:
                 prov_id = f"{base_id}/{prov_id}"
                 bill = Bill(prov_id).get()
                 if bill[1] is None or bill[1]["type"] != "provision":
                     return [False, f"Invalid provision id: '{prov_id}'", 404]
-                
+                prov.append(
+                    {
+                        "date": datetime.utcfromtimestamp(bill[1]["date"]).strftime('%d/%m/%Y'),
+                        "price": bill[1]["price"]["total"],
+                        "provision_id": bill[1]["id"]
+                    }
+                )
+            data["provisions"] = prov
         data["price"] = {"HT": 0.0, "taxes": 0.0, "total": 0.0}
         lines = []
         for t_id in timesheets:
@@ -141,11 +149,11 @@ class Bill(Crud):
                 "tva_amount": data["TVA"],
                 "tva_value": self.__currency_format(data["price"]["taxes"]),
 
-                "provision": self.__currency_format(0.00),
+                "provision": self.__currency_format(sum(t["price"] for t in data["provisions"])),
 
                 "retainer": self.__currency_format(0.00), 
 
-                "total_ttc": self.__currency_format(data["price"]["total"])
+                "total_ttc": self.__currency_format(data["price"]["total"] - sum(t["price"] for t in data["provisions"]))
             }
         }
         headers = {
