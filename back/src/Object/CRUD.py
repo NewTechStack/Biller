@@ -2,6 +2,30 @@ from .rethink import get_conn, r
 from datetime import datetime
 import math
 
+class StatusObject:
+    def __init__(self):
+        self.status = True
+    
+    def change_status(self, status):
+        if status not in [0, 1, 2, 3, 4]:
+            return [False, f"Status '{status}' not in range(0, 4)", 400]
+        ret = self.get()
+        if ret[1] is None:
+            retun [False, "error", 500]
+        if int(ret[1]["status"]) > status:
+            return [False, "Can't revert status", 401]
+        if int(ret[1]["status"]) + 1 != status:
+            return [False, "Can't skip status", 401]
+        return self._push({'status': status}) 
+    
+    def status_under_2(self):
+        ret = self.get()
+        if ret[1] is None:
+            retun [False, "error", 500]
+        if int(ret[1]["status"]) >= 2:
+            return [False, "Operation only available if status >= 2", 400]
+        return [True, {}, None]
+
 class Crud:
     def __init__(self, id, table):
         self.id = id
@@ -9,6 +33,7 @@ class Crud:
             self.red = get_conn().db("ged").table(table)
         except:
             self.red = None
+        self.status = False
 
     def get_all(self, page, number, filter = {}, exclude={}, match = None, inside = None, greater = None, less = None):
         if page < 1:
@@ -89,5 +114,7 @@ class Crud:
         if self.red.get(self.id).run() is None:
             data['created_at'] = r.expr(datetime.now(r.make_timezone('+02:00')))
             data['created_by'] = "test@test.fr"
+            if self.status is True:
+                data["status"] = 0 
         res = dict(self.red.insert([data], conflict="update").run())
-        return [True, {"id": self.id}, None]
+        return self.get()
