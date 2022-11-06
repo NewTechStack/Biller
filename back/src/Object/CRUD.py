@@ -15,9 +15,9 @@ class StatusObject:
             retun [False, "error", 500]
         if int(ret[1]["status"]) > status:
             return [False, "Can't revert status", 401]
-        if int(ret[1]["status"]) + 1 > status:
+        if int(ret[1]["status"]) + 1 < status:
             return [False, "Can't skip status", 401]
-        if int(ret[1]["status"]) + 1 == status:
+        if int(ret[1]["status"]) == status:
             return [False, "No status update", 401]
         if status == self.trigger:
             ret = self.status_trigger(status)
