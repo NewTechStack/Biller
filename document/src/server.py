@@ -59,8 +59,8 @@ def index():
     source = "./source/"
     name = request.json.get("name", None)
     title = request.json.get("title", "facture")
-    bucket = request.json.get("bucket", "preview")
-    bucket = bucket is bucket in ["files", "preview"] else "preview"
+    bucket = request.json.get("bucket", "previews")
+    bucket = bucket if bucket in ["files", "previews"] else "previews"
     variables = request.json.get("variables", {})
     if name is None:
         return json.dumps(False)
