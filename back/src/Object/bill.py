@@ -204,6 +204,7 @@ class Bill(Crud, StatusObject):
         if "fees" in data:
             if not any([isinstance(data["fees"], x) for x in [float, int]]) and data["fees"] > 0.0:
                 return [False, "Invalid fees value, float", 400]
+            print(data["price"]["HT"], data["fees"])
             price_HT = self.__fees_price(data["price"]["HT"], data["fees"])
             data["fees"] = {
                 "fees": data["fees"],
