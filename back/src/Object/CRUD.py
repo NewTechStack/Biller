@@ -22,7 +22,7 @@ class StatusObject:
         ret = self.get()
         if ret[1] is None:
             retun [False, "error", 500]
-        if int(ret[1]["status"]) >= 2:
+        if "status" not in ret[1] or int(ret[1]["status"]) >= 2:
             return [False, "Operation only available if status >= 2", 400]
         return [True, {}, None]
 
