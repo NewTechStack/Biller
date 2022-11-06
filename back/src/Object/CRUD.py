@@ -3,8 +3,9 @@ from datetime import datetime
 import math
 
 class StatusObject:
-    def __init__(self):
+    def __init__(self, trigger = None):
         self.status = True
+        self.trigger = trigger
     
     def change_status(self, status):
         if status not in [0, 1, 2, 3, 4]:
@@ -16,7 +17,12 @@ class StatusObject:
             return [False, "Can't revert status", 401]
         if int(ret[1]["status"]) + 1 != status:
             return [False, "Can't skip status", 401]
+        if status == self.trigger:
+            self.status_trigger(status)
         return self._push({'status': status}) 
+    
+    def status_trigger(self, status):
+        return
     
     def status_under_2(self):
         ret = self.get()
