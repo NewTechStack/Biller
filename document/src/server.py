@@ -59,6 +59,8 @@ def index():
     source = "./source/"
     name = request.json.get("name", None)
     title = request.json.get("title", "facture")
+    bucket = request.json.get("bucket", "preview")
+    bucket = bucket is bucket in ["files", "preview"] else "preview"
     variables = request.json.get("variables", {})
     if name is None:
         return json.dumps(False)
@@ -94,14 +96,14 @@ def index():
         secret_key="adminadmin",
         secure=False
     )
-    if not client.bucket_exists("files"):
-        client.make_bucket("files")
-    client.put_object("files", 
+    if not client.bucket_exists(bucket):
+        client.make_bucket(bucket)
+    client.put_object(bucket, 
         f"{title}.pdf",  
         data=io.BytesIO(pdf.content), 
         length=len(pdf.content),
         content_type='application/pdf'
     )
-    return json.dumps(client.get_presigned_url("GET", "files", f"{title}.pdf").split("?")[0].split("minio:8080")[1])
+    return json.dumps(client.get_presigned_url("GET", bucket, f"{title}.pdf").split("?")[0].split("minio:8080")[1])
 
 run(host='0.0.0.0', port=8080)
