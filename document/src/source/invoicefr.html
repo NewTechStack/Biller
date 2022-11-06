@@ -32,7 +32,7 @@
 {% for line in lines %}
   {% set top = 4.4 + 0.23 * (loop.index - 1) %}
   <div style="position:absolute;top:{{top}}in;left:0.90in;width:7.215in;height:0.23in;">
-    <span class="line" style="margin-left:0.15in;"><b>{{line.date}}</b></span>
+    <span class="line" style="left:1.05in;"><b>{{line.date}}</b></span>
     <span class="line" style="margin-left:0.6in;">{{line.activite}}</span>
     <span class="line" style="margin-left:0.75in;">{{line.user}}</span>
     <span class="line" style="margin-left:0.5in;">CHF {{line.rate}}</span>
