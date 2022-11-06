@@ -18,7 +18,9 @@ class StatusObject:
         if int(ret[1]["status"]) + 1 != status:
             return [False, "Can't skip status", 401]
         if status == self.trigger:
-            self.status_trigger(status)
+            ret = self.status_trigger(status)
+            if not ret[0]:
+                return ret
         return self._push({'status': status}) 
     
     def status_trigger(self, status):
