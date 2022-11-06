@@ -149,7 +149,7 @@ class Bill(Crud, StatusObject):
         data["template"]["variables"]["num"] = "2022-" + str(int(self.red.filter(
            lambda bill: bill["status"] >= 2
         ).count().run()))
-        data["template"]["variable"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
+        data["template"]["variables"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
         data["url"] = self.__generate_fact(data)
         self._push(data)
         return [True, data, None]
