@@ -28,9 +28,9 @@
   <span class="open" style="left:0.15in;">DATE</span>
   <span class="open" style="left:1.25in;">ACTIVITÉ</span>
   <span class="open" style="left:3.1in;">AVOCAT(S)</span>
-  <span class="open" style="left:4.5in;">TAUX</span>
-  <span class="open" style="left:5.4in;">HEURES</span>
-  <span class="open" style="left:6.2in;">CHF</span>
+  <span class="open" style="left:4.49in;">TAUX</span>
+  <span class="open" style="left:5.38in;">HEURES</span>
+  <span class="open" style="left:6.215in;">CHF</span>
 </div>
 {% for line in lines %}
   {% set top = 4.4 + 0.23 * (loop.index - 1) %}
@@ -38,9 +38,9 @@
     <span class="line" style="left:0.15in;"><b>{{line.date}}</b></span>
     <span class="line" style="left:1.25in;">{{line.activite}}</span>
     <span class="line" style="left:3.1in;">{{line.user}}</span>
-    <span class="line" style="left:4.5in;">CHF {{line.rate}}</span>
-    <span class="line" style="left:5.4in;">{{line.time}}</span>
-    <span class="line" style="left:6.2in;">CHF {{line.priceHT}}</span>
+    <span class="line" style="left:4.49in;">CHF {{line.rate}}</span>
+    <span class="line" style="left:5.38in;">{{line.time}}</span>
+    <span class="line" style="left:6.215in;">CHF {{line.priceHT}}</span>
     <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
   </div>
 {% endfor %}
