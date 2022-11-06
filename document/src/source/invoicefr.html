@@ -12,6 +12,14 @@
     font-family:Be Vietnam ExtraBold;
     color:#000000
   }
+  .line {
+    width: 2in;
+    font-style:normal;
+    font-weight:normal;
+    font-size:10pt;
+    font-family:Arial;
+    color:#000000
+  }
 </STYLE>
 <div style="position:absolute;top:4.12in;left:0.90in;width:7.215in;height:0.25in;background-color: rgb(156, 190, 209)">
   <span class="open" style="margin-left:0.15in;">DATE</span>
@@ -23,13 +31,15 @@
 </div>
 {% for line in lines %}
   {% set top = 4.4 + 0.23 * (loop.index - 1) %}
-  <div style="position:absolute;top:{{top}}in;left:1.05in;width:0.80in;line-height:0.22in;"><span style="font-style:normal;font-weight:bold;font-size:10pt;font-family:Arial;color:#000000">{{line.date}}</span><span style="font-style:normal;font-weight:bold;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
-  <div style="position:absolute;top:{{top}}in;left:2.38in;width:1.07in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">{{line.activite}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
-  <div style="position:absolute;top:{{top}}in;left:3.84in;width:1.10in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">{{line.user}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
-  <div style="position:absolute;top:{{top}}in;left:5.20in;width:0.74in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">CHF {{line.rate}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
-  <div style="position:absolute;top:{{top}}in;left:6.31in;width:0.38in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">{{line.time}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
-  <div style="position:absolute;top:{{top}}in;left:7.25in;width:1.78in;line-height:0.21in;"><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">CHF {{line.priceHT}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
-  <div style="position:absolute;top:{{top + 0.20}}in;left:0.90in;width:7.215in;height:0.02in; background-color: rgba(200, 200, 200, 0.6)"></div>
+  <div style="position:absolute;top:{{top}}in;left:0.90in;width:7.215in;height:0.23in;">
+    <span class="line" style="margin-left:0.15in;"><b>{{line.date}}</b></span>
+    <span class="line" style="margin-left:0.6in;">{{line.activite}}</span>
+    <span class="line" style="margin-left:0.75in;">{{line.user}}</span>
+    <span class="line" style="margin-left:0.5in;">CHF {{line.rate}}</span>
+    <span class="line" style="margin-left:0.4in;">{{line.time}}</span>
+    <span class="line" style="margin-left:0.1in;">CHF {{line.priceHT}}</span>
+    <div style="margin-top:0.21in;width:7.215in;height:0.02in; background-color: rgba(200, 200, 200, 0.6)"></div>
+  </div>
 {% endfor %}
 <div style="position:absolute;top:1.60in;left:5.56in;width:3.00in;line-height:0.23in;"><span style="font-style:normal;font-weight:normal;font-size:11pt;font-family:Arial;color:#000000">Alexandre de Boccard</span><span style="font-style:normal;font-weight:normal;font-size:11pt;font-family:Arial;color:#000000"> </span><br/><span style="font-style:normal;font-weight:normal;font-size:11pt;font-family:Arial;color:#000000">Place de Longemalle, 1</span><span style="font-style:normal;font-weight:normal;font-size:11pt;font-family:Arial;color:#000000"> </span><br/><span style="font-style:normal;font-weight:normal;font-size:11pt;font-family:Arial;color:#000000">1204 Genève</span><span style="font-style:normal;font-weight:normal;font-size:11pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
 <div style="position:absolute;top:2.84in;left:0.91in;width:3.31in;line-height:0.23in;"><span style="font-style:normal;font-weight:bold;font-size:10pt;font-family:Arial;color:#000000">FACTURE #{{num}}</span><span style="font-style:normal;font-weight:bold;font-size:10pt;font-family:Arial;color:#000000"> </span><br/><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000">{{date}}</span><span style="font-style:normal;font-weight:normal;font-size:10pt;font-family:Arial;color:#000000"> </span><br/></SPAN></div>
