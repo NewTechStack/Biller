@@ -1,4 +1,4 @@
-from .CRUD import Crud
+from .CRUD import Crud, StatusObject
 from .timesheet import Timesheet
 from .folder import Folder
 import requests
@@ -6,34 +6,15 @@ import uuid
 from datetime import datetime
 import json
 
-class Bill(Crud):
+class Bill(Crud, StatusObject):
     def __init__(self, id = None):
-        super().__init__(id, 'bill')
+        Crud.__init__(id, 'bill')
+        StatusObject.__init__()
 
     def new(self, client_id, folder_id):
         bill_id = str(uuid.uuid4())
         self.id = f"{client_id}/{folder_id}/{bill_id}"
         return [True, {}, None]
-    
-    def status_under_2(self):
-        ret = self.get()
-        if ret[1] is None:
-            retun [False, "error", 500]
-        if int(ret[1]["status"]) >= 2:
-            return [False, "Operation only available if status >= 2", 400]
-        return [True, {}, None]
-    
-    def change_status(self, status):
-        if status not in [0, 1, 2, 3, 4]:
-            return [False, f"Status '{status}' not in range(0, 4)", 400]
-        ret = self.get()
-        if ret[1] is None:
-            retun [False, "error", 500]
-        if int(ret[1]["status"]) > status:
-            return [False, "Can't revert status", 401]
-        if int(ret[1]["status"]) + 1 != status:
-            return [False, "Can't skip status", 401]
-        return self._push({'status': status})
 
     def edit(self, data):
         data['id'] = self.id
