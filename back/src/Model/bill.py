@@ -48,8 +48,8 @@ def bill_delete(cn, nextc):
     err = cn.private['bill'].delete()
     return cn.call_next(nextc, err)
 
-def bill_status_0(cn, nextc):
-    err = cn.private['bill'].status_0()
+def bill_status_under_2(cn, nextc):
+    err = cn.private['bill'].status_under_2()
     return cn.call_next(nextc, err)
 
 def bill_change_status(cn, nextc):
