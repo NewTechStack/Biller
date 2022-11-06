@@ -9,7 +9,7 @@ import json
 class Bill(Crud, StatusObject):
     def __init__(self, id = None):
         Crud.__init__(self, id, 'bill')
-        StatusObject.__init__(self)
+        StatusObject.__init__(self, 2)
 
     def new(self, client_id, folder_id):
         bill_id = str(uuid.uuid4())
@@ -76,7 +76,7 @@ class Bill(Crud, StatusObject):
         prov = []
         if "provisions" in data and isinstance(data["provisions"], list) and all([isinstance(x, str) for x in data['provisions']]):
             for prov_id in data["provisions"]:
-                prov_id = f"{base_id}/{prov_id}"
+                prov_id = f"{folder_id}/{prov_id}"
                 bill = Bill(prov_id).get()
                 if bill[1] is None or bill[1]["type"] != "provision":
                     return [False, f"Invalid provision id: '{prov_id}'", 404]
@@ -91,7 +91,7 @@ class Bill(Crud, StatusObject):
         data["price"] = {"HT": 0.0, "taxes": 0.0, "total": 0.0}
         lines = []
         for t_id in timesheets:
-            ret = self.__calc_timesheet(f"{base_id}/{t_id}", data)
+            ret = self.__calc_timesheet(f"{folder_id}/{t_id}", data)
             if ret[0] is False:
                 return ret
             lines.append(ret[1])
@@ -113,7 +113,7 @@ class Bill(Crud, StatusObject):
             "title": f"/preview_{self.id}",
             "variables": {
                 "lines": data["timesheet"],
-                "num": "#preview",
+                "num": "preview",
                 "date": datetime.now().strftime("%d/%m/%Y"),
                 "name": f"{folder[1]['name']}",
 
@@ -136,6 +136,21 @@ class Bill(Crud, StatusObject):
             }
         }
         data["url"] = self.__generate_fact(data)
+        return [True, data, None]
+    
+    def status_trigger(self, status):
+        if status != 2:
+            return
+        ret = self.get()
+        if ret[1] is None:
+            retun [False, "error", 500]
+        data["template"]["bucket"] = "files"
+        data["template"]["variables"]["num"] = "2022-" + str(int(self.red.filter(
+           lambda bill: bill["status"] >= 2
+        ).count().run()))
+        data["template"]["variable"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
+        data["url"] = self.__generate_fact(data)
+        self._push(data)
         return [True, data, None]
     
     def __generate_fact(self, data):
