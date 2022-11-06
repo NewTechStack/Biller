@@ -108,14 +108,12 @@ class Bill(Crud, StatusObject):
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
-        url = "http://template:8080/template/pdf"
-        number = 1
-        payload = {
+        data["template"] = {
             "name": f"invoice{data['lang']}.html",
             "title": f"/preview_{self.id}",
             "variables": {
                 "lines": data["timesheet"],
-                "num": "0",
+                "num": "#preview",
                 "date": datetime.now().strftime("%d/%m/%Y"),
                 "name": f"{folder[1]['name']}",
 
@@ -137,14 +135,14 @@ class Bill(Crud, StatusObject):
                 "total_ttc": self.__currency_format(data["price"]["total"] - sum(t["price"] for t in data["provisions"]))
             }
         }
-        headers = {
-            'content-type': "application/json",
-        }
-        response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
-        data["template"] = payload
-        data["url"] = json.loads(response.text)
+        data["url"] = self.__generate_fact(data)
         return [True, data, None]
     
+    def __generate_fact(self, data):
+        url = "http://template:8080/template/pdf"
+        response = requests.request("POST", url, data=json.dumps(data["template"]), headers={'content-type': "application/json"})
+        return json.loads(response.text)
+        
     def __currency_format(self, price):
         return f"{price:_.2f}".replace(".00", ".-").replace("_", " ")
     
