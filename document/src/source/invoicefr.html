@@ -14,7 +14,7 @@
     border: 1px solid red;
   }
   .line {
-    position: abolute;
+    position: absolute;
     width:1in;
     overflow: hidden;
     font-style:normal;
@@ -36,12 +36,12 @@
 {% for line in lines %}
   {% set top = 4.4 + 0.23 * (loop.index - 1) %}
   <div style="position:absolute;top:{{top}}in;left:0.90in;width:7.215in;height:0.23in;">
-    <span class="line" style="left:1.05in;"><b>{{line.date}}</b></span>
-    <span class="line" style="left:2.8in;">{{line.activite}}</span>
-    <span class="line" style="left:3.75in;">{{line.user}}</span>
-    <span class="line" style="left:5.0in;">CHF {{line.rate}}</span>
-    <span class="line" style="left:6.4in;">{{line.time}}</span>
-    <span class="line" style="left:7.1in;">CHF {{line.priceHT}}</span>
+    <span class="line" style="left:0.15in;"><b>{{line.date}}</b></span>
+    <span class="line" style="left:1.225in;">{{line.activite}}</span>
+    <span class="line" style="left:2.796in;">{{line.user}}</span>
+    <span class="line" style="left:4.17in;">CHF {{line.rate}}</span>
+    <span class="line" style="left:5.06in;">{{line.time}}</span>
+    <span class="line" style="left:5.84in;">CHF {{line.priceHT}}</span>
     <div style="width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
   </div>
 {% endfor %}
