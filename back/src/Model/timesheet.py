@@ -49,3 +49,14 @@ def timesheet_edit(cn, nextc):
 def timesheet_delete(cn, nextc):
     err = cn.private['timesheet'].delete()
     return cn.call_next(nextc, err)
+
+def timesheet_status_under_2(cn, nextc):
+    err = cn.private['timesheet'].status_under_2()
+    return cn.call_next(nextc, err)
+
+def timesheet_change_status(cn, nextc):
+    err = check.contain(cn.pr, ["status"])
+    if not err[0]:
+        return cn.toret.add_error(err[1], err[2])
+    err = cn.private['timesheet'].change_status(cn.pr["status"])
+    return cn.call_next(nextc, err)
