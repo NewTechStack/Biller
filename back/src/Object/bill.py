@@ -15,12 +15,12 @@ class Bill(Crud):
         self.id = f"{client_id}/{folder_id}/{bill_id}"
         return [True, {}, None]
     
-    def status_0(self):
+    def status_under_2(self):
         ret = self.get()
         if ret[1] is None:
             retun [False, "error", 500]
-        if int(ret[1]["status"]) != 0:
-            return [False, "Operation only available if status == 0", 400]
+        if int(ret[1]["status"]) >= 2:
+            return [False, "Operation only available if status >= 2", 400]
         return [True, {}, None]
     
     def change_status(self, status):
