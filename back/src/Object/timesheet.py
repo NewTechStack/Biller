@@ -1,9 +1,10 @@
-from .CRUD import Crud
+from .CRUD import Crud, StatusObject
 import uuid
 
-class Timesheet(Crud):
+class Timesheet(Crud, StatusObject):
     def __init__(self, id = None):
-        super().__init__(id, 'timesheet')
+        Crud.__init__(self, id, 'timesheet')
+        StatusObject.__init__(self)
 
     def new(self, client_id, folder_id):
         timesheet_id = str(uuid.uuid4())
