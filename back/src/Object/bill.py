@@ -110,7 +110,7 @@ class Bill(Crud, StatusObject):
         data["timesheet"] = lines
         data["template"] = {
             "name": f"invoice{data['lang']}.html",
-            "title": f"preview_{self.id.split('/')[:-1]}",
+            "title": f"preview_{self.id.split('/')[-1]}",
             "variables": {
                 "lines": data["timesheet"],
                 "num": "preview",
