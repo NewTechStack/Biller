@@ -127,5 +127,7 @@ services:
       /usr/bin/mc alias set myminio http://minio:8080 admin adminadmin;
       /usr/bin/mc mb myminio/files;
       /usr/bin/mc policy set public myminio/files;
+      /usr/bin/mc mb myminio/previews;
+      /usr/bin/mc policy set public myminio/previews;
       exit 0;
       "
