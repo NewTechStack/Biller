@@ -62,7 +62,7 @@ class Bill(Crud, StatusObject):
         return [True, data, None]
     
     def __invoice(self, data):
-        folder_id = base_id = self.id.rsplit('/', 1)[0]
+        folder_id = self.id.rsplit('/', 1)[0]
         folder = Folder(folder_id).get()
         if folder[1] is None:
             return [False, f"Invalid folder id: '{folder_id}'", 404]
@@ -112,7 +112,7 @@ class Bill(Crud, StatusObject):
         number = 1
         payload = {
             "name": f"invoice{data['lang']}.html",
-            "title": f"{base_id}/facture_{number}",
+            "title": f"/preview_{self.id}",
             "variables": {
                 "lines": data["timesheet"],
                 "num": "0",
@@ -141,6 +141,7 @@ class Bill(Crud, StatusObject):
             'content-type': "application/json",
         }
         response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
+        data["template"] = payload
         data["url"] = json.loads(response.text)
         return [True, data, None]
     
