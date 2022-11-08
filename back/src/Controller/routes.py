@@ -30,6 +30,7 @@ def setuproute(app, call):
     @app.route('/client/<>/folder/<>',                  ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, folder_delete])                                              )
 
     @app.route('/timesheets',                           ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, timesheet_get_all])                                                                                                          )
+    @app.route('/timesheets/sum',                       ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, timesheet_get_all_sum])                                                                                                          )
     @app.route('/user/<>/timesheets',                   ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, user_set_by_id, user_exist, timesheet_get_all])                                                                              )
     @app.route('/client/<>/timesheets',                 ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, timesheet_get_all])                                                                          )
     @app.route('/client/<>/folder/<>/timesheet',        ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_new, timesheet_edit])                              )
