@@ -32,7 +32,7 @@ def timesheet_get_all_sum(cn, nextc):
         return cn.toret.add_error(err[1], err[2])
     err = Timesheet().get_all(1, 10000000, cn.pr["filter"], exclude, match=match, greater=greater, less=less)
     if err[0]:
-        err = [True, sum([t["duration"] * t["price"] for t in err[1]["list"]]]), None]
+        err = [True, sum([t["duration"] * t["price"] for t in err[1]["list"]]), None]
     return cn.call_next(nextc, err)
 
 def timesheet_new(cn, nextc):
