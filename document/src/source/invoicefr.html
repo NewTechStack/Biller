@@ -40,60 +40,91 @@
         <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
       </div>
     <!-- {% endfor %} -->
-    <div class="invoice_recap" style="width:3in; left:5.06in;">
+    <!-- {% set top = 0.23 * lines|length %} -->
+    <div class="invoice_recap" style="left:5.06in; margin-top:{{top}}in">
       <b>SOUS-TOTAL (HT)</b><br/>
-      {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %}
+      <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
         <div style="background-color: #000; border-radius: 40in;"></div>
-        {% if fees_percent != 0 %} Frais admin.({{fees_percent}}%)<br/> {% endif %}
-        {% if reduction_amount != 0 %} Réduction({{reduction_amount}}{{reduction_unit}})<br/> {% endif %}
-        {% if tva_amount != 0 %}TVA ({{tva_amount}}%)<br/>{% endif %}
-      {% endif %}
-      {% if provision_amount != 0 or retainer_amount != 0 %}
+        <!-- {% if fees_percent != 0 %} -->
+          Frais admin.({{fees_percent}}%)<br/>
+        <!-- {% endif %} -->
+        <!-- {% if reduction_amount != 0 %} -->
+          Réduction({{reduction_amount}}{{reduction_unit}})<br/>
+        <!-- {% endif %} -->
+        <!-- {% if tva_amount != 0 %} -->
+        TVA ({{tva_amount}}%)<br/>
+        <!-- {% endif %} -->
+      <!-- {% endif %} -->
+      <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
         <div style="background-color: #000; border-radius: 40in;"></div>
-        {% if provision_amount != 0 %} Provision (TTC)<br/>{% endif %}
-        {% if retainer_amount != 0 %} Avance de frais<br/>{% endif %}
-      {% endif %}
+        <!-- {% if provision_amount != 0 %} -->
+          Provision (TTC)<br/>
+        <!-- {% endif %} -->
+        <!-- {% if retainer_amount != 0 %}  -->
+          Avance de frais<br/>
+        <!-- {% endif %} -->
+      <!-- {% endif %} -->
       <div style="background-color: #000; border-radius: 40in;margin-bottom: 0.09in;"></div>
       <b>TOTAL</b>
     </div>
-    <div class="invoice_recap" style="width:0.45in; left:6.86in; text-align: right">
+    <div class="invoice_recap" style="width:0.45in; left:6.86in; text-align: right; margin-top:{{top}}in">
       <b>CHF</b><br/>
-      {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %}
+      <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
         <div></div>
-        {% if fees_percent != 0 %}CHF<br/>{% endif %}
-        {% if reduction_amount != 0 %}- CHF<br/>{% endif %}
-        {% if tva_amount != 0 %}CHF<br/>{% endif %}
-      {% endif %}
-      {% if provision_amount != 0 or retainer_amount != 0 %}
+        <!-- {% if fees_percent != 0 %} -->
+          CHF<br/>
+        <!-- {% endif %} -->
+        <!-- {% if reduction_amount != 0 %} -->
+          - CHF<br/>
+        <!-- {% endif %} -->
+        <!-- {% if tva_amount != 0 %} -->
+          CHF<br/>
+        <!-- {% endif %} -->
+      <!-- {% endif %} -->
+      <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
         <div></div>
-        {% if provision_amount != 0 %}- CHF<br/>{% endif %}
-        {% if retainer_amount != 0 %}CHF<br/>{% endif %}
-      {% endif %}
+        <!-- {% if provision_amount != 0 %} -->
+          - CHF<br/>
+        <!-- {% endif %} -->
+        <!-- {% if retainer_amount != 0 %} -->
+          CHF<br/>
+        <!-- {% endif %} -->
+      <!-- {% endif %} -->
       <div style="margin-bottom: 0.09in;"></div>
       <b>CHF</b>
     </div>
-    <div class="invoice_recap" style="width:1.5in; left:6.86in; text-align: right">
+    <div class="invoice_recap" style="width:1.5in; left:6.86in; text-align: right; margin-top:{{top}}in">
       <b>{{timesheet_sum}}</b><br/>
-      {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %}
+      <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
         <div></div>
-        {% if fees_percent != 0 %} {{fees_price_ht}}<br/>{% endif %}
-        {% if reduction_amount != 0 %} {{reduction_value}}<br/>{% endif %}
-        {% if tva_amount != 0 %} {{tva_value}}<br/>{% endif %}
-      {% endif %}
-      {% if provision_amount != 0 or retainer_amount != 0 %}
+        <!-- {% if fees_percent != 0 %} -->
+          {{fees_price_ht}}<br/>
+        <!-- {% endif %} -->
+        <!-- {% if reduction_amount != 0 %} -->
+          {{reduction_value}}<br/>
+        <!-- {% endif %} -->
+        <!-- {% if tva_amount != 0 %} -->
+          {{tva_value}}<br/>
+        <!-- {% endif %} -->
+      <!-- {% endif %} -->
+      <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
         <div></div>
-        {% if provision_amount != 0 %}{{provision_value}}<br/>{% endif %}
-        {% if retainer_amount != 0 %}{{retainer_value}}<br/>{% endif %}
-      {% endif %}
+        <!-- {% if provision_amount != 0 %} -->
+          {{provision_value}}<br/>
+        <!-- {% endif %} -->
+        <!-- {% if retainer_amount != 0 %} -->
+          {{retainer_value}}<br/>
+        <!-- {% endif %} -->
+      <!-- {% endif %} -->
       <div style="margin-bottom: 0.09in;"></div>
       <b>{{total_ttc}}</b>
     </div>
 
-<div style="position:absolute;top:9.73in;left:0.91in;width:4.00in;line-height:0.21in;">
-  {% for line in banq %}
+<div style="position:absolute;top:8in;left:0.91in;width:4.00in;line-height:0.21in; margin-top:{{top}}in;">
+  <!-- {% for line in banq %} -->
   {{line}}
   <br/>
-  {% endfor %}
+  <!-- {% endfor %} -->
 </div>
 
 </body>
@@ -176,7 +207,7 @@
 
   div.invoice_recap {
     position:absolute;
-    top:5.5in;
+    top:5.2in;
     line-height:0.27in;
     font-style:normal;
     font-weight:normal;
