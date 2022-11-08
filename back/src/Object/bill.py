@@ -145,12 +145,13 @@ class Bill(Crud, StatusObject):
         if ret[1] is None:
             retun [False, "error", 500]
         data = ret[1]
-        data["template"]["bucket"] = "files"
-        data["template"]["variables"]["num"] = "2022-" + str(int(self.red.filter(
-           lambda bill: bill["status"] >= 2
-        ).count().run()))
-        data["template"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
-        data["url"] = self.__generate_fact(data)
+        if "template" in data:
+            data["template"]["bucket"] = "files"
+            data["template"]["variables"]["num"] = "2022-" + str(int(self.red.filter(
+               lambda bill: bill["status"] >= 2
+            ).count().run()))
+            data["template"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
+            data["url"] = self.__generate_fact(data)
         self._push(data)
         return [True, data, None]
 

@@ -38,14 +38,15 @@ def setuproute(app, call):
     @app.route('/client/<>/folder/<>/timesheet/<>',     ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_set_by_id, timesheet_exist, timesheet_status_under_2, timesheet_edit])       )
     @app.route('/client/<>/folder/<>/timesheet/<>',     ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_set_by_id, timesheet_exist, timesheet_status_under_2, timesheet_delete])     )
     @app.route('/client/<>/folder/<>/timesheet/<>/status',   ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, timesheet_set_by_id, timesheet_exist, timesheet_change_status])             )
-    
+
     @app.route('/bills',                                ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, bill_get_all])                                                                                                               )
+    @app.route('/bills/sums',                           ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, bill_get_all_sums])                                                                                                               )
     @app.route('/client/<>/bills',                      ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, bill_get_all])                                                                               )
     @app.route('/client/<>/folder/<>/bills',            ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_get_all])                                               )
     @app.route('/client/<>/folder/<>/bill',             ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_new, bill_edit])                                        )
     @app.route('/client/<>/folder/<>/bill/<>',          ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_set_by_id, bill_exist, bill_get])                       )
     @app.route('/client/<>/folder/<>/bill/<>',          ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_set_by_id, bill_exist, bill_status_under_2, bill_edit])       )
     @app.route('/client/<>/folder/<>/bill/<>',          ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_set_by_id, bill_exist, bill_status_under_2, bill_delete])     )
-    @app.route('/client/<>/folder/<>/bill/<>/status',   ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_set_by_id, bill_exist, bill_change_status])             )    
+    @app.route('/client/<>/folder/<>/bill/<>/status',   ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_set_by_id, bill_exist, bill_change_status])             )
     def base():
         return
