@@ -34,9 +34,9 @@
         <span style="left:0.15in;"><b>{{l.date}}</b></span>
         <span style="left:1.25in;">{{l.activite}}</span>
         <span style="left:3.1in;">{{l.user}}</span>
-        <span style="left:4.49in;">CHF {{l.rate}}</span>
-        <span style="left:5.38in;">{{l.time}}</span>
-        <span style="left:6.215in;">CHF {{l.priceHT}}</span>
+        <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
+        <span style="left:5.38in;width: 1.5in;">{{l.time}}</span>
+        <span style="left:6.215in;width: 1.5in;">CHF {{l.priceHT}}</span>
         <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
       </div>
     <!-- {% endfor %} -->
@@ -44,7 +44,7 @@
     <div class="invoice_recap" style="left:5.06in; margin-top:{{top}}in">
       <b>SOUS-TOTAL (HT)</b><br/>
       <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
-        <div style="background-color: #000; border-radius: 40in;"></div>
+        <div style="width: 3.3in;background-color: #000; border-radius: 40in;"></div>
         <!-- {% if fees_percent != 0 %} -->
           Frais admin.({{fees_percent}}%)<br/>
         <!-- {% endif %} -->
@@ -56,7 +56,7 @@
         <!-- {% endif %} -->
       <!-- {% endif %} -->
       <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
-        <div style="background-color: #000; border-radius: 40in;"></div>
+        <div style="width: 3.3in;background-color: #000; border-radius: 40in;"></div>
         <!-- {% if provision_amount != 0 %} -->
           Provision (TTC)<br/>
         <!-- {% endif %} -->
@@ -64,7 +64,7 @@
           Avance de frais<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
-      <div style="background-color: #000; border-radius: 40in;margin-bottom: 0.09in;"></div>
+      <div style="width: 3.3in;background-color: #000; border-radius: 40in;margin-bottom: 0.09in;"></div>
       <b>TOTAL</b>
     </div>
     <div class="invoice_recap" style="width:0.45in; left:6.86in; text-align: right; margin-top:{{top}}in">
@@ -143,7 +143,7 @@
     position:absolute;
     top:1.60in;
     left:5.56in;
-    width:3.00in;
+    width:2.80in;
     line-height:0.23in;
     font-style:normal;
     font-weight:normal;
@@ -227,7 +227,7 @@
   }
 
   div.invoice_recap > div {
-    width: 3.3in; height: 0.02in; margin-bottom: 0.05in; margin-top: 0.04in;
+    width: 0.1in; height: 0.02in; margin-bottom: 0.05in; margin-top: 0.04in;
   }
 
   div.logo {
