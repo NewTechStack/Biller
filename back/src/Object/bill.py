@@ -109,7 +109,7 @@ class Bill(Crud, StatusObject):
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
         data["template"] = {
-            "name": f"invoice{data['lang']}.html",
+            "name": f"invoice_preview{data['lang']}.html",
             "title": f"preview_{self.id.split('/')[-1]}",
             "variables": {
                 "lines": data["timesheet"],
