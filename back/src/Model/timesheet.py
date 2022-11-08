@@ -11,10 +11,12 @@ def timesheet_get_all(cn, nextc):
     greater = None if greater is None or "field" not in greater or "value" not in greater else greater 
     less = None if "less" not in cn.pr else cn.pr["less"]
     less = None if less is None or "field" not in less or "value" not in less else less 
-    print(greater, less)
     err = check.contain(cn.pr, ["filter", "exclude"])
     if not err[0]:
         return cn.toret.add_error(err[1], err[2])
+    if "user_in_charge" in cn.pr["filter"]:
+        cn.pr["filter"]["folder"] = ""
+        del cn.pr["filter"]["user_in_charge"]
     err = Timesheet().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match, greater=greater, less=less)
     return cn.call_next(nextc, err)
 
