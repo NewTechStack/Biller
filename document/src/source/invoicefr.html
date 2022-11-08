@@ -42,39 +42,51 @@
     {% endfor %}
     <div class="invoice_recap" style="width:3in; left:5.06in;">
       <b>SOUS-TOTAL (HT)</b><br/>
-      <div style="background-color: #000; border-radius: 40in;"></div>
-      Frais admin.({{fees_percent}}%)<br/>
-      Réduction({{reduction_amount}}{{reduction_unit}})*<br/>
-      TVA ({{tva_amount}}%)*<br/>
-      <div style="background-color: #000; border-radius: 40in;"></div>
-      Provision (TTC)*<br/>
-      Avance de frais*<br/>
+      {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0%}
+        <div style="background-color: #000; border-radius: 40in;"></div>{% endif %}
+        {% if fees_percent != 0 %} Frais admin.({{fees_percent}}%)<br/> {% endif %}
+        {% if reduction_amount != 0 %} Réduction({{reduction_amount}}{{reduction_unit}})<br/> {% endif %}
+        {% if tva_amount != 0 %}TVA ({{tva_amount}}%)<br/>{% endif %}
+      {% endif %}
+      {% if provision_amount != 0 or retainer_amount != 0 %}
+        <div style="background-color: #000; border-radius: 40in;"></div>
+        {% if provision_amount != 0 %} Provision (TTC)<br/>{% endif %}
+        {% if retainer_amount != 0 %} Avance de frais<br/>{% endif %}
+      {% endif %}
       <div style="background-color: #000; border-radius: 40in;"></div>
       <br/>
       <b>TOTAL</b>
     </div>
     <div class="invoice_recap" style="width:0.40in; left:6.86in; text-align: right">
       <b>CHF</b><br/>
-      <div></div>
-      CHF<br/>
-      - CHF<br/>
-      CHF<br/>
-      <div></div>
-      - CHF<br/>
-      CHF<br/>
+      {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0%}
+        <div></div>
+        {% if fees_percent != 0 %}CHF<br/>{% endif %}
+        {% if reduction_amount != 0 %}- CHF<br/>{% endif %}
+        {% if tva_amount != 0 %}CHF<br/>{% endif %}
+      {% endif %}
+      {% if provision_amount != 0 or retainer_amount != 0 %}
+        <div></div>
+        {% if provision_amount != 0 %}- CHF<br/>{% endif %}
+        {% if retainer_amount != 0 %}CHF<br/>{% endif %}
+      {% endif %}
       <div></div>
       <br/>
       <b>CHF</b>
     </div>
     <div class="invoice_recap" style="width:1.5in; left:6.86in; text-align: right">
       <b>{{timesheet_sum}}</b><br/>
-      <div></div>
-      {{fees_price_ht}}<br/>
-      {{reduction_value}}<br/>
-      {{tva_value}}<br/>
-      <div></div>
-      {{provision}}<br/>
-      {{retainer}}<br/>
+      {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0%}
+        <div></div>
+        {% if fees_percent != 0 %} {{fees_price_ht}}<br/>{% endif %}
+        {% if reduction_amount != 0 %} {{reduction_value}}<br/>{% endif %}
+        {% if tva_amount != 0 %} {{tva_value}}<br/>{% endif %}
+      {% endif %}
+      {% if provision_amount != 0 or retainer_amount != 0 %}
+        <div></div>
+        {% if provision_amount != 0 %}{{provision_value}}<br/>{% endif %}
+        {% if retainer_amount != 0 %}{{retainer_value}}<br/>{% endif %}
+      {% endif %}
       <div></div>
       <br/>
       <b>{{total_ttc}}</b>
@@ -156,7 +168,7 @@
 
   div.line > span{
     position: absolute;
-    width:2in;
+    width:3in;
     overflow: hidden;
     font-style:normal;
     font-weight:normal;
@@ -177,7 +189,7 @@
   }
 
   div.invoice_recap > div {
-    width: 3in; height: 0.02in; margin-bottom: 0.05in; margin-top: 0.04in;
+    width: 3.2in; height: 0.02in; margin-bottom: 0.05in; margin-top: 0.04in;
   }
 
   div.logo {
