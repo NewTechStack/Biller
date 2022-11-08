@@ -5,23 +5,21 @@
     <div class=logo />
     </div>
     <div class="address">
-      {% for line in address %}
+      <!-- {% for line in address %} -->
         {{line}}
         <br/>
-      {% endfor %}
+      <!-- {% endfor %} -->
     </div>
     <div class="invoice_details">
-      <div>
-        <b>FACTURE #{{num}}</b>
-        <br/>
-        {{date}}
-      </div>
-      <div style="margin-left: 1.5in">
-        <b>DOSSIER</b>
-        <br/>
-        {{name}}
-      </div>
+      <b>FACTURE #{{num}}</b>
+      <br/>
+      {{date}}
     </div>
+  <div class="folder_details">
+    <b>DOSSIER</b>
+    <br/>
+    {{name}}
+  </div>
     <div class="array_header">
       <span style="left:0.15in;">DATE</span>
       <span style="left:1.25in;">ACTIVITÉ</span>
@@ -30,18 +28,18 @@
       <span style="left:5.38in;">HEURES</span>
       <span style="left:6.215in;">CHF</span>
     </div>
-    {% for line in lines %}
-      {% set top = 4.4 + 0.23 * (loop.index - 1) %}
-      <div class="line" style="top:{{top}}in;">
-        <span style="left:0.15in;"><b>{{line.date}}</b></span>
-        <span style="left:1.25in;">{{line.activite}}</span>
-        <span style="left:3.1in;">{{line.user}}</span>
-        <span style="left:4.49in;">CHF {{line.rate}}</span>
-        <span style="left:5.38in;">{{line.time}}</span>
-        <span style="left:6.215in;">CHF {{line.priceHT}}</span>
+    <!-- {% for l in lines %} -->
+      <!-- {% set top = 0.23 * (loop.index - 1) %} -->
+      <div class="line" style="top: 4.4in; margin-top:{{top}}in;">
+        <span style="left:0.15in;"><b>{{l.date}}</b></span>
+        <span style="left:1.25in;">{{l.activite}}</span>
+        <span style="left:3.1in;">{{l.user}}</span>
+        <span style="left:4.49in;">CHF {{l.rate}}</span>
+        <span style="left:5.38in;">{{l.time}}</span>
+        <span style="left:6.215in;">CHF {{l.priceHT}}</span>
         <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
       </div>
-    {% endfor %}
+    <!-- {% endfor %} -->
     <div class="invoice_recap" style="width:3in; left:5.06in;">
       <b>SOUS-TOTAL (HT)</b><br/>
       {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %}
@@ -58,7 +56,7 @@
       <div style="background-color: #000; border-radius: 40in;margin-bottom: 0.09in;"></div>
       <b>TOTAL</b>
     </div>
-    <div class="invoice_recap" style="width:0.43in; left:6.86in; text-align: right">
+    <div class="invoice_recap" style="width:0.45in; left:6.86in; text-align: right">
       <b>CHF</b><br/>
       {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %}
         <div></div>
@@ -101,8 +99,9 @@
 </body>
 <STYLE>
   div.address {
-    margin-top:0.10in;
-    margin-left:5.56in;
+    position:absolute;
+    top:1.60in;
+    left:5.56in;
     width:3.00in;
     line-height:0.23in;
     font-style:normal;
@@ -113,9 +112,23 @@
   }
 
   div.invoice_details {
-    display: flex;
-    margin-top:1.01in;
-    margin-left:0.91in;
+    position:absolute;
+    top:2.84in;
+    left:0.91in;
+    width:3.31in;
+    line-height:0.23in;
+    font-style:normal;
+    font-weight:normal;
+    font-size:10pt;
+    font-family:Arial;
+    color:#000000;
+  }
+
+  div.folder_details {
+    position:absolute;
+    top:2.84in;
+    left:3.41in;
+    width:0.85in;
     line-height:0.23in;
     font-style:normal;
     font-weight:normal;
@@ -163,7 +176,7 @@
 
   div.invoice_recap {
     position:absolute;
-    top:6.94in;
+    top:5.5in;
     line-height:0.27in;
     font-style:normal;
     font-weight:normal;
@@ -173,15 +186,13 @@
   }
 
   div.invoice_recap > div {
-    width: 3.2in;
-    height: 0.02in;
-    margin-bottom: 0.05in;
-    margin-top: 0.04in;
+    width: 3.2in; height: 0.02in; margin-bottom: 0.05in; margin-top: 0.04in;
   }
 
   div.logo {
-    margin-top:0.90in;
-    margin-left:0.93in;
+    position:absolute;
+    top:0.90in;
+    left:0.93in;
     width:3.09in;
     height:0.37in;
     border: none;
