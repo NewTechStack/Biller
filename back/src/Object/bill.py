@@ -38,14 +38,14 @@ class Bill(Crud, StatusObject):
             data = ret[1]
         data["status"] = 0
         return self._push(data)
-    
+
     def __provision(self, data):
         if not "prov_amount" in data or not any([isinstance(data["prov_amount"], x) for x in [float, int]]):
             return [False, "Invalid 'prov_amount' float or int", 400]
         prov_amount = data["prov_amount"]
         data["price"] = {
             "HT": self.__HT_price(prov_amount),
-            "taxes": 0.0, 
+            "taxes": 0.0,
             "total": 0.0
         }
         ret = self.__calc__fees(data)
@@ -60,7 +60,7 @@ class Bill(Crud, StatusObject):
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         return [True, data, None]
-    
+
     def __invoice(self, data):
         folder_id = self.id.rsplit('/', 1)[0]
         folder = Folder(folder_id).get()
@@ -117,27 +117,27 @@ class Bill(Crud, StatusObject):
                 "date": datetime.now().strftime("%d/%m/%Y"),
                 "name": f"{folder[1]['name']}",
 
-                "timesheet_sum": self.__currency_format(sum(t["price_HT"] for t in data["timesheet"])), 
+                "timesheet_sum": self.__currency_format(sum(t["price_HT"] for t in data["timesheet"])),
                 "fees_percent": data["fees"]["fees"] if "fees" in data else 0,
                 "fees_price_ht": self.__currency_format(data["fees"]["price_HT"] if "fees" in data else 0),
 
                 "reduction_amount": 0 if "reduction" not in data else  self.__currency_format(data["reduction"]["fix"]["amount"]) if "fix" in data["reduction"] else data["reduction"]["percentage"]["amount"],
                 "reduction_unit": "%" if "reduction" not in data else "CHF" if "fix" in data["reduction"] else "%",
-                "reduction_value": 0 if "reduction" not in data else data["reduction"]["fix"]["valueHT"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["valueHT"],
+                "reduction_value": self.__currency_format(0.0) if "reduction" not in data else data["reduction"]["fix"]["valueHT"] if "fix" in data["reduction"] else data["reduction"]["percentage"]["valueHT"],
 
                 "tva_amount": data["TVA"],
                 "tva_value": self.__currency_format(data["price"]["taxes"]),
 
                 "provision": self.__currency_format(sum(t["price"] for t in data["provisions"])),
 
-                "retainer": self.__currency_format(0.00), 
+                "retainer": self.__currency_format(0.00),
 
                 "total_ttc": self.__currency_format(data["price"]["total"] - sum(t["price"] for t in data["provisions"]))
             }
         }
         data["url"] = self.__generate_fact(data)
         return [True, data, None]
-    
+
     def status_trigger(self, status):
         if status != 2:
             return
@@ -153,30 +153,30 @@ class Bill(Crud, StatusObject):
         data["url"] = self.__generate_fact(data)
         self._push(data)
         return [True, data, None]
-    
+
     def __generate_fact(self, data):
         url = "http://template:8080/template/pdf"
         response = requests.request("POST", url, data=json.dumps(data["template"]), headers={'content-type': "application/json"})
         return json.loads(response.text)
-        
+
     def __currency_format(self, price):
         return f"{price:_.2f}".replace(".00", ".-").replace("_", " ")
-    
+
     def __HT_price(self, price):
         return float(price)
-    
+
     def __taxe(self, price, tva):
         return self.__percentage(price, tva)
-    
+
     def __TTC_price(self, price, tva):
         return price + self.__taxe(price, tva)
-    
+
     def __fees_price(self, price, tva):
         return self.__taxe(price, tva)
-    
+
     def __percentage(self, total, percentage):
         return total * percentage / 100
-   
+
     def __calc_timesheet(self, timsheet_id, data):
         d = Timesheet(timsheet_id).get()
         if d[1] is None:
@@ -199,7 +199,7 @@ class Bill(Crud, StatusObject):
             "rate": self.__currency_format(float(d[1]["price"]))
         }
         return [True, line, None]
-    
+
     def __calc__fees(self, data):
         if "fees" in data:
             if not any([isinstance(data["fees"], x) for x in [float, int]]) and data["fees"] > 0.0:
@@ -216,7 +216,7 @@ class Bill(Crud, StatusObject):
             }
             data["price"]["HT"] += price_HT
         return [True, data, None]
-    
+
     def __calc_reductions(self, data):
         if "reduction" in data:
             if "fix" in data["reduction"]:
