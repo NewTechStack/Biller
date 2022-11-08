@@ -57,7 +57,23 @@
       <br/>
       <b>TOTAL</b>
     </div>
-    
+    <div class="invoice_recap" style="width:0.40in; left:6.86in; text-align: right">
+      <b>CHF</b><br/>
+      {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %}
+        <div></div>
+        {% if fees_percent != 0 %}CHF<br/>{% endif %}
+        {% if reduction_amount != 0 %}- CHF<br/>{% endif %}
+        {% if tva_amount != 0 %}CHF<br/>{% endif %}
+      {% endif %}
+      {% if provision_amount != 0 or retainer_amount != 0 %}
+        <div></div>
+        {% if provision_amount != 0 %}- CHF<br/>{% endif %}
+        {% if retainer_amount != 0 %}CHF<br/>{% endif %}
+      {% endif %}
+      <div></div>
+      <br/>
+      <b>CHF</b>
+    </div>
     <div class="invoice_recap" style="width:1.5in; left:6.86in; text-align: right">
       <b>{{timesheet_sum}}</b><br/>
       {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %}
