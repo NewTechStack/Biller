@@ -18,8 +18,6 @@ def bill_get_all(cn, nextc):
     return cn.call_next(nextc, err)
 
 def bill_get_all_sum(cn, nextc):
-    page = int(cn.get.get('page', 1))
-    number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
     match = {'field': 'id', "value": cn.rt["client"] + "/*/"} if 'client' in cn.rt else None
     match = {'field': 'id', "value": "*/" + cn.rt["folder"] + "/" } if 'folder' in cn.rt else match
     match = {'field': 'id', "value": cn.rt["client"]  + "/" + cn.rt["folder"] + "/" } if 'folder' in cn.rt and "client" in cn.rt else match
@@ -30,12 +28,12 @@ def bill_get_all_sum(cn, nextc):
     err = check.contain(cn.pr, ["filter", "exclude"])
     if not err[0]:
         return cn.toret.add_error(err[1], err[2])
-    err = Bill().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match, greater=greater, less=less)
+    err = Bill().get_all(1, 10000000, cn.pr["filter"], cn.pr['exclude'], match=match, greater=greater, less=less)
     if err[0]:
         err = [True, {
-                "price_HT":  sum([t["price"]["HT"] for t in err[1]["list"]]),
-                "price_TVA": sum([t["price"]["taxes"] for t in err[1]["list"]]),
-                "Price_TTC": sum([t["price"]["total"] for t in err[1]["list"]])
+                "price_HT":  round(sum([t["price"]["HT"] for t in err[1]["list"]]), 2),
+                "price_TVA": round(sum([t["price"]["taxes"] for t in err[1]["list"]]), 2),
+                "Price_TTC": round(sum([t["price"]["total"] for t in err[1]["list"]]), 2)
                }, None]
     return cn.call_next(nextc, err)
 
