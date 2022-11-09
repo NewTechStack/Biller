@@ -161,7 +161,6 @@ class Bill(Crud, StatusObject):
     def __generate_fact(self, data):
         url = "http://template:8080/template/pdf"
         response = requests.request("POST", url, data=json.dumps(data["template"]), headers={'content-type': "application/json"})
-        print(response.text)
         return json.loads(response.text)
 
     def __currency_format(self, price):
