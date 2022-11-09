@@ -68,14 +68,15 @@ class Crud:
         else:
             to_del = []
             req = self.red
-            for key in filter:
-                if isinstance(filter[key], list) and all([isinstance(x, str) for x in filter[key]]):
-                    req = req.filter(
-                        lambda object: r.expr(filter[key]).contains(object[key])
-                    )
-                    to_del.append(key)
-            for key in to_del:
-                del filter[key]
+            if "client_folder" in filter:
+                for key in filter:
+                    if isinstance(filter[key], list) and all([isinstance(x, str) for x in filter[key]]):
+                        req = req.filter(
+                            lambda object: r.expr(filter["client_folder"][key]).contains(object["client_folder"][key])
+                        )
+                        to_del.append(key)
+                for key in to_del:
+                    del filter["client_folder"][key]
             req = req.filter(filter)
             if greater is not None:
                 req = req.filter(
