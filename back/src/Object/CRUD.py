@@ -6,7 +6,7 @@ class StatusObject:
     def __init__(self, trigger = None):
         self.status = True
         self.trigger = trigger
-    
+
     def change_status(self, status):
         if status not in [0, 1, 2, 3, 4]:
             return [False, f"Status '{status}' not in range(0, 4)", 400]
@@ -23,11 +23,11 @@ class StatusObject:
             ret = self.status_trigger(status)
             if not ret[0]:
                 return ret
-        return self._push({'status': status}) 
-    
+        return self._push({'status': status})
+
     def status_trigger(self, status):
         return
-    
+
     def status_under_2(self):
         ret = self.get()
         if ret[1] is None:
@@ -66,7 +66,16 @@ class Crud:
                 }
             }
         else:
-            req = self.red.filter(filter)
+            to_del = []
+            for key in filter:
+                if isinstance(filter[key], list) and all([isinstance(x, string) for x in filter[key]]):
+                    req = self.red.filter(
+                        lambda object: r.expr(filter[key]).contains(object[key])
+                    )
+                to_del.append(key)
+            for key in to_del:
+                del filter[key]
+            req = (self.red if len(to_del) == 0 else req).filter(filter)
             if greater is not None:
                 req = req.filter(
                     lambda object: object[greater['field']] > (greater['value'])
@@ -125,6 +134,6 @@ class Crud:
             data['created_at'] = r.expr(datetime.now(r.make_timezone('+02:00')))
             data['created_by'] = "test@test.fr"
             if self.status is True:
-                data["status"] = 0 
+                data["status"] = 0
         res = dict(self.red.insert([data], conflict="update").run())
         return self.get()
