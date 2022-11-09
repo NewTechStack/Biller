@@ -148,6 +148,7 @@ class Bill(Crud, StatusObject):
             retun [False, "error", 500]
         data = ret[1]
         if "template" in data:
+            data["template"]["name"] = data["template"]["name"].replace("_preview", "")
             data["template"]["bucket"] = "files"
             data["template"]["variables"]["num"] = "2022-" + str(int(self.red.filter(
                lambda bill: bill["status"] >= 2
