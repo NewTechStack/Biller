@@ -31,7 +31,7 @@ def client_get(cn, nextc):
 
 def client_edit(cn, nextc):
     cn.pr = check.setnoneopt(cn.pr, ["type", "name_1", "name_2", "email", "phone", "adresse", "lang"])
-    err = cn.private['client'].edit(cn.pr["type"], cn.pr["name_1"], cn.pr["name_2"], cn.pr["email"], cn.pr["phone"], cn.pr["adresse"], cn.pr['lang'])
+    err = cn.private['client'].edit(cn.pr["type"], cn.pr["name_1"], cn.pr["name_2"], cn.pr["email"], cn.pr["phone"], cn.pr["adresse"], cn.pr['lang'], cn.pr.get("extra", None))
     return cn.call_next(nextc, err)
 
 def client_delete(cn, nextc):

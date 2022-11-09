@@ -9,7 +9,7 @@ class Client(Crud):
         self.id = str(uuid.uuid4())
         return [True, {}, None]
 
-    def edit(self, type, name_1, name_2, email, phone, adresse, lang):
+    def edit(self, type, name_1, name_2, email, phone, adresse, lang, extra = None):
         data = {
             'id': self.id
         }
@@ -27,4 +27,6 @@ class Client(Crud):
             data['adresse'] = adresse
         if lang is not None:
             data['lang'] = lang
+        if extra is not None:
+            data['extra'] = extra
         return self._push(data)

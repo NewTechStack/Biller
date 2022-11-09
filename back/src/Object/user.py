@@ -22,4 +22,6 @@ class User(Crud):
             data['price'] = price
         if index is not None:
             data['index'] = index
+        if extra is not None:
+            data['extra'] = extra
         return self._push(data)

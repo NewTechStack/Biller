@@ -32,13 +32,11 @@
     </div>
     <!-- {% set ns = namespace (top = 0) %} -->
     <!-- {% for l in lines %} -->
-
-      <!-- {% set top = 0.23 * (loop.index - 1) %} -->
       <div class="line" style="top: 4.4in; margin-top:{{ns.top}}in;">
         <span style="left:0.15in;"><b>{{l.date}}</b></span>
         <span style="left:1.25in;">
           <!-- {% for act in l.activite %} -->
-          <!-- {% set ns.top = ns.top + 0.23 %} -->
+          <!-- {% set ns.top = ns.top + 0.22 %} -->
           {{act}}<br>
           <!-- {% endfor %} -->
         </span>
@@ -48,7 +46,7 @@
         <span style="left:6.215in;width: 1.5in;">CHF {{l.priceHT}}</span>
         <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
       </div>
-      <!-- {% set ns.top = ns.top + 0.23 %} -->
+      <!-- {% set ns.top = ns.top + 0.22 %} -->
     <!-- {% endfor %} -->
     <div class="invoice_recap" style="left:5.06in; margin-top:{{ns.top}}in">
       <b>SOUS-TOTAL (HT)</b><br/>
