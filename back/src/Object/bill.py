@@ -132,7 +132,9 @@ class Bill(Crud, StatusObject):
                 "retainer_amount": 0,
                 "retainer_value": self.__currency_format(0.00),
 
-                "total_ttc": self.__currency_format(data["price"]["total"] - sum(t["price"] for t in data["provisions"]))
+                "total_ttc": self.__currency_format(data["price"]["total"] - sum(t["price"] for t in data["provisions"])),
+                "banq": data["banq"],
+                "address": data["address"]
             }
         }
         data["url"] = self.__generate_fact(data)
