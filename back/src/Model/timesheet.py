@@ -18,7 +18,6 @@ def timesheet_get_all(cn, nextc):
     if "user_in_charge" in cn.pr["filter"]:
         cn.pr["filter"]["client_folder"] = {}
         cn.pr["filter"]["client_folder"]["id"] = [x["id"].split("/")[1] for x in Folder().get_all(1, 10000000, {"user_in_charge": cn.pr["filter"]["user_in_charge"]}, {}, match=None)[1]["list"]]
-        print(cn.pr["filter"]["client_folder"])
         del cn.pr["filter"]["user_in_charge"]
     err = Timesheet().get_all(page, number, cn.pr["filter"], cn.pr['exclude'], match=match, greater=greater, less=less)
     return cn.call_next(nextc, err)
