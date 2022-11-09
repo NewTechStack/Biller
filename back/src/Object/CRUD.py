@@ -67,15 +67,16 @@ class Crud:
             }
         else:
             to_del = []
+            req = self.red
             for key in filter:
                 if isinstance(filter[key], list) and all([isinstance(x, string) for x in filter[key]]):
-                    req = self.red.filter(
+                    req = req.filter(
                         lambda object: r.expr(filter[key]).contains(object[key])
                     )
-                to_del.append(key)
+                    to_del.append(key)
             for key in to_del:
                 del filter[key]
-            req = (self.red if len(to_del) == 0 else req).filter(filter)
+            req = req.filter(filter)
             if greater is not None:
                 req = req.filter(
                     lambda object: object[greater['field']] > (greater['value'])
