@@ -129,14 +129,13 @@ class Bill(Crud, StatusObject):
                 "tva_value": self.__currency_format(data["price"]["taxes"]),
                 "provision_amount": sum(t["price"] for t in data["provisions"]),
                 "provision_value": self.__currency_format(sum(t["price"] for t in data["provisions"])),
-                "retainer_amount": 0,
-                "retainer_value": self.__currency_format(0.00),
 
                 "total_ttc": self.__currency_format(data["price"]["total"] - sum(t["price"] for t in data["provisions"])),
                 "banq": data["banq"],
                 "address": data["address"]
             }
         }
+        for i in template["variables"]
         data["url"] = self.__generate_fact(data)
         return [True, data, None]
 

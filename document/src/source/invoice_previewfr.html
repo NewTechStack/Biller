@@ -69,9 +69,6 @@
         <!-- {% if provision_amount != 0 %} -->
           Provision (TTC)<br/>
         <!-- {% endif %} -->
-        <!-- {% if retainer_amount != 0 %}  -->
-          Avance de frais<br/>
-        <!-- {% endif %} -->
       <!-- {% endif %} -->
       <div style="width: 3.3in;background-color: #000; border-radius: 40in;margin-bottom: 0.09in;"></div>
       <b>TOTAL</b>
@@ -94,9 +91,6 @@
         <div></div>
         <!-- {% if provision_amount != 0 %} -->
           - CHF<br/>
-        <!-- {% endif %} -->
-        <!-- {% if retainer_amount != 0 %} -->
-          CHF<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
       <div style="margin-bottom: 0.09in;"></div>
@@ -126,10 +120,6 @@
         <div></div>
         <!-- {% if provision_amount != 0 %} -->
           {{provision_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
-          <br/>
-        <!-- {% endif %} -->
-        <!-- {% if retainer_amount != 0 %} -->
-          {{retainer_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
           <br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
