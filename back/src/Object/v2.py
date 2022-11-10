@@ -1,0 +1,35 @@
+from .rethink import get_conn, r
+import uuid
+
+class Timesheet():
+    def __init__(self):
+        self.rf = get_conn().db("ged").table("folder")
+        self.rt = get_conn().db("ged").table("timesheet")
+
+    def grouped_by_folder(self, page, number):
+        if page < 1:
+            page = 1
+        page -= 1
+        if number < 1:
+            number = 1
+        req = self.rf.map(
+            lambda folder: folder["timesheets"] = self.rt.filter(
+                lambda timesheet: timesheet["client_folder"]["id"] == folder["id"]
+            ).with_fields('id')
+        )
+        total = int(req.count().run())
+        max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
+        max = max + 1 if max == 0 else max
+        if max < page + 1:
+            return [False, "Invalid pagination", 404]
+        pagination = {
+            "total": total,
+            "pages": {
+                "min": 1,
+                "max": max,
+                "per_page": number,
+                "actual_page": page + 1
+            }
+        }
+        ret = list(req.skip(page * number).limit(number).run())
+        return [True, {"list": ret, "pagination": pagination}, None]
