@@ -1,5 +1,6 @@
 from .rethink import get_conn, r
 import uuid
+import math
 
 class TimesheetV2():
     def __init__(self):
