@@ -6,7 +6,7 @@ from Object.v2 import TimesheetV2
 def timesheets_by_folder(cn, nextc):
     page = int(cn.get.get('page', 1))
     number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
-    err = TimesheetV2().grouped_by_folder(page, number, cn.pr["filter"])
+    err = TimesheetV2().grouped_by_folder(page, number, cn.pr.get("filter", {}))
     return cn.call_next(nextc, err)
 
 def timesheet_get_all(cn, nextc):
