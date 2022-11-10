@@ -135,7 +135,6 @@ class Bill(Crud, StatusObject):
                 "address": data["address"]
             }
         }
-        for i in template["variables"]
         data["url"] = self.__generate_fact(data)
         return [True, data, None]
 
