@@ -30,5 +30,5 @@ class TimesheetV2():
         }
         ret = list(req.skip(page * number).limit(number).run())
         for i in ret:
-            i["timesheets"] = list(self.rt.filter({"client_folder": {"id": i["id"]}}).with_fields('id').run())
+            i["timesheets"] = list(self.rt.filter({"client_folder": {"id": i["id"].split("/")[1]}}).with_fields('id').run())
         return [True, {"list": ret, "pagination": pagination}, None]
