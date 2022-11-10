@@ -45,7 +45,8 @@ services:
     command: rethinkdb --bind all -d /data
     networks:
       - dbnet
-      
+      - proxy
+
   template:
     build:
       context: ./document/
@@ -71,7 +72,7 @@ services:
       retries: 1
     volumes:
       - ./document/src:/home/api
-      
+
   pdfgenerator:
     image: kurzdigital/html-to-pdf
     container_name: biller-pdfgenerator
