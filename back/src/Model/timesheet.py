@@ -1,17 +1,12 @@
 from Controller.basic import check
 from Object.timesheet import Timesheet
 from Object.folder import Folder
-from Object.v2 import Timesheet
+from Object.v2 import TimesheetV2
 
 def timesheets_by_folder(cn, nextc):
     page = int(cn.get.get('page', 1))
     number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
-    match = {'field': 'id', "value": cn.rt["client"] + "/*/"} if 'client' in cn.rt else None
-    greater = None if "greater" not in cn.pr else cn.pr["greater"]
-    greater = None if greater is None or "field" not in greater or "value" not in greater else greater
-    less = None if "less" not in cn.pr else cn.pr["less"]
-    less = None if less is None or "field" not in less or "value" not in less else less
-
+    err = TimesheetV2().grouped_by_folder(page, number, cn.pr["filter"])
     return cn.call_next(nextc, err)
 
 def timesheet_get_all(cn, nextc):

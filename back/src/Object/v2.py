@@ -1,12 +1,12 @@
 from .rethink import get_conn, r
 import uuid
 
-class Timesheet():
+class TimesheetV2():
     def __init__(self):
         self.rf = get_conn().db("ged").table("folder")
         self.rt = get_conn().db("ged").table("timesheet")
 
-    def grouped_by_folder(self, page, number):
+    def grouped_by_folder(self, page, number, filter):
         if page < 1:
             page = 1
         page -= 1
