@@ -67,7 +67,8 @@ class Bill(Crud, StatusObject):
                 "amount_HT": self.__currency_format(data["price"]["HT"]),
                 "tva_amount": data["TVA"],
                 "amount_TTC": self.__currency_format(data["price"]["total"]),
-                "banq": data["banq"]
+                "banq": data["banq"],
+                "address": data["address"]
             }
         }
         data["url"] = self.__generate_fact(data)
