@@ -239,7 +239,7 @@ class Bill(Crud, StatusObject):
             "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y'),
             "rate": self.__currency_format(float(d[1]["price"]))
         }
-        return [True, {"line:": line, "timesheet_object": timesheet_object}, None]
+        return [True, {"line": line, "timesheet_object": timesheet_object}, None]
 
     def __calc__fees(self, data):
         if "fees" in data:
