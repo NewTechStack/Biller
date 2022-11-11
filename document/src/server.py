@@ -86,10 +86,10 @@ def index():
                         "encoding": "UTF-8",
                         "pageSize": "A4",
                         "title": title.split('/')[-1],
-                        "marginTop":"0px",
-                        "marginBottom":"0px",
-                        "marginLeft":"0px",
-                        "marginRight":"0px"
+                        # "marginTop":"0px",
+                        # "marginBottom":"0px",
+                        # "marginLeft":"0px",
+                        # "marginRight":"0px"
                     }
                 }
             )
