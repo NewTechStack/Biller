@@ -85,13 +85,25 @@ class Bill(Crud, StatusObject):
             return [False, "Invalid 'timsheet' list", 400]
         if len(timesheets) != len(set(timesheets)):
             return [False, "Duplicates in 'timesheet' list", 400]
+        provision_objects = []
+        timesheet_objects = []
         prov = []
         if "provisions" in data and isinstance(data["provisions"], list) and all([isinstance(x, str) for x in data['provisions']]):
             for prov_id in data["provisions"]:
                 prov_id = f"{folder_id}/{prov_id}"
-                bill = Bill(prov_id).get()
+                bill_object = Bill(prov_id)
+                bill = bill_object.get()
+                provision_objects.append(bill_object)
                 if bill[1] is None or bill[1]["type"] != "provision":
                     return [False, f"Invalid provision id: '{prov_id}'", 404]
+                if bill[1]["status"] in [0, 1]:
+                    return [False, f"Unpaid provision", 400]
+                if bill[1]["status"] == 3
+                    return [False, f"Provision already in a unpaid bill", 400]
+                if bill[1]["status"] == 4:
+                    return [False, f"Provision already in a paid bill", 400]
+                if bill[1]["status"] != 2:
+                    return [False, f"Provision error", 500]
                 prov.append(
                     {
                         "date": datetime.utcfromtimestamp(bill[1]["date"]).strftime('%d/%m/%Y'),
@@ -106,8 +118,9 @@ class Bill(Crud, StatusObject):
             ret = self.__calc_timesheet(f"{folder_id}/{t_id}", data)
             if ret[0] is False:
                 return ret
-            lines.append(ret[1])
-            data["price"]["HT"] += ret[1]["price_HT"]
+            lines.append(ret[1]["line"])
+            data["price"]["HT"] += ret[1]["line"]["price_HT"]
+            timesheet_objects.append(ret[1]["timesheet_object"])
         ret = self.__calc__fees(data)
         if ret[0] is False:
             return ret
@@ -148,10 +161,17 @@ class Bill(Crud, StatusObject):
             }
         }
         data["url"] = self.__generate_fact(data)
+        self.__status_object_set(3, provision_objects)
+        self.__status_object_set(1, timesheet_objects)
         return [True, data, None]
 
+    def __status_object_set(self, status, object_list):
+        for i in object_list:
+            i.set_status(status)
+        return None
+
     def status_trigger(self, status):
-        if status != 2:
+        if status != 1:
             return
         ret = self.get()
         if ret[1] is None:
@@ -192,11 +212,18 @@ class Bill(Crud, StatusObject):
         return total * percentage / 100
 
     def __calc_timesheet(self, timsheet_id, data):
-        d = Timesheet(timsheet_id).get()
+        timesheet_object = Timesheet(timsheet_id)
+        d = timesheet_object.get()
         if d[1] is None:
             return [False, f"Invalid timesheet id: '{timsheet_id}'", 404]
         if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
             return [False, f"Invalid price in timesheet: '{timsheet_id}'", 400]
+        if d[1]["status"] == 1:
+            return [False, f"Timesheet already in a unpaid bill", 400]
+        if d[1]["status"] == 2:
+            return [False, f"Timesheet already in a paid bill", 400]
+        if d[1]["status"] != 0:
+            return [False, f"Timesheet error", 500]
         price_HT =  self.__HT_price(d[1]["price"] * d[1]["duration"])
         taxes = self.__taxe(price_HT, data["TVA"])
         line = {
@@ -212,7 +239,7 @@ class Bill(Crud, StatusObject):
             "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y'),
             "rate": self.__currency_format(float(d[1]["price"]))
         }
-        return [True, line, None]
+        return [True, {"line:": line, "timesheet_object": timesheet_object}, None]
 
     def __calc__fees(self, data):
         if "fees" in data:

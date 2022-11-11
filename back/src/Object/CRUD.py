@@ -8,7 +8,7 @@ class StatusObject:
         self.trigger = trigger
 
     def change_status(self, status):
-        if status not in [0, 1, 2, 3, 4]:
+        if status not in [1, 2]:
             return [False, f"Status '{status}' not in range(0, 4)", 400]
         ret = self.get()
         if ret[1] is None:
@@ -23,7 +23,10 @@ class StatusObject:
             ret = self.status_trigger(status)
             if not ret[0]:
                 return ret
-        return self._push({'status': status})
+        return self.set_status(2)
+
+    def set_status(self, status):
+        self._push({'status': status})
 
     def status_trigger(self, status):
         return
