@@ -98,7 +98,7 @@ class Bill(Crud, StatusObject):
                     return [False, f"Invalid provision id: '{prov_id}'", 404]
                 if bill[1]["status"] in [0, 1]:
                     return [False, f"Unpaid provision", 400]
-                if bill[1]["status"] == 3
+                if bill[1]["status"] == 3:
                     return [False, f"Provision already in a unpaid bill", 400]
                 if bill[1]["status"] == 4:
                     return [False, f"Provision already in a paid bill", 400]
