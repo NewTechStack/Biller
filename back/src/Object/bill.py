@@ -20,7 +20,7 @@ class Bill(Crud, StatusObject):
         data['id'] = self.id
         if not "lang" in data or data["lang"] not in ["fr", "en"]:
             return [False, "Invalid 'lang', 'fr' or 'en' only", 400]
-        if not "type" in data or data["type"] not in ["invoice", "provision", "retainer"]:
+        if not "type" in data or data["type"] not in ["invoice", "provision"]:
           return [False, "Invalid 'type' of bill", 404]
         if not "TVA" in data or not any([isinstance(data["TVA"], x) for x in [float, int]]):
           return [False, "Invalid 'TVA' float", 400]
@@ -56,9 +56,21 @@ class Bill(Crud, StatusObject):
         if ret[0] is False:
             return ret
         data = ret[1]
+
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
+        data["template"] = {
+            "name": f"invoice_preview{data['lang']}.html",
+            "title": f"preview_{self.id.split('/')[-1]}",
+            "variables": {
+                "amount_HT": self.__currency_format(data["price"]["HT"]),
+                "tva_amount": data["price"]["taxes"],
+                "amount_TTC": self.__currency_format(data["price"]["total"]),
+                "banq": data["banq"]
+            }
+        }
+        data["url"] = self.__generate_fact(data)
         return [True, data, None]
 
     def __invoice(self, data):
