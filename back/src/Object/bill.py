@@ -171,6 +171,14 @@ class Bill(Crud, StatusObject):
         return None
 
     def status_trigger(self, status):
+        if status == 2:
+            if "provisions" in data["provisions"]:
+                for i in data:
+                    self.__status_object_set(4, [Bill(i["provision_id"])])
+            if "lines" in data:
+                for i in data["lines"]:
+                    self.__status_object_set(2, [Bill(i["provision_id"])])
+                "timesheet_id"
         if status != 1:
             return
         ret = self.get()
@@ -185,6 +193,7 @@ class Bill(Crud, StatusObject):
             ).count().run()))
             data["template"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
             data["url"] = self.__generate_fact(data)
+
         self._push(data)
         return [True, data, None]
 
