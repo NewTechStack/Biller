@@ -65,7 +65,7 @@ class Bill(Crud, StatusObject):
             "title": f"preview_{self.id.split('/')[-1]}",
             "variables": {
                 "amount_HT": self.__currency_format(data["price"]["HT"]),
-                "tva_amount": data["price"]["taxes"],
+                "tva_amount": data["TVA"],
                 "amount_TTC": self.__currency_format(data["price"]["total"]),
                 "banq": data["banq"]
             }

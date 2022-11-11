@@ -4,12 +4,12 @@ import requests
 import json
 from bottle import static_file
 from jinja2 import Environment, BaseLoader, meta
-from minio import Minio 
+from minio import Minio
 import io
 
 @route('/')
 def index():
-    return "working" 
+    return "working"
 
 @route('/static/<template>/<filename>')
 def server_static(template, filename):
@@ -25,7 +25,7 @@ def index():
         if os.path.exists(path) and os.path.isfile(path):
             f = open(path, "r")
             templates[template] = {
-                 "variables": 
+                 "variables":
                     list(
                         meta.find_undeclared_variables(
                             Environment().parse(
@@ -85,7 +85,11 @@ def index():
                     {
                         "encoding": "UTF-8",
                         "pageSize": "A4",
-                        "title": title.split('/')[-1]
+                        "title": title.split('/')[-1],
+                        "marginTop":"0px",
+                        "marginBottom":"0px",
+                        "marginLeft":"0px",
+                        "marginRight":"0px"
                     }
                 }
             )
@@ -98,9 +102,9 @@ def index():
     )
     if not client.bucket_exists(bucket):
         client.make_bucket(bucket)
-    client.put_object(bucket, 
-        f"{title}.pdf",  
-        data=io.BytesIO(pdf.content), 
+    client.put_object(bucket,
+        f"{title}.pdf",
+        data=io.BytesIO(pdf.content),
         length=len(pdf.content),
         content_type='application/pdf'
     )
