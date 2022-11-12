@@ -18,6 +18,7 @@ class Bill(Crud, StatusObject):
 
     def edit(self, data):
         data['id'] = self.id
+        self.before_delete()
         if not "lang" in data or data["lang"] not in ["fr", "en"]:
             return [False, "Invalid 'lang', 'fr' or 'en' only", 400]
         if not "type" in data or data["type"] not in ["invoice", "provision"]:
@@ -171,15 +172,24 @@ class Bill(Crud, StatusObject):
             i.set_status(status)
         return None
 
+    def before_delete(self):
+        data = self.get()
+        if "provisions" in data:
+            for i in data["provisions"]:
+                self.__status_object_set(2, [Bill(i["provision_id"])])
+        if "lines" in data:
+            for i in data["lines"]:
+                self.__status_object_set(0, [Timesheet(i["timesheet_id"])])
+        return [True, data, None]
+
     def status_trigger(self, status):
         if status == 2:
-            if "provisions" in data["provisions"]:
-                for i in data:
+            if "provisions" in data:
+                for i in data["provisions"]:
                     self.__status_object_set(4, [Bill(i["provision_id"])])
             if "lines" in data:
                 for i in data["lines"]:
-                    self.__status_object_set(2, [Bill(i["provision_id"])])
-                "timesheet_id"
+                    self.__status_object_set(2, [Timesheet(i["timesheet_id"])])
         if status != 1:
             return
         ret = self.get()
@@ -194,7 +204,6 @@ class Bill(Crud, StatusObject):
             ).count().run()))
             data["template"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
             data["url"] = self.__generate_fact(data)
-
         self._push(data)
         return [True, data, None]
 

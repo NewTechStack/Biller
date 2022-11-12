@@ -65,6 +65,7 @@ def bill_edit(cn, nextc):
     return cn.call_next(nextc, err)
 
 def bill_delete(cn, nextc):
+    cn.private['bill'].before_delete()
     err = cn.private['bill'].delete()
     return cn.call_next(nextc, err)
 
