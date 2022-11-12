@@ -5,6 +5,27 @@ networks:
     internal: true
 
 services:
+  front:
+    build:
+      context: ./front/
+      dockerfile: Dockerfile
+    container_name: biller-front
+    tty: true
+    restart: always
+    depends_on:
+      rethink:
+        condition: "service_started"
+    networks:
+      - proxy
+      - dbnet
+    ports:
+      - 8079:80
+    healthcheck:
+      test: exit $$( curl -so /dev/null --fail http://127.0.0.1:8080 && echo 0 || echo 1 )
+      interval: 30s
+      timeout: 1s
+      retries: 1
+
   back:
     build:
       context: ./back/
