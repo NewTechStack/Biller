@@ -38,7 +38,7 @@ class Bill(Crud, StatusObject):
                 return ret
             data = ret[1]
         data["status"] = 0
-        return self._push(data)
+        return self._push(data, replace=True)
 
     def __provision(self, data):
         if not "prov_amount" in data or not any([isinstance(data["prov_amount"], x) for x in [float, int]]):
