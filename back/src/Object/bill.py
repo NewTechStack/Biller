@@ -174,6 +174,7 @@ class Bill(Crud, StatusObject):
 
     def before_delete(self):
         data = self.get()
+        print('data', data)
         if data[0] is True:
           data = data[1]
         if data is None:
