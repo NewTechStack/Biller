@@ -174,6 +174,8 @@ class Bill(Crud, StatusObject):
 
     def before_delete(self):
         data = self.get()
+        if data[0] is True:
+          data = data[1]
         if "provisions" in data:
             for i in data["provisions"]:
                 self.__status_object_set(2, [Bill(i["provision_id"])])
