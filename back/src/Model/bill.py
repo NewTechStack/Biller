@@ -62,6 +62,8 @@ def bill_exist(cn, nextc):
 
 def bill_edit(cn, nextc):
     err = cn.private['bill'].edit(cn.pr)
+    if err[0] is False:
+      print(err)
     return cn.call_next(nextc, err)
 
 def bill_delete(cn, nextc):
