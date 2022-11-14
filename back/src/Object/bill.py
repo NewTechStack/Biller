@@ -181,9 +181,8 @@ class Bill(Crud, StatusObject):
         if "provisions" in data:
             for i in data["provisions"]:
                 self.__status_object_set(2, [Bill(i["provision_id"])])
-        print(data)
-        if "lines" in data:
-            for i in data["lines"]:
+        if "timesheet" in data:
+            for i in data["timesheet"]:
                 print(i["timesheet_id"])
                 self.__status_object_set(0, [Timesheet(i["timesheet_id"])])
         return [True, data, None]
