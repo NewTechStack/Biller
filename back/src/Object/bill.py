@@ -268,6 +268,7 @@ class Bill(Crud, StatusObject):
 
     def __calc__fees(self, data):
         if "fees" in data:
+            print(data["fees"])
             if (not isinstance(data["fees"], int) and not isinstance(data["fees"], float)) or float(data["fees"]) <= 0.0:
                 return [False, "Invalid fees value, float", 400]
             print(data["price"]["HT"], data["fees"])
