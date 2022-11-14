@@ -132,7 +132,7 @@ class Crud:
             return [False, f"{self.__class__.__name__} '{self.id}' doesn't exist", 404]
         return [True, {}, None]
 
-    def _push(self, data):
+    def _push(self, data, replace = False):
         if self.id is None:
             return [False, "Invalid id", 404]
         data['id'] = self.id
@@ -141,5 +141,5 @@ class Crud:
             data['created_by'] = "test@test.fr"
             if self.status is True:
                 data["status"] = 0
-        res = dict(self.red.insert([data], conflict="update").run())
+        res = dict(self.red.insert([data], conflict="update" if replace is False else "replace").run())
         return self.get()
