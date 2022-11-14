@@ -176,6 +176,7 @@ class Bill(Crud, StatusObject):
         data = self.get()
         if data[0] is True:
           data = data[1]
+        print(data)
         if "provisions" in data:
             for i in data["provisions"]:
                 self.__status_object_set(2, [Bill(i["provision_id"])])
@@ -240,7 +241,7 @@ class Bill(Crud, StatusObject):
         if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
             return [False, f"Invalid price in timesheet: '{timsheet_id}'", 400]
         if d[1]["status"] == 1:
-            return [False, f"Timesheet already in a unpaid bill", 400]
+            return [False, f"Timesheet '{timesheet_id}' already in a unpaid bill", 400]
         if d[1]["status"] == 2:
             return [False, f"Timesheet already in a paid bill", 400]
         if d[1]["status"] != 0:
