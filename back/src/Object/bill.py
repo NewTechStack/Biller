@@ -176,7 +176,8 @@ class Bill(Crud, StatusObject):
         data = self.get()
         if data[0] is True:
           data = data[1]
-        print(data)
+        if data is None:
+          return [True, None, None]
         if "provisions" in data:
             for i in data["provisions"]:
                 self.__status_object_set(2, [Bill(i["provision_id"])])
