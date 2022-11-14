@@ -27,6 +27,7 @@ class StatusObject:
 
     def set_status(self, status):
         self._push({'status': status})
+        return [True, {'status': status}, None]
 
     def status_trigger(self, status):
         return
