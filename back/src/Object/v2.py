@@ -28,7 +28,9 @@ class TimesheetV2():
                 }
             )
         
-        req = req.eq_join(
+        req = req.filter(
+                {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
+            ).eq_join(
                 "user", 
                 self.ru
             ).without(
