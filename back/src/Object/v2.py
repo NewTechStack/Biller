@@ -16,12 +16,10 @@ class TimesheetV2():
             number = 1
         req = self.rt.filter(
                 {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
-            )
-            .eq_join(
+            ).eq_join(
                 "user", 
                 self.ru
-            )
-            .without(
+            ).without(
                 {"right": "id"}
             ).zip().pluck(
                 ["id", "client_folder", "date", "desc", "duration", "price", "first_name", "last_name", "image"]
