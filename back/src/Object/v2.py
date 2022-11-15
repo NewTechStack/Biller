@@ -43,7 +43,7 @@ class TimesheetV2():
             ).eq_join(
                 "client_folder", 
                 self.rf
-            ).group("right").without("right").zip().ungroup().map(
+            ).group("right").without("right").zip().ungroup().skip(page * number).limit(number).map(
                 lambda doc:
                     {
                         "id": doc["group"]["id"], 
@@ -64,5 +64,4 @@ class TimesheetV2():
                 "actual_page": page + 1
             }
         }
-        ret = list(req.skip(page * number).limit(number).run())
-        return [True, {"list": ret, "pagination": pagination}, None]
+        return [True, {"list": list(req.run()), "pagination": pagination}, None]
