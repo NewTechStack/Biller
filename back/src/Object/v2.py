@@ -34,7 +34,6 @@ class TimesheetV2():
                         "timesheets": doc["reduction"]
                     }
             )
-        return [True, list(req.run()), None]
         total = int(req.count().run())
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
