@@ -26,20 +26,7 @@ class TimesheetV2():
             ).eq_join(
                 "client_folder", 
                 self.ru
-            ).group("right").without("right").zip().ungroup().without(
-                {
-                    "group": 
-                        {
-                            "associate": true, 
-                            "autrepartie": true, 
-                            "created_at": true, 
-                            "created_by": true, 
-                            "user_in_charge": true, 
-                            "user_in_charge_price": true, 
-                            "counterpart": true
-                        }
-                }
-            ).map(
+            ).group("right").without("right").zip().ungroup().map(
                 lambda doc:
                     {
                         "id": doc["group"]["id"], 
