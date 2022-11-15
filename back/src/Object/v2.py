@@ -20,6 +20,8 @@ class TimesheetV2():
                 {
                     "client": client_id
                 }
+            ).filter(
+                {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
             )
         if folder_id is not None:
             req = req.filter(
@@ -27,10 +29,10 @@ class TimesheetV2():
                     "folder_id": folder_id
                 }
             )
-        
-        req = req.filter(
-                {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
-            ).eq_join(
+        total = int(
+            req.eq_join("client_folder", self.rf).group("right").without("right").zip().ungroup().count().run()
+        )
+        req = req.eq_join(
                 "user", 
                 self.ru
             ).without(
@@ -48,9 +50,7 @@ class TimesheetV2():
                         "timesheets": doc["reduction"]
                     }
             )
-        total = int(req.count().run())
-#             req.eq_join("client_folder", self.rf).group("right").without("right").zip().ungroup().count().run()
-#         )
+
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
         if max < page + 1:
