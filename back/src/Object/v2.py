@@ -20,7 +20,8 @@ class TimesheetV2():
                 {
                     "client": client_id
                 }
-            ).filter(
+            )
+        req = req.filter(
                 {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
             )
         if folder_id is not None:
