@@ -16,24 +16,27 @@ class TimesheetV2():
             number = 1
         req = self.rf.filter(
                 {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
-            ).eq_join(
-                "user", 
-                self.ru
-            ).without(
-                {"right": "id"}
-            ).zip().pluck(
-                ["id", "client_folder", "date", "desc", "duration", "price", "first_name", "last_name", "image"]
-            ).eq_join(
-                "client_folder", 
-                self.ru
-            ).group("right").without("right").zip().ungroup().map(
-                lambda doc:
-                    {
-                        "id": doc["group"]["id"], 
-                        "name": doc["group"]["name"], 
-                        "timesheets": doc["reduction"]
-                    }
             )
+#             .eq_join(
+#                 "user", 
+#                 self.ru
+#             )
+#             .without(
+#                 {"right": "id"}
+#             ).zip().pluck(
+#                 ["id", "client_folder", "date", "desc", "duration", "price", "first_name", "last_name", "image"]
+#             ).eq_join(
+#                 "client_folder", 
+#                 self.ru
+#             ).group("right").without("right").zip().ungroup().map(
+#                 lambda doc:
+#                     {
+#                         "id": doc["group"]["id"], 
+#                         "name": doc["group"]["name"], 
+#                         "timesheets": doc["reduction"]
+#                     }
+#             )
+        return [True, list(req.run()), None]
         total = int(req.count().run())
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
