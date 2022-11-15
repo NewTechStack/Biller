@@ -41,10 +41,10 @@ class TimesheetV2():
                 }
             ).map(
                 lambda doc:
-                    return {
-                            "id": doc["group"]["id"], 
-                            "name": d["group"]["name"], 
-                            "timesheets": d["reduction"]
+                    {
+                        "id": doc["group"]["id"], 
+                        "name": d["group"]["name"], 
+                        "timesheets": d["reduction"]
                     }
             )
         total = int(req.count().run())
