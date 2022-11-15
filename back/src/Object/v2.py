@@ -23,18 +23,17 @@ class TimesheetV2():
                 {"right": "id"}
             ).zip().pluck(
                 ["id", "client_folder", "date", "desc", "duration", "price", "first_name", "last_name", "image"]
+            ).eq_join(
+                "client_folder", 
+                self.rf
+            ).group("right").without("right").zip().ungroup().map(
+                lambda doc:
+                    {
+                        "id": doc["group"]["id"], 
+                        "name": doc["group"]["name"], 
+                        "timesheets": doc["reduction"]
+                    }
             )
-#                 .eq_join(
-#                 "client_folder", 
-#                 self.ru
-#             ).group("right").without("right").zip().ungroup().map(
-#                 lambda doc:
-#                     {
-#                         "id": doc["group"]["id"], 
-#                         "name": doc["group"]["name"], 
-#                         "timesheets": doc["reduction"]
-#                     }
-#             )
         return [True, list(req.run()), None]
         total = int(req.count().run())
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
