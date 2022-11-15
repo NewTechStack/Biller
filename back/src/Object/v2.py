@@ -13,7 +13,7 @@ class TimesheetV2():
         page -= 1
         if number < 1:
             number = 1
-        self.rt.filter({"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}).eqJoin("client_folder", self.rf).group("right")
+        self.rt.filter({"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}).eq_join("client_folder", self.rf).group("right")
         total = int(req.count().run())
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
