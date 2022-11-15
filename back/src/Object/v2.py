@@ -15,15 +15,16 @@ class TimesheetV2():
         if number < 1:
             number = 1
         req = self.rt.filter(
-                {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"})
-#             ).eq_join(
-#                 "user", 
-#                 self.ru
-#             ).without(
-#                 {"right": "id"}
-#             ).zip().pluck(
-#                 ["id", "client_folder", "date", "desc", "duration", "price", "first_name", "last_name", "image"]
-#             ).eq_join(
+                {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
+            ).eq_join(
+                "user", 
+                self.ru
+            ).without(
+                {"right": "id"}
+            ).zip().pluck(
+                ["id", "client_folder", "date", "desc", "duration", "price", "first_name", "last_name", "image"]
+            )
+#                 .eq_join(
 #                 "client_folder", 
 #                 self.ru
 #             ).group("right").without("right").zip().ungroup().map(
