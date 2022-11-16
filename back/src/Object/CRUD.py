@@ -23,7 +23,7 @@ class StatusObject:
             ret = self.status_trigger(status)
             if not ret[0]:
                 return ret
-        return self.set_status(2)
+        return self.set_status(status)
 
     def set_status(self, status):
         self._push({'status': status})
