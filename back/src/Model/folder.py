@@ -1,5 +1,16 @@
 from Controller.basic import check
 from Object.folder import Folder
+from Object.v2 import FolderV2
+
+def folders_v2(cn, nextc):
+    page = int(cn.get.get('page', 1))
+    number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
+    search = cn.get.get('search', None)
+    client_type = cn.get.get('type', None)
+    email = cn.get.get('email', None)
+    err = FolderV2().get_all(page, number, search, client_type, email)
+    return cn.call_next(nextc, err)
+
 
 def folder_get_all(cn, nextc):
     page = int(cn.get.get('page', 1))
