@@ -15,7 +15,22 @@ class FolderV2():
         if number < 1:
             number = 1
         req = self.rt
+        if email is not None:
+            req = req.filter(
+                {
+                    "email": email
+                }
+            )
+        if client_type is not None:
+            req = req.filter(
+                {
+                    "type": client_type
+                }
+            )
         if search is not None:
+            req = req.filter(lambda doc:
+                doc['name'].match(search)
+            )
             req = req.filter(
                 {
                     "client": client_id
