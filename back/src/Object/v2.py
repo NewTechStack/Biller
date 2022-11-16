@@ -17,9 +17,8 @@ class FolderV2():
         req = self.rt
         if email is not None:
             req = req.filter(
-                {
-                    "email": email
-                }
+                lambda doc:
+                    doc['email'].match(email)
             )
         if client_type is not None:
             req = req.filter(
