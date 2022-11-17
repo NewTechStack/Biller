@@ -13,6 +13,8 @@ class Timesheet(Crud, StatusObject):
 
     def edit(self, data):
         data['id'] = self.id
+        data["client"] = self.id.split("/")[0]
+        data["client_folder"] = data["client"] + "/" + self.id.split("/")[1]
         if "desc" in data:
             data["desc"] = [data["desc"][i:i+30] for i in range(0, len(data["desc"]), 30)]
         return self._push(data)
