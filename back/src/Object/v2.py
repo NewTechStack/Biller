@@ -115,7 +115,7 @@ class TimesheetV2():
         for timesheet in timesheets:
             sum["price"] += timesheet["price"]
             sum["duration"] += timesheet["duration"]
-        return [True, {"list": timehseets, "pagination": pagination}, None]
+        return [True, {"list": timesheets, "sum": sum, "pagination": pagination}, None]
 
     def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime):
         if page < 1:
