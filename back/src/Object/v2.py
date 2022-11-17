@@ -1,4 +1,5 @@
 from .rethink import get_conn, r
+import urllib.parse
 import uuid
 import math
 
@@ -67,12 +68,14 @@ class TimesheetV2():
             number = 1
         req = self.rt
         if client_id is not None:
+            client_id = urllib.parse.unquote(client_id)
             req = req.filter(
                 {
-                    "client": client_id
+                    "client": urllib.parse.unquote(client_id)
                 }
             )
         if folder_id is not None:
+            folder_id = urllib.parse.unquote(folder_id)
             req = req.filter(
                 {
                     "folder_id": folder_id
@@ -138,12 +141,14 @@ class TimesheetV2():
             number = 1
         req = self.rt
         if client_id is not None:
+            client_id = urllib.parse.unquote(client_id)
             req = req.filter(
                 {
-                    "client": client_id
+                    "client": urllib.parse.unquote(client_id)
                 }
             )
         if folder_id is not None:
+            folder_id = urllib.parse.unquote(folder_id)
             req = req.filter(
                 {
                     "folder_id": folder_id
