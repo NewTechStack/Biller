@@ -57,6 +57,57 @@ class TimesheetV2():
         self.rf = get_conn().db("ged").table("folder")
         self.rt = get_conn().db("ged").table("timesheet")
         self.ru = get_conn().db("ged").table("user")
+    
+    def all(self, page, number, client_id, folder_id, stime, etime):
+        if page < 1:
+            page = 1
+        page -= 1
+        if number < 1:
+            number = 1
+        req = self.rt
+        if client_id is not None:
+            req = req.filter(
+                {
+                    "client": client_id
+                }
+            )
+        req = req.filter(
+                {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
+            )
+        if folder_id is not None:
+            req = req.filter(
+                {
+                    "folder_id": folder_id
+                }
+            )
+        total = int(req.count().run())
+        req = self.rt.eq_join(
+            "client_folder", 
+            self.rf
+        ).without(
+            {"right": "id"}
+        ).zip().eq_join(
+            "user",
+            self.ru
+        ).without(
+            {"right": {"id": True, "price": True}}
+        ).zip().pluck(
+            ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name"]
+        )
+        max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
+        max = max + 1 if max == 0 else max
+        if max < page + 1:
+            return [False, "Invalid pagination", 404]
+        pagination = {
+            "total": total,
+            "pages": {
+                "min": 1,
+                "max": max,
+                "per_page": number,
+                "actual_page": page + 1
+            }
+        }
+        return [True, {"list": list(req.run()), "pagination": pagination}, None]
 
     def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime):
         if page < 1:
