@@ -12,9 +12,15 @@ class Timesheet(Crud, StatusObject):
         return [True, {}, None]
 
     def edit(self, data):
-        data['id'] = self.id
-        data["client"] = self.id.split("/")[0]
-        data["client_folder"] = data["client"] + "/" + self.id.split("/")[1]
+        input = {}
+        input['id'] = self.id
+        input["client"] = self.id.split("/")[0]
+        input["client_folder"] = input["client"] + "/" + self.id.split("/")[1]
+        input["date"] = data.get("date", None)
+        input["input"] = data.get("duration", None)
+        input["type"] = data.get("type", None)
+        input["price"] = data.get("price", None)
+        input["status"] = 0
         if "desc" in data:
-            data["desc"] = [data["desc"][i:i+30] for i in range(0, len(data["desc"]), 30)]
-        return self._push(data)
+            input["desc"] = [data["desc"][i:i+30] for i in range(0, len(data["desc"]), 30)]
+        return self._push(input)
