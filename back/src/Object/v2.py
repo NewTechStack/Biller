@@ -95,7 +95,7 @@ class TimesheetV2():
                     doc["date"] <= stime
             )
         total = int(req.count().run())
-        req = self.rt.eq_join(
+        req = req.eq_join(
             "client_folder", 
             self.rf
         ).without(
