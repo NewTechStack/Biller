@@ -61,7 +61,6 @@ class TimesheetV2():
         self.rc = get_conn().db("ged").table("client")
     
     def all(self, page, number, client_id, folder_id, stime, etime):
-        print(stime, etime)
         if page < 1:
             page = 1
         page -= 1
@@ -77,6 +76,7 @@ class TimesheetV2():
             )
         if folder_id is not None:
             folder_id = urllib.parse.unquote(folder_id)
+            print(folder_id)
             req = req.filter(
                 {
                     "folder_id": folder_id
