@@ -17,7 +17,7 @@ class Timesheet(Crud, StatusObject):
         input["client"] = self.id.split("/")[0]
         input["client_folder"] = input["client"] + "/" + self.id.split("/")[1]
         input["date"] = data.get("date", None)
-        input["input"] = data.get("duration", None)
+        input["duration"] = data.get("duration", None)
         input["user"] = data.get("user", None)
         input["price"] = data.get("price", None)
         input["status"] = 0
