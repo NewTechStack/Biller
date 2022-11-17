@@ -61,6 +61,7 @@ class TimesheetV2():
         self.rc = get_conn().db("ged").table("client")
     
     def all(self, page, number, client_id, folder_id, stime, etime):
+        print(stime, etime)
         if page < 1:
             page = 1
         page -= 1
@@ -82,11 +83,13 @@ class TimesheetV2():
                 }
             )
         if stime is not None:
+            stime = int(stime)
             req = req.filter(
                 lambda doc:
                     doc["date"] >= stime
             )
         if etime is not None:
+            etime = int(etime)
             req = req.filter(
                 lambda doc:
                     doc["date"] <= stime
