@@ -162,7 +162,8 @@ class Bill(Crud, StatusObject):
                 "address": data["address"]
             }
         }
-        data["url"] = self.__generate_fact(data)
+        data["url"] = None 
+#         self.__generate_fact(data)
         self.__status_object_set(3, provision_objects)
         self.__status_object_set(1, timesheet_objects)
         return [True, data, None]
