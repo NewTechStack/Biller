@@ -60,7 +60,7 @@ class TimesheetV2():
         self.ru = get_conn().db("ged").table("user")
         self.rc = get_conn().db("ged").table("client")
     
-    def all(self, page, number, client_id, folder_id, stime, etime):
+    def all(self, page, number, client_id, folder_id, stime, etime, status):
         if page < 1:
             page = 1
         page -= 1
@@ -93,6 +93,11 @@ class TimesheetV2():
             req = req.filter(
                 lambda doc:
                     doc["date"] <= stime
+            )
+        if status is not None:
+            status = int(status)
+            req = req.filter(
+               {"status": status}
             )
         total = int(req.count().run())
         req = req.eq_join(
@@ -152,20 +157,28 @@ class TimesheetV2():
             )
         if folder_id is not None:
             folder_id = urllib.parse.unquote(folder_id)
+            print(folder_id)
             req = req.filter(
                 {
-                    "folder_id": folder_id
+                    "client_folder": folder_id
                 }
             )
         if stime is not None:
+            stime = int(stime)
             req = req.filter(
                 lambda doc:
                     doc["date"] >= stime
             )
         if etime is not None:
+            etime = int(etime)
             req = req.filter(
                 lambda doc:
                     doc["date"] <= stime
+            )
+        if status is not None:
+            status = int(status)
+            req = req.filter(
+               {"status": status}
             )
         total = int(
             req.eq_join("client_folder", self.rf).group("right").without("right").zip().ungroup().count().run()
