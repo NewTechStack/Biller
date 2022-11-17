@@ -72,14 +72,21 @@ class TimesheetV2():
                     "client": client_id
                 }
             )
-        req = req.filter(
-                {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
-            )
         if folder_id is not None:
             req = req.filter(
                 {
                     "folder_id": folder_id
                 }
+            )
+        if stime is not None:
+            req = req.filter(
+                lambda doc:
+                    doc["date"] >= stime
+            )
+        if etime is not None:
+            req = req.filter(
+                lambda doc:
+                    doc["date"] <= stime
             )
         total = int(req.count().run())
         req = self.rt.eq_join(
@@ -136,14 +143,21 @@ class TimesheetV2():
                     "client": client_id
                 }
             )
-        req = req.filter(
-                {"client": "193a46bd-10c0-4eec-8390-91b09779ef3f"}
-            )
         if folder_id is not None:
             req = req.filter(
                 {
                     "folder_id": folder_id
                 }
+            )
+        if stime is not None:
+            req = req.filter(
+                lambda doc:
+                    doc["date"] >= stime
+            )
+        if etime is not None:
+            req = req.filter(
+                lambda doc:
+                    doc["date"] <= stime
             )
         total = int(
             req.eq_join("client_folder", self.rf).group("right").without("right").zip().ungroup().count().run()
