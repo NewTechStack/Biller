@@ -79,7 +79,7 @@ class TimesheetV2():
             print(folder_id)
             req = req.filter(
                 {
-                    "folder_id": folder_id
+                    "client_folder": folder_id
                 }
             )
         if stime is not None:
