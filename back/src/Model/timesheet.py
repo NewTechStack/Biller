@@ -3,6 +3,16 @@ from Object.timesheet import Timesheet
 from Object.folder import Folder
 from Object.v2 import TimesheetV2
 
+def timesheets_all(cn, nextc):
+    page = int(cn.get.get('page', 1))
+    number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
+    client_id = cn.get.get('client', None)
+    folder_id = cn.get.get('folder', None)
+    stime = cn.get.get('stime', None)
+    etime = cn.get.get('etime', None)
+    err = TimesheetV2().all(page, number, client_id, folder_id, stime, etime)
+    return cn.call_next(nextc, err)
+
 def timesheets_by_folder(cn, nextc):
     page = int(cn.get.get('page', 1))
     number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
