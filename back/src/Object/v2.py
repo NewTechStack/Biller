@@ -119,7 +119,7 @@ class TimesheetV2():
             "duration": 0
         }
         for timesheet in timesheets:
-            sum["price"] += timesheet["price"]
+            sum["price"] += timesheet["price"] * timesheet["duration"]
             sum["duration"] += timesheet["duration"]
         return [True, {"list": timesheets, "sum": sum, "pagination": pagination}, None]
 
