@@ -57,6 +57,7 @@ class TimesheetV2():
         self.rf = get_conn().db("ged").table("folder")
         self.rt = get_conn().db("ged").table("timesheet")
         self.ru = get_conn().db("ged").table("user")
+        self.rc = get_conn().db("ged").table("client")
     
     def all(self, page, number, client_id, folder_id, stime, etime):
         if page < 1:
@@ -91,8 +92,13 @@ class TimesheetV2():
             self.ru
         ).without(
             {"right": {"id": True, "price": True}}
+        ).zip().eq_join(
+            "client",
+            self.rc
+        ).without(
+            {"right": "id"}
         ).zip().pluck(
-            ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name"]
+            ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang"]
         )
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
