@@ -60,13 +60,20 @@ class TimesheetV2():
         self.ru = get_conn().db("ged").table("user")
         self.rc = get_conn().db("ged").table("client")
     
-    def all(self, page, number, client_id, folder_id, stime, etime, status):
+    def all(self, page, number, client_id, folder_id, stime, etime, status, user):
         if page < 1:
             page = 1
         page -= 1
         if number < 1:
             number = 1
         req = self.rt
+        if user is not None:
+            user = urllib.parse.unquote(client_id)
+            req = req.filter(
+                {
+                    "user": urllib.parse.unquote(user)
+                }
+            )
         if client_id is not None:
             client_id = urllib.parse.unquote(client_id)
             req = req.filter(
@@ -140,13 +147,20 @@ class TimesheetV2():
             sum["duration"] += timesheet["duration"]
         return [True, {"list": timesheets, "sum": sum, "pagination": pagination}, None]
 
-    def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime):
+    def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime, status, user):
         if page < 1:
             page = 1
         page -= 1
         if number < 1:
             number = 1
         req = self.rt
+        if user is not None:
+            user = urllib.parse.unquote(client_id)
+            req = req.filter(
+                {
+                    "user": urllib.parse.unquote(user)
+                }
+            )
         if client_id is not None:
             client_id = urllib.parse.unquote(client_id)
             req = req.filter(
