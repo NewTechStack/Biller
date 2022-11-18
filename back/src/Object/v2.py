@@ -31,7 +31,7 @@ class BillV2():
             ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions"]
         )
         bills = list(req.run())
-        for bill in bill:
+        for bill in bills:
             for timesheet in bill["timesheets"]:
                 timesheet = {
                 "date": timesheet["timestamp"],
