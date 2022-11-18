@@ -261,6 +261,8 @@ class Bill(Crud, StatusObject):
             "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2),
             "activite": d[1]["desc"],
             "user": d[1]["user"],
+            "timestamp": d[1]["date"],
+            "duration": d[1]["duration"],
             "time": str(int(d[1]['duration'])) + "h" + str(int(d[1]['duration'] % 1 * 60)),
             "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y'),
             "rate": self.__currency_format(float(d[1]["price"]))
