@@ -9,7 +9,7 @@ class BillV2():
         self.ru = get_conn().db("ged").table("user")
         self.rb = get_conn().db("ged").table("bill")
         
-    def all(self, page, number, search, client_type, email):
+    def all(self, page, number, client_id, folder_id, stime, etime, status):
         if page < 1:
             page = 1
         page -= 1
