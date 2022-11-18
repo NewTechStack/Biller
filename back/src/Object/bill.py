@@ -21,18 +21,18 @@ class Bill(Crud, StatusObject):
         self.before_delete()
         if not "lang" in data or data["lang"] not in ["fr", "en"]:
             return [False, "Invalid 'lang', 'fr' or 'en' only", 400]
-        if not "type" in data or data["type"] not in ["invoice", "provision"]:
+        if not "bill_type" in data or data["bill_type"] not in ["invoice", "provision"]:
           return [False, "Invalid 'type' of bill", 404]
         if not "TVA" in data or not any([isinstance(data["TVA"], x) for x in [float, int]]):
           return [False, "Invalid 'TVA' float", 400]
         tva = data["TVA"]
         data["TVA"] = float(data["TVA"])
-        if data["type"] == "invoice":
+        if data["bill_type"] == "invoice":
             ret = self.__invoice(data)
             if ret[0] is False:
                 return ret
             data = ret[1]
-        if data["type"] == "provision":
+        if data["bill_type"] == "provision":
             ret = self.__provision(data)
             if ret[0] is False:
                 return ret
@@ -96,7 +96,7 @@ class Bill(Crud, StatusObject):
                 bill_object = Bill(prov_id)
                 bill = bill_object.get()
                 provision_objects.append(bill_object)
-                if bill[1] is None or bill[1]["type"] != "provision":
+                if bill[1] is None or bill[1]["bill_type"] != "provision":
                     return [False, f"Invalid provision id: '{prov_id}'", 404]
                 if bill[1]["status"] in [0, 1]:
                     return [False, f"Unpaid provision", 400]
