@@ -76,7 +76,6 @@ class TimesheetV2():
             )
         if folder_id is not None:
             folder_id = urllib.parse.unquote(folder_id)
-            print(folder_id)
             req = req.filter(
                 {
                     "client_folder": folder_id
@@ -92,7 +91,7 @@ class TimesheetV2():
             etime = int(etime)
             req = req.filter(
                 lambda doc:
-                    doc["date"] <= stime
+                    doc["date"] <= etime
             )
         if status is not None:
             status = int(status)
@@ -157,7 +156,6 @@ class TimesheetV2():
             )
         if folder_id is not None:
             folder_id = urllib.parse.unquote(folder_id)
-            print(folder_id)
             req = req.filter(
                 {
                     "client_folder": folder_id
@@ -167,7 +165,7 @@ class TimesheetV2():
             stime = int(stime)
             req = req.filter(
                 lambda doc:
-                    doc["date"] >= stime
+                    doc["date"] >= etime
             )
         if etime is not None:
             etime = int(etime)
