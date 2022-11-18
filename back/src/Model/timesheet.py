@@ -11,7 +11,8 @@ def timesheets_all(cn, nextc):
     stime = cn.get.get('stime', None)
     etime = cn.get.get('etime', None)
     status = cn.get.get('status', None)
-    err = TimesheetV2().all(page, number, client_id, folder_id, stime, etime, status)
+    user = cn.get.get('user', None)
+    err = TimesheetV2().all(page, number, client_id, folder_id, stime, etime, status, user)
     return cn.call_next(nextc, err)
 
 def timesheets_by_folder(cn, nextc):
@@ -22,7 +23,8 @@ def timesheets_by_folder(cn, nextc):
     stime = cn.get.get('stime', None)
     etime = cn.get.get('etime', None)
     status = cn.get.get('status', None)
-    err = TimesheetV2().grouped_by_folder(page, number, client_id, folder_id, stime, etime, status)
+    user = cn.get.get('user', None)
+    err = TimesheetV2().grouped_by_folder(page, number, client_id, folder_id, stime, etime, status, user)
     return cn.call_next(nextc, err)
 
 def timesheet_get_all(cn, nextc):
