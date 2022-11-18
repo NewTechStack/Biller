@@ -32,6 +32,7 @@ class BillV2():
         )
         bills = list(req.run())
         for bill in bills:
+            t = []
             for timesheet in bill["timesheet"]:
                 timesheet = {
                 "date": timesheet["timestamp"],
@@ -42,6 +43,8 @@ class BillV2():
                 "sum": timesheet["price"] * timesheet["duration"],
                 "user": dict(self.ru.get(timesheet["user"]).pluck(["image", "lang", "first_name", "last_name"]).run())
                 }
+                t.append(timesheet)
+            bill["timesheet"] = t
         return [True, bills, None]
     
 class FolderV2():
