@@ -3,6 +3,46 @@ import urllib.parse
 import uuid
 import math
 
+class BillV2():
+    def __init__(self):
+        self.rt = get_conn().db("ged").table("timesheet")
+        self.ru = get_conn().db("ged").table("user")
+        self.rb = get_conn().db("ged").table("bill")
+        
+    def all(self, page, number, search, client_type, email):
+        if page < 1:
+            page = 1
+        page -= 1
+        if number < 1:
+            number = 1
+        req = self.rt
+        self.rb.eq_join(
+            "client", 
+            self.rc
+        ).without(
+            {"right": {"id": True}}
+        ).zip().eq_join(
+            "client_folder", self.rf
+        ).without(
+            {"right": {"id": True}}
+        ).zip().pluck(
+            ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions"]
+        )
+        bills = list(req.run())
+        for bill in bill:
+            for timesheet in bill["timesheets"]:
+                timesheet = {
+                "date": timesheet["timestamp"],
+                "desc": timsheet["activite"],
+                "duration": timsheet["duration"],
+                "id": timesheet["id"],
+                "price": timesheet["price"],
+                "status": timesheet["status"],
+                "sum": timesheet["price"] * timesheet["duration"],
+                "user": dict(self.ru.get(timesheet["user"]).pluck(["image", "lang", "first_name", "last_name"]).run())
+                }
+        return [True, bills, None]
+    
 class FolderV2():
     def __init__(self):
         self.rf = get_conn().db("ged").table("folder")
