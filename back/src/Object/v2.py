@@ -28,7 +28,7 @@ class BillV2():
         ).without(
             {"right": {"id": True}}
         ).zip().pluck(
-            ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions"]
+            ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions", "bill_type"]
         )
         bills = list(req.run())
         for bill in bills:
