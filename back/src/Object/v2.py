@@ -106,7 +106,7 @@ class TimesheetV2():
                {"status": status}
             )
         total = int(req.count().run())
-        req = req.order_by(index=r.desc('date'))
+        req = req.order_by(r.desc('date'))
         req = req.eq_join(
             "client_folder", 
             self.rf
@@ -193,7 +193,7 @@ class TimesheetV2():
             req = req.filter(
                {"status": status}
             )
-        req = req.order_by(index=r.desc('date'))
+        req = req.order_by(r.desc('date'))
         total = int(
             req.eq_join("client_folder", self.rf).group("right").without("right").zip().ungroup().count().run()
         )
