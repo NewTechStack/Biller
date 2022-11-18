@@ -39,7 +39,6 @@ class BillV2():
                 "duration": timesheet["duration"],
                 "id": timesheet["timesheet_id"],
                 "price": timesheet["price"],
-                "status": timesheet["status"],
                 "sum": timesheet["price"] * timesheet["duration"],
                 "user": dict(self.ru.get(timesheet["user"]).pluck(["image", "lang", "first_name", "last_name"]).run())
                 }
