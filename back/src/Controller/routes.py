@@ -52,6 +52,7 @@ def setuproute(app, call):
     @app.route('/v2/folders',                           ['OPTIONS', 'GET'],          lambda x = None: call([sso_verify_token, folders_v2]))
     @app.route('/v2/timsheet',                          ['OPTIONS', 'GET'],          lambda x = None: call([sso_verify_token, timesheets_all]))
     @app.route('/v2/timsheet/byfolders',                ['OPTIONS', 'GET'],          lambda x = None: call([sso_verify_token, timesheets_by_folder]))
+    @app.route('/v2/bill',                              ['OPTIONS', 'GET'],          lambda x = None: call([sso_verify_token, bills_all]))
 
 
     def base():
