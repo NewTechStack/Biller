@@ -11,13 +11,52 @@ class BillV2():
         self.rc = get_conn().db("ged").table("client")
         self.rf = get_conn().db("ged").table("folder")
         
-    def all(self, page, number, client_id, folder_id, stime, etime, status):
+    def all(self, page, number, client_id, folder_id, stime, etime, status, user):
         if page < 1:
             page = 1
         page -= 1
         if number < 1:
             number = 1
         req = self.rb
+        if user is not None:
+            user = urllib.parse.unquote(user)
+            req = req.filter(
+                {
+                    "user": urllib.parse.unquote(user)
+                }
+            )
+        if client_id is not None:
+            client_id = urllib.parse.unquote(client_id)
+            req = req.filter(
+                {
+                    "client": urllib.parse.unquote(client_id)
+                }
+            )
+        if folder_id is not None:
+            folder_id = urllib.parse.unquote(folder_id)
+            req = req.filter(
+                {
+                    "client_folder": folder_id
+                }
+            )
+        if stime is not None:
+            stime = int(stime)
+            req = req.filter(
+                lambda doc:
+                    doc["date"] >= stime
+            )
+        if etime is not None:
+            etime = int(etime)
+            req = req.filter(
+                lambda doc:
+                    doc["date"] <= etime
+            )
+        if status is not None:
+            status = int(status)
+            req = req.filter(
+               {"status": status}
+            )
+        req = req.order_by(r.desc('date'))
         req = req.eq_join(
             "client", 
             self.rc
@@ -30,8 +69,17 @@ class BillV2():
         ).zip().pluck(
             ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions", "bill_type"]
         )
+        total = int(req.count().run())
         bills = list(req.run())
+        sum = {
+            "HT": 0,
+            "taxes": 0,
+            "total": 0
+        }
         for bill in bills:
+            sum["HT"] += bill["price"]["HT"]
+            sum["taxes"] += bill["price"]["taxes"]
+            sum["total"] += bill["price"]["total"]
             t = []
             for timesheet in bill["timesheet"]:
                 timesheet = {
@@ -45,7 +93,20 @@ class BillV2():
                 }
                 t.append(timesheet)
             bill["timesheet"] = t
-        return [True, bills, None]
+        max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
+        max = max + 1 if max == 0 else max
+        if max < page + 1:
+            return [False, "Invalid pagination", 404]
+        pagination = {
+            "total": total,
+            "pages": {
+                "min": 1,
+                "max": max,
+                "per_page": number,
+                "actual_page": page + 1
+            }
+        }
+        return [True, {"list": bills, "sum": sum, "pagination": pagination}, None]
     
 class FolderV2():
     def __init__(self):
