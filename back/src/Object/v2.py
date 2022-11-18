@@ -35,8 +35,8 @@ class BillV2():
             for timesheet in bill["timesheet"]:
                 timesheet = {
                 "date": timesheet["timestamp"],
-                "desc": timsheet["activite"],
-                "duration": timsheet["duration"],
+                "desc": timesheet["activite"],
+                "duration": timesheet["duration"],
                 "id": timesheet["id"],
                 "price": timesheet["price"],
                 "status": timesheet["status"],
