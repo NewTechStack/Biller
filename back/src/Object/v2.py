@@ -31,6 +31,7 @@ class BillV2():
             ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions"]
         )
         bills = list(req.run())
+        return [True, bills, None]
         for bill in bills:
             print(bills)
             for timesheet in bill["timesheet"]:
