@@ -37,7 +37,7 @@ class BillV2():
                 "date": timesheet["timestamp"],
                 "desc": timesheet["activite"],
                 "duration": timesheet["duration"],
-                "id": timesheet["id"],
+                "id": timesheet["timesheet_id"],
                 "price": timesheet["price"],
                 "status": timesheet["status"],
                 "sum": timesheet["price"] * timesheet["duration"],
