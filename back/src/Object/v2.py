@@ -32,6 +32,7 @@ class BillV2():
         )
         bills = list(req.run())
         for bill in bills:
+            print(bills)
             for timesheet in bill["timesheet"]:
                 timesheet = {
                 "date": timesheet["timestamp"],
