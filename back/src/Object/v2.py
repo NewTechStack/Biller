@@ -17,8 +17,8 @@ class BillV2():
         page -= 1
         if number < 1:
             number = 1
-        req = self.rt
-        self.rb.eq_join(
+        req = self.rb
+        req = req.eq_join(
             "client", 
             self.rc
         ).without(
