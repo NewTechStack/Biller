@@ -68,7 +68,7 @@ class TimesheetV2():
             number = 1
         req = self.rt
         if user is not None:
-            user = urllib.parse.unquote(client_id)
+            user = urllib.parse.unquote(user)
             req = req.filter(
                 {
                     "user": urllib.parse.unquote(user)
@@ -155,7 +155,7 @@ class TimesheetV2():
             number = 1
         req = self.rt
         if user is not None:
-            user = urllib.parse.unquote(client_id)
+            user = urllib.parse.unquote(user)
             req = req.filter(
                 {
                     "user": urllib.parse.unquote(user)
