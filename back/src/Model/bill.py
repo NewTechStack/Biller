@@ -10,7 +10,8 @@ def bills_all(cn, nextc):
     stime = cn.get.get('stime', None)
     etime = cn.get.get('etime', None)
     status = cn.get.get('status', None)
-    err = BillV2().all(page, number, client_id, folder_id, stime, etime, status)
+    user = cn.get.get('user', None)
+    err = BillV2().all(page, number, client_id, folder_id, stime, etime, status, user)
     return cn.call_next(nextc, err)
 
 def bill_get_all(cn, nextc):
