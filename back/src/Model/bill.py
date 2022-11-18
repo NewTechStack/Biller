@@ -1,5 +1,18 @@
 from Controller.basic import check
 from Object.bill import Bill
+from Object.v2 import BillV2
+
+def bills_all(cn, nextc):
+    page = int(cn.get.get('page', 1))
+    number = int(cn.get.get('number', 2)) if 'page' in cn.get else 2
+    client_id = cn.get.get('client', None)
+    folder_id = cn.get.get('folder', None)
+    stime = cn.get.get('stime', None)
+    etime = cn.get.get('etime', None)
+    status = cn.get.get('status', None)
+    user = cn.get.get('user', None)
+    err = TimesheetV2().all(page, number, client_id, folder_id, stime, etime, status, user)
+    return cn.call_next(nextc, err)
 
 def bill_get_all(cn, nextc):
     page = int(cn.get.get('page', 1))
