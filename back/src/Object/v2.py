@@ -349,7 +349,7 @@ class TimesheetV2():
                     {
                         "id": associate["id"],
                         "price": associate["price"],
-                        "details": dict(self.rc.get(associate["id"]).run())
+                        "details": dict(self.ru.get(associate["id"]).run())
                     }
                 )
             folder["associates"] = associates
