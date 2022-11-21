@@ -68,6 +68,13 @@ services:
       - dbnet
       - proxy
 
+  qr:
+    build:
+      context: ./swiss_qr/
+      dockerfile: Dockerfile
+    expose:
+      - 8080
+
   template:
     build:
       context: ./document/
@@ -82,10 +89,7 @@ services:
       minio:
         condition: "service_started"
     networks:
-      - proxy
       - dbnet
-    ports:
-      - 8082:8080
     healthcheck:
       test: exit $$( curl -so /dev/null --fail http://127.0.0.1:8080 && echo 0 || echo 1 )
       interval: 30s

@@ -1,0 +1,6 @@
+bottle==0.12.18
+iso3166==2.1.1
+python-stdnum==1.18
+qrbill==1.0.0
+qrcode==7.3.1
+svgwrite==1.4.3
