@@ -72,7 +72,7 @@ class Bill(Crud, StatusObject):
                 "address": data["address"]
             }
         }
-        data["url"] = self.__generate_fact(data)
+        data["url"] = None #self.__generate_fact(data)
         return [True, data, None]
 
     def __invoice(self, data):
@@ -162,8 +162,7 @@ class Bill(Crud, StatusObject):
                 "address": data["address"]
             }
         }
-        data["url"] = None 
-#         self.__generate_fact(data)
+        data["url"] = None #self.__generate_fact(data)
         self.__status_object_set(3, provision_objects)
         self.__status_object_set(1, timesheet_objects)
         return [True, data, None]
@@ -209,7 +208,7 @@ class Bill(Crud, StatusObject):
                lambda bill: bill["status"] >= 2
             ).count().run()))
             data["template"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
-            data["url"] = self.__generate_fact(data)
+            data["url"] = None #self.__generate_fact(data)
         self._push(data)
         return [True, data, None]
 
