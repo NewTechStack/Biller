@@ -74,6 +74,8 @@ services:
       dockerfile: Dockerfile
     expose:
       - 8080
+    networks:
+      - dbnet
 
   template:
     build:
