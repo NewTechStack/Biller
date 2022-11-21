@@ -81,18 +81,19 @@ class BillV2():
             sum["taxes"] += bill["price"]["taxes"]
             sum["total"] += bill["price"]["total"]
             t = []
-            for timesheet in bill["timesheet"]:
-                timesheet = {
-                "date": timesheet["timestamp"],
-                "desc": timesheet["activite"],
-                "duration": timesheet["duration"],
-                "id": timesheet["timesheet_id"],
-                "price": timesheet["price"] / timesheet["duration"],
-                "sum": timesheet["price"],
-                "user": dict(self.ru.get(timesheet["user"]).pluck(["image", "lang", "first_name", "last_name"]).run())
-                }
-                t.append(timesheet)
-            bill["timesheet"] = t
+            if "timesheet" in bill:
+                for timesheet in bill["timesheet"]:
+                    timesheet = {
+                    "date": timesheet["timestamp"],
+                    "desc": timesheet["activite"],
+                    "duration": timesheet["duration"],
+                    "id": timesheet["timesheet_id"],
+                    "price": timesheet["price"] / timesheet["duration"],
+                    "sum": timesheet["price"],
+                    "user": dict(self.ru.get(timesheet["user"]).pluck(["image", "lang", "first_name", "last_name"]).run())
+                    }
+                    t.append(timesheet)
+                bill["timesheet"] = t
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
         if max < page + 1:
