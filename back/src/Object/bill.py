@@ -188,6 +188,10 @@ class Bill(Crud, StatusObject):
         return [True, data, None]
 
     def status_trigger(self, status):
+        ret = self.get()
+        if ret[1] is None:
+            retun [False, "error", 500]
+        data = ret[1]
         if status == 2:
             if "provisions" in data:
                 for i in data["provisions"]:
@@ -197,10 +201,6 @@ class Bill(Crud, StatusObject):
                     self.__status_object_set(2, [Timesheet(i["timesheet_id"])])
         if status != 1:
             return
-        ret = self.get()
-        if ret[1] is None:
-            retun [False, "error", 500]
-        data = ret[1]
         if "template" in data:
             data["template"]["name"] = data["template"]["name"].replace("_preview", "")
             data["template"]["bucket"] = "files"
