@@ -285,13 +285,13 @@ class TimesheetV2():
             stime = int(stime)
             req = req.filter(
                 lambda doc:
-                    doc["date"] >= etime
+                    doc["date"] >= stime
             )
         if etime is not None:
             etime = int(etime)
             req = req.filter(
                 lambda doc:
-                    doc["date"] <= stime
+                    doc["date"] <= etime
             )
         if status is not None:
             status = int(status)
