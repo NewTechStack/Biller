@@ -341,15 +341,15 @@ class TimesheetV2():
             for ts in folder["timesheets"]:
                 folder["sum"]["duration"] += ts["duration"]
                 folder["sum"]["price"] += ts["duration"] * ts["price"]
-            folder["client"] = dict(self.rc.get(folder["client"]).run())
-            folder["user_in_charge"]["details"] = dict(self.ru.get(folder["user_in_charge"]["id"]).run())
+            folder["client"] = dict(self.rc.get(folder["client"]).pluck(["id", "name_1", "name_2", "type", "lang"]).run())
+            folder["user_in_charge"]["details"] = dict(self.ru.get(folder["user_in_charge"]["id"]).pluck(["first_name", "last_name", "image"]).run())
             associates = []
             for associate in folder["associates"]:
                 associates.append(
                     {
                         "id": associate["id"],
                         "price": associate["price"],
-                        "details": dict(self.ru.get(associate["id"]).run())
+                        "details": dict(self.ru.get(associate["id"]).pluck(["first_name", "last_name", "image"]).run())
                     }
                 )
             folder["associates"] = associates
