@@ -324,6 +324,21 @@ class TimesheetV2():
         max = max + 1 if max == 0 else max
         if max < page + 1:
             return [False, "Invalid pagination", 404]
+        folders = list(req.run())
+        sum = {
+            "price": 0,
+            "duration": 0
+        }
+        for folder in folders:
+            folder["sum"] = {
+            "duration": 0,
+            "price": 0
+            }
+            for ts in folder["timesheets"]:
+                folder["sum"]["duration"] += ts["duration"]
+                folder["sum"]["price"] += ts["duration"] * ts["price"]
+            sum["duration"] += folder["sum"]["duration"]
+            sum["price"] += folder["sum"]["price"]
         pagination = {
             "total": total,
             "pages": {
@@ -333,4 +348,4 @@ class TimesheetV2():
                 "actual_page": page + 1
             }
         }
-        return [True, {"list": list(req.run()), "pagination": pagination}, None]
+        return [True, {"list": folders, "sum": sum, "pagination": pagination}, None]
