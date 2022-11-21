@@ -25,6 +25,8 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import projectFunctions from "../../tools/project_functions";
 import PQueue from "p-queue";
 
+const custom_style = {fontWeight:700}
+
 export default function Team_List(props) {
 
     const user_image_upload = React.createRef()
@@ -449,7 +451,7 @@ export default function Team_List(props) {
                                         }}
                                     />
                                 </div>
-                                <div className="col-lg-6 mb-1">
+                                {/*<div className="col-lg-6 mb-1">
                                     <Typography variant="subtitle1" style={{fontSize:14,color:"#616161"}}>Téléphone</Typography>
                                     <TextField
                                         type={"text"}
@@ -469,32 +471,30 @@ export default function Team_List(props) {
                                             }
                                         }}
                                     />
-                                </div>
-                            </div>
-                        <div className="row mt-1">
-                                <div className="col-lg-6 mb-1">
-                                    <Typography variant="subtitle1" style={{fontSize:14,color:"#616161"}}>Taux horaire</Typography>
-                                    <TextField
-                                        type={"number"}
-                                        variant="outlined"
-                                        value={newUserPrice}
-                                        onChange={(e) =>
-                                            setNewUserPrice(e.target.value)
+                                </div>*/}
+                            <div className="col-lg-6 mb-1">
+                                <Typography variant="subtitle1" style={{fontSize:14,color:"#616161"}}>Taux horaire</Typography>
+                                <TextField
+                                    type={"number"}
+                                    variant="outlined"
+                                    value={newUserPrice}
+                                    onChange={(e) =>
+                                        setNewUserPrice(e.target.value)
+                                    }
+                                    style={{width: "100%"}}
+                                    size="small"
+                                    InputLabelProps={{
+                                        shrink: false,
+                                        style: {
+                                            color: "black",
+                                            fontSize: 16
                                         }
-                                        style={{width: "100%"}}
-                                        size="small"
-                                        InputLabelProps={{
-                                            shrink: false,
-                                            style: {
-                                                color: "black",
-                                                fontSize: 16
-                                            }
-                                        }}
-                                        InputProps={{
-                                            endAdornment: <InputAdornment position="end">CHF/h</InputAdornment>,
-                                        }}
-                                    />
-                                </div>
+                                    }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">CHF/h</InputAdornment>,
+                                    }}
+                                />
+                            </div>
                             </div>
                     </div>
                 </DialogContent>
@@ -536,7 +536,7 @@ export default function Team_List(props) {
 
                 >
                     <DialogTitle disableTypography id="form-dialog-title">
-                        <Typography variant="h6" color="primary" style={{fontWeight:700}}>{toUpdateUser.last_name + " " + toUpdateUser.first_name}</Typography>
+                        <Typography variant="h6" color="primary" style={custom_style} >{toUpdateUser.last_name + " " + toUpdateUser.first_name}</Typography>
                         <IconButton
                             aria-label="close"
                             style={{
@@ -641,7 +641,7 @@ export default function Team_List(props) {
                                             }}
                                         />
                                     </div>
-                                    <div className="col-lg-6 mb-1">
+                                    {/*<div className="col-lg-6 mb-1">
                                         <Typography variant="subtitle1" style={{fontSize:14,color:"#616161"}}>Téléphone</Typography>
                                         <TextField
                                             type={"text"}
@@ -664,9 +664,7 @@ export default function Team_List(props) {
                                                 }
                                             }}
                                         />
-                                    </div>
-                                </div>
-                                <div className="row mt-1">
+                                    </div>*/}
                                     <div className="col-lg-6 mb-1">
                                         <Typography variant="subtitle1" style={{fontSize:14,color:"#616161"}}>Taux horaire</Typography>
                                         <TextField
