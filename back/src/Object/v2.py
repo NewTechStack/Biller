@@ -316,8 +316,11 @@ class TimesheetV2():
             ).group("right").without("right").zip().ungroup().skip(page * number).limit(number).map(
                 lambda doc:
                     {
-                        "id": doc["group"]["id"], 
-                        "name": doc["group"]["name"], 
+                        "id": doc["group"]["id"],
+                        "client": doc["group"]["id"].split('/')[0],
+                        "associates": doc["group"]["associate"],
+                        "name": doc["group"]["name"],
+                        "user_in_chage": { "id": doc["grup"]["user_in_charge"], "price": doc["group"]["user_in_charge_price"] },
                         "timesheets": doc["reduction"]
                     }
             )
