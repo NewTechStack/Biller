@@ -341,6 +341,18 @@ class TimesheetV2():
             for ts in folder["timesheets"]:
                 folder["sum"]["duration"] += ts["duration"]
                 folder["sum"]["price"] += ts["duration"] * ts["price"]
+            folder["client"] = dict(self.rc.get(folder["client"]).run())
+            folder["user_in_charge"]["details"] = dict(self.ru.get(folder["user_in_charge"]["id"]).run())
+            associates = []
+            for associate in folder["associates"]:
+                associates.append(
+                    {
+                        "id": associate["id"],
+                        "price": associate["price"],
+                        "details": dict(self.rc.get(associate["id"]).run())
+                    }
+                )
+            folder["associates"] = associates
             sum["duration"] += folder["sum"]["duration"]
             sum["price"] += folder["sum"]["price"]
         pagination = {
