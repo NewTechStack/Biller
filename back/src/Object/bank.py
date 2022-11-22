@@ -2,7 +2,7 @@ from .CRUD import Crud
 
 class Bank(Crud):
     def __init__(self, id = None):
-        super().__init__(id, 'user')
+        super().__init__(id, 'bank')
 
     def edit(self, internal_name, name, benef, iban, clearing, bic):
         data = {
