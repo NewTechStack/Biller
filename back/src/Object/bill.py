@@ -253,7 +253,7 @@ class Bill(Crud, StatusObject):
             return [False, f"Timesheet error", 500]
         price_HT =  self.__HT_price(d[1]["price"] * d[1]["duration"])
         taxes = self.__taxe(price_HT, data["TVA"])
-        user = User().get(d[1]["user"])[1]
+        user = User(d[1]["user"]).get()[1]
         if user is None:
             user = "/"
         else:
