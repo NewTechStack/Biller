@@ -1,6 +1,7 @@
 from .CRUD import Crud, StatusObject
 from .timesheet import Timesheet
 from .folder import Folder
+from .user import User
 import requests
 import uuid
 from datetime import datetime
@@ -252,6 +253,11 @@ class Bill(Crud, StatusObject):
             return [False, f"Timesheet error", 500]
         price_HT =  self.__HT_price(d[1]["price"] * d[1]["duration"])
         taxes = self.__taxe(price_HT, data["TVA"])
+        user = User().get(d[1]["user"])[1]
+        if user is None:
+            user = "/"
+        else:
+            user = f"{user['last_name']} {user['first_name']}"
         line = {
             "timesheet_id": timsheet_id,
             "price_HT": round(price_HT, 2),
@@ -260,7 +266,7 @@ class Bill(Crud, StatusObject):
             "TVA": data["TVA"],
             "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2),
             "activite": d[1]["desc"],
-            "user": d[1]["user"],
+            "user": user,
             "timestamp": d[1]["date"],
             "duration": d[1]["duration"],
             "time": str(int(d[1]['duration'])) + "h" + str(int(d[1]['duration'] % 1 * 60)),
