@@ -67,7 +67,7 @@ class BillV2():
         ).without(
             {"right": {"id": True}}
         ).zip().pluck(
-            ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions", "bill_type"]
+            ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions", "bill_type", "url"]
         )
         total = int(req.count().run())
         bills = list(req.run())
