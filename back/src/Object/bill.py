@@ -96,7 +96,7 @@ class Bill(Crud, StatusObject):
                 bill_object = Bill(prov_id)
                 bill = bill_object.get()
                 provision_objects.append(bill_object)
-                print(bill, prov_id)
+                print(bill[1] is None, bill[1]["bill_type"] != "provision", bill[1]["bill_type"])
                 if bill[1] is None or bill[1]["bill_type"] != "provision":
                     return [False, f"Invalid provision id: '{prov_id}'", 404]
                 if bill[1]["status"] in [0, 1]:
