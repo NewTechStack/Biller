@@ -12,7 +12,7 @@ def bank_get_all(cn, nextc):
 
 def bank_new(cn, nextc):
     cn.private['ged_bank'] = Bank()
-    err = cn.private['client'].new()
+    err = cn.private['ged_bank'].new()
     return cn.call_next(nextc, err)
 
 def bank_set_by_id(cn, nextc):
