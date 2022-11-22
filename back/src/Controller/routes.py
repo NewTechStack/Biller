@@ -52,7 +52,7 @@ def setuproute(app, call):
     @app.route('/banks',                                ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, bank_get_all])                                                                                                               )
     @app.route('/bank/<>',                              ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, bank_set_by_id, bank_get])                                                                                                   )
     @app.route('/bank/<>',                              ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, bank_set_by_id, bank_edit])                                                                                                  )
-    @app.route('/bank/<>',                              ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, bank_set_by_id, bank_exist, bank_delete]) 
+    @app.route('/bank/<>',                              ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, bank_set_by_id, bank_exist, bank_delete])) 
     
     @app.route('/v2/folders',                           ['OPTIONS', 'GET'],          lambda x = None: call([sso_verify_token, folders_v2]))
     @app.route('/v2/timsheet',                          ['OPTIONS', 'GET'],          lambda x = None: call([sso_verify_token, timesheets_all]))
