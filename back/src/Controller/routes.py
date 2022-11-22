@@ -51,6 +51,7 @@ def setuproute(app, call):
     @app.route('/client/<>/folder/<>/bill/<>/status',   ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, client_set_by_id, client_exist, folder_set_by_id, folder_exist, bill_set_by_id, bill_exist, bill_change_status])             )
     
     @app.route('/banks',                                ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, bank_get_all])                                                                                                               )
+    @app.route('/client',                               ['OPTIONS', 'POST'],          lambda x = None: call([sso_verify_token, bank_new, bank_edit])                                                                                                    )
     @app.route('/bank/<>',                              ['OPTIONS', 'GET'],           lambda x = None: call([sso_verify_token, bank_set_by_id, bank_get])                                                                                                   )
     @app.route('/bank/<>',                              ['OPTIONS', 'PUT'],           lambda x = None: call([sso_verify_token, bank_set_by_id, bank_edit])                                                                                                  )
     @app.route('/bank/<>',                              ['OPTIONS', 'DELETE'],        lambda x = None: call([sso_verify_token, bank_set_by_id, bank_exist, bank_delete])) 
