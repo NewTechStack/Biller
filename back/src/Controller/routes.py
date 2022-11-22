@@ -5,6 +5,7 @@ from Model.timesheet import *
 from Model.sso import *
 from Model.timesheet import *
 from Model.bill import *
+from Model.bank import *
 
 def setuproute(app, call):
     @app.route('/sso',                                  ['OPTIONS', 'GET'],           lambda x = None: call([sso_url])                                                                                                                                      )
