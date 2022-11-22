@@ -81,18 +81,19 @@ class BillV2():
             sum["taxes"] += bill["price"]["taxes"]
             sum["total"] += bill["price"]["total"]
             t = []
-            for timesheet in bill["timesheet"]:
-                timesheet = {
-                "date": timesheet["timestamp"],
-                "desc": timesheet["activite"],
-                "duration": timesheet["duration"],
-                "id": timesheet["timesheet_id"],
-                "price": timesheet["price"] / timesheet["duration"],
-                "sum": timesheet["price"],
-                "user": dict(self.ru.get(timesheet["user"]).pluck(["image", "lang", "first_name", "last_name"]).run())
-                }
-                t.append(timesheet)
-            bill["timesheet"] = t
+            if "timesheet" in bill:
+                for timesheet in bill["timesheet"]:
+                    timesheet = {
+                    "date": timesheet["timestamp"],
+                    "desc": timesheet["activite"],
+                    "duration": timesheet["duration"],
+                    "id": timesheet["timesheet_id"],
+                    "price": timesheet["price"] / timesheet["duration"],
+                    "sum": timesheet["price"],
+                    "user": dict(self.ru.get(timesheet["user"]).pluck(["image", "lang", "first_name", "last_name"]).run())
+                    }
+                    t.append(timesheet)
+                bill["timesheet"] = t
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
         if max < page + 1:
@@ -315,8 +316,11 @@ class TimesheetV2():
             ).group("right").without("right").zip().ungroup().skip(page * number).limit(number).map(
                 lambda doc:
                     {
-                        "id": doc["group"]["id"], 
-                        "name": doc["group"]["name"], 
+                        "id": doc["group"]["id"],
+                        "client": doc["group"]["id"].split('/')[0],
+                        "associates": doc["group"]["associate"],
+                        "name": doc["group"]["name"],
+                        "user_in_charge": { "id": doc["group"]["user_in_charge"], "price": doc["group"]["user_in_charge_price"] },
                         "timesheets": doc["reduction"]
                     }
             )
@@ -337,6 +341,18 @@ class TimesheetV2():
             for ts in folder["timesheets"]:
                 folder["sum"]["duration"] += ts["duration"]
                 folder["sum"]["price"] += ts["duration"] * ts["price"]
+            folder["client"] = dict(self.rc.get(folder["client"]).pluck(["id", "name_1", "name_2", "type", "lang"]).run())
+            folder["user_in_charge"]["details"] = dict(self.ru.get(folder["user_in_charge"]["id"]).pluck(["first_name", "last_name", "image"]).run())
+            associates = []
+            for associate in folder["associates"]:
+                associates.append(
+                    {
+                        "id": associate["id"],
+                        "price": associate["price"],
+                        "details": dict(self.ru.get(associate["id"]).pluck(["first_name", "last_name", "image"]).run())
+                    }
+                )
+            folder["associates"] = associates
             sum["duration"] += folder["sum"]["duration"]
             sum["price"] += folder["sum"]["price"]
         pagination = {
