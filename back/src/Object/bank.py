@@ -3,6 +3,10 @@ from .CRUD import Crud
 class Bank(Crud):
     def __init__(self, id = None):
         super().__init__(id, 'bank')
+    
+    def new(self):
+        self.id = str(uuid.uuid4())
+        return [True, {}, None]
 
     def edit(self, internal_name, name, benef, iban, clearing, bic):
         data = {
