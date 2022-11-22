@@ -10,6 +10,11 @@ def bank_get_all(cn, nextc):
     err = Bank().get_all(page, number, cn.pr["filter"], cn.pr['exclude'])
     return cn.call_next(nextc, err)
 
+def client_new(cn, nextc):
+    cn.private['ged_bank'] = Bank()
+    err = cn.private['client'].new()
+    return cn.call_next(nextc, err)
+
 def bank_set_by_id(cn, nextc):
     cn.private['ged_bank'] = Bank(cn.rt['bank'])
     err = [True, {}, None]
