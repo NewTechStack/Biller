@@ -4,6 +4,7 @@ from rethinkdb import RethinkDB
 dbs = {
     "ged":
        [
+        "bank",
         "user",
         "client",
         "folder",
