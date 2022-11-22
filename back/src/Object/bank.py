@@ -1,4 +1,5 @@
 from .CRUD import Crud
+import uuid
 
 class Bank(Crud):
     def __init__(self, id = None):
