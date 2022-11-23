@@ -187,7 +187,7 @@ class Bill(Crud, StatusObject):
                     {
                         "name": data["address"][0],
                         "line1": data["address"][1],
-                        "line2": data["address"][2:],
+                        "line2": data["address"][2],
                     }, 
                     data["lang"], 
                     data["price"]["total"] - sum(t["price"] for t in data["provisions"]) , 
