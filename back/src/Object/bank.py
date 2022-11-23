@@ -25,7 +25,7 @@ class Bank(Crud):
             data['clearing'] = clearing
         if bic is not None:
             data['bic'] = bic
-        if bank_type is not None 
+        if bank_type is not None:
             if not isinstance(bank_type, list) or any([x not in ["provision", "invoice"] for x in bank_type]):
                 return [False, "type should be a list of ['provision', 'invoice']", 400]
             data['type'] = bank_type
