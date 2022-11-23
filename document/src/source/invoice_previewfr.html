@@ -126,20 +126,22 @@
         {{total_ttc|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
       </b>
     </div>
-
-<div style="position:absolute;top:7in;left:0.91in;width:4.00in;line-height:0.21in; margin-top:{{ns.top}}in;">
-  Banque : {{bank.name}} <br/>
-  Bénéficiaire : {{bank.benef.name}}<br/>
-  IBAN : <b>{{bank.iban}}</b><br/>
-  Clearing : {{bank.clearing}}<br/>
-  BIC/Swif : {{bank.bic}}<br/>
-  REF. : <b>Facture #{{num}}</b><br/>
-  Délai de paiement :  {{before}} jours net<br/>
-  <br/>
-</div>
-<div style="position:absolute;top:8.65in;left:0.8in;margin-top:{{ns.top}}in; z-index: -1;">
-  {{ qr }}
-</div>
+{% if qr is none %}
+  <div style="position:absolute;top:8in;left:0.91in;width:4.00in;line-height:0.21in; margin-top:{{ns.top}}in;">
+    Banque : {{bank.name}} <br/>
+    Bénéficiaire : {{bank.benef.name}}<br/>
+    IBAN : <b>{{bank.iban}}</b><br/>
+    Clearing : {{bank.clearing}}<br/>
+    BIC/Swif : {{bank.bic}}<br/>
+    REF. : <b>Facture #{{num}}</b><br/>
+    Délai de paiement :  {{before}} jours net<br/>
+    <br/>
+  </div>
+{%else %}
+  <div style="position:absolute;top:8in;left:0.8in;margin-top:{{ns.top}}in;">
+    {{ qr }}
+  </div>
+{% endif %}
 </body>
 <STYLE>
 
