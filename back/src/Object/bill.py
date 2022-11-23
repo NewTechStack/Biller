@@ -342,19 +342,13 @@ class Bill(Crud, StatusObject):
         payload = json.dumps({
           "creditor": {
             "name": "name",
-            "street": "street",
-            "house_num": "house_n",
-            "pcode": "postcode",
-            "city": "city",
-            "country": "CH"
+            "line1": "street",
+            "line2": "house_n",
           },
           "debtor": {
             "name": "name",
-            "street": "street",
-            "house_num": "house_n",
-            "pcode": "postcode",
-            "city": "city",
-            "country": "CH"
+            "line1": "street",
+            "line2": "house_n",
           },
           "language": "fr",
           "currency": "CHF",
