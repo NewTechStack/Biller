@@ -336,7 +336,7 @@ class Bill(Crud, StatusObject):
                 data["price"]["HT"] -= price
         return [True, data, None]
    
-    def swiss_qr(self, data):
+    def swiss_qr(self, creditor, debtor, lang, amount, iban, addi):
         url = "http://qr:8080/generate/svg"
 
         payload = json.dumps({
@@ -360,8 +360,7 @@ class Bill(Crud, StatusObject):
           "currency": "CHF",
           "amount": 10000,
           "account": "CH9580808001170939132",
-          "reference_number": "210000000003139471430009017",
-          "additional_information": "test",
+          "additional_information": addi,
         })
         headers = {
           'Content-Type': 'application/json'
