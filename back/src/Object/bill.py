@@ -27,10 +27,6 @@ class Bill(Crud, StatusObject):
           return [False, "Invalid 'type' of bill", 404]
         if not "TVA" in data or not any([isinstance(data["TVA"], x) for x in [float, int]]):
           return [False, "Invalid 'TVA' float or int", 400]
-        if not "bank" in data or not isinstance(data["bank"], str):
-          return [False, "Invalid 'bank' str", 400]
-        if not "before_payment" in data or not isinstance(data["before_payment"], int):
-          return [False, "Invalid 'before_payment' int", 400]
         tva = data["TVA"]
         data["TVA"] = float(data["TVA"])
         if data["bill_type"] == "invoice":
@@ -88,9 +84,13 @@ class Bill(Crud, StatusObject):
             return [False, f"Invalid folder id: '{folder_id}'", 404]
         if not "timesheet" in data or not isinstance(data["timesheet"], list) or not all([isinstance(x, str) for x in data['timesheet']]):
             return [False, "Invalid 'timesheet' list", 400]
+        if not "bank" in data or not isinstance(data["bank"], str):
+          return [False, "Invalid 'bank' str", 400]
+        if not "before_payment" in data or not isinstance(data["before_payment"], int):
+          return [False, "Invalid 'before_payment' int", 400]
         bank = Bank(data["bank"]).get()
         if bank[1] is None:
-            return [False, f"Invalid bank id: '{folder_id}'", 404]
+            return [False, f"Invalid bank id: '{data['bank']}'", 404]
         timesheets = data["timesheet"]
         if len(timesheets) == 0:
             return [False, "Invalid 'timsheet' list", 400]
