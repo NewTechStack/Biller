@@ -161,7 +161,8 @@ class Bill(Crud, StatusObject):
 
                 "total_ttc": self.__currency_format(data["price"]["total"] - sum(t["price"] for t in data["provisions"])),
                 "banq": data["banq"],
-                "address": data["address"]
+                "address": data["address"],
+                "qr": self.swiss_qr(data)
             }
         }
         data["url"] = self.__generate_fact(data)
@@ -318,3 +319,39 @@ class Bill(Crud, StatusObject):
                 }
                 data["price"]["HT"] -= price
         return [True, data, None]
+   
+    def swiss_qr(self, data) {
+        url = "http://qr:8080/generate/svg"
+
+        payload = json.dumps({
+          "creditor": {
+            "name": "name",
+            "street": "street",
+            "house_num": "house_n",
+            "pcode": "postcode",
+            "city": "city",
+            "country": "CH"
+          },
+          "debtor": {
+            "name": "name",
+            "street": "street",
+            "house_num": "house_n",
+            "pcode": "postcode",
+            "city": "city",
+            "country": "CH"
+          },
+          "language": "fr",
+          "currency": "CHF",
+          "amount": 10000,
+          "account": "CH9580808001170939132",
+          "reference_number": "210000000003139471430009017",
+          "additional_information": "test",
+        })
+        headers = {
+          'Content-Type': 'application/json'
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        svg = json.loads(response.text)["svg"]
+        return [True, svg, None]
