@@ -29,8 +29,8 @@ def bank_exist(cn, nextc):
     return cn.call_next(nextc, err)
 
 def bank_edit(cn, nextc):
-    cn.pr = check.setnoneopt(cn.pr, ["internal_name", "name", "benef", "iban", "clearing", "bic"])
-    err = cn.private['ged_bank'].edit(cn.pr['internal_name'], cn.pr['name'], cn.pr['benef'], cn.pr['iban'], cn.pr['clearing'], cn.pr['bic'])
+    cn.pr = check.setnoneopt(cn.pr, ["internal_name", "name", "benef", "iban", "clearing", "bic", "type"])
+    err = cn.private['ged_bank'].edit(cn.pr['internal_name'], cn.pr['name'], cn.pr['benef'], cn.pr['iban'], cn.pr['clearing'], cn.pr['bic'], cn.pr['type'])
     return cn.call_next(nextc, err)
 
 def bank_delete(cn, nextc):
