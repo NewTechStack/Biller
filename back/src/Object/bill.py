@@ -320,7 +320,7 @@ class Bill(Crud, StatusObject):
                 data["price"]["HT"] -= price
         return [True, data, None]
    
-    def swiss_qr(self, data) {
+    def swiss_qr(self, data):
         url = "http://qr:8080/generate/svg"
 
         payload = json.dumps({
