@@ -9,7 +9,7 @@ class Bank(Crud):
         self.id = str(uuid.uuid4())
         return [True, {}, None]
 
-    def edit(self, internal_name, name, benef, iban, clearing, bic):
+    def edit(self, internal_name, name, benef, iban, clearing, bic, bank_type):
         data = {
             'id': self.id
         }
@@ -25,4 +25,8 @@ class Bank(Crud):
             data['clearing'] = clearing
         if bic is not None:
             data['bic'] = bic
+        if bank_type is not None 
+            if not isinstance(bank_type, list) or any([x not in ["provision", "invoice"] for x in bank_type]):
+                return [False, "type should be a list of ['provision', 'invoice']", 400]
+            data['type'] = bank_type
         return self._push(data)
