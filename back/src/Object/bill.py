@@ -369,5 +369,5 @@ class Bill(Crud, StatusObject):
 
         response = requests.request("POST", url, headers=headers, data=payload)
 
-        svg = json.loads(response.text)["svg"].replace("height='106mm'", "height='115mm'").replace("width='210mm'", "width='228mm'")
+        svg = json.loads(response.text)["svg"].replace("height='106mm'", "height='125mm'").replace("width='210mm'", "width='250mm'")
         return [True, svg, None]
