@@ -178,7 +178,7 @@ class Bill(Crud, StatusObject):
                 },
                 "before": data["before_payment"],
                 "address": data["address"],
-                "qr": self.swiss_qr(data)
+                "qr": self.swiss_qr(data)[1]
             }
         }
         data["url"] = self.__generate_fact(data)
