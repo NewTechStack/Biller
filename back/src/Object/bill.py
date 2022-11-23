@@ -168,7 +168,19 @@ class Bill(Crud, StatusObject):
                 "provision_value": self.__currency_format(sum(t["price"] for t in data["provisions"])),
 
                 "total_ttc": self.__currency_format(data["price"]["total"] - sum(t["price"] for t in data["provisions"])),
-                "bank": bank[1],
+                "bank": {
+                    "benef": bank[1]["benef"],
+                    "city": bank[1]["city"],
+                    "country": bank[1]["country"],
+                    "house_num": bank[1]["house_num"],
+                    "name": bank[1]["name"],
+                    "pcode": bank[1]["pcode"],
+                    "street": bank[1]["street"],
+                    "bic": bank[1]["bic"],
+                    "clearing": bank[1]["clearing"],
+                    "iban": bank[1]["iban"],
+                    "name": bank[1]["name"]      
+                },
                 "before": data["before_payment"],
                 "address": data["address"],
                 "qr": self.swiss_qr(data)
