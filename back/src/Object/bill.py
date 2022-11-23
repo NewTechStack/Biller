@@ -181,8 +181,8 @@ class Bill(Crud, StatusObject):
                 "qr": self.swiss_qr(
                     {
                         "name": bank[1]["benef"]["name"],
-                        "line1": f"{bank[1]["benef"]["house_num"]} {bank[1]["benef"]["street"]}",
-                        "line2": f"{bank[1]["benef"]["city"]}, {bank[1]["benef"]["pcode"]}, {bank[1]["benef"]["country"]}",
+                        "line1": f'{bank[1]["benef"]["house_num"]} {bank[1]["benef"]["street"]}',
+                        "line2": f'{bank[1]["benef"]["city"]}, {bank[1]["benef"]["pcode"]}, {bank[1]["benef"]["country"]}',
                     }, 
                     {
                         "name": data["address"][0],
