@@ -145,6 +145,7 @@ class Bill(Crud, StatusObject):
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
+        data['lang'] = 'fr'
         data["template"] = {
             "name": f"invoice_preview{data['lang']}.html",
             "title": f"preview_{self.id.split('/')[-1]}",
