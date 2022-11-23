@@ -178,7 +178,21 @@ class Bill(Crud, StatusObject):
                 },
                 "before": data["before_payment"],
                 "address": data["address"],
-                "qr": self.swiss_qr({}, {}, data["lang"], data["price"]["total"] - sum(t["price"] for t in data["provisions"]) , bank[1]["iban"], f"invoice/{data['before_payment']}/preview")[1]
+                "qr": self.swiss_qr(
+                    {
+                        "name": bank[1]["benef"]["name"],
+                        "line1": f"{bank[1]["benef"]["house_num"]} {bank[1]["benef"]["street"]}",
+                        "line2": f"{bank[1]["benef"]["city"]}, {bank[1]["benef"]["pcode"]}, {bank[1]["benef"]["country"]}",
+                    }, 
+                    {
+                        "name": data["address"][0],
+                        "line1": data["address"][1],
+                        "line2": data["address"][2:],
+                    }, 
+                    data["lang"], 
+                    data["price"]["total"] - sum(t["price"] for t in data["provisions"]) , 
+                    bank[1]["iban"], 
+                    f"invoice/{data['before_payment']}/preview")[1]
             }
         }
         data["url"] = self.__generate_fact(data)
@@ -341,19 +355,19 @@ class Bill(Crud, StatusObject):
 
         payload = json.dumps({
           "creditor": {
-            "name": "name",
-            "line1": "street",
-            "line2": "house_n",
+            "name": creditor["name"],
+            "line1": creditor["line1"],
+            "line2": creditor["line2"],
           },
           "debtor": {
-            "name": "name",
-            "line1": "street",
-            "line2": "house_n",
+            "name": debtor["name"],
+            "line1": debtor["line1"],
+            "line2": debtor["line2"],
           },
-          "language": "fr",
+          "language": lang,
           "currency": "CHF",
-          "amount": 10000,
-          "account": "CH9580808001170939132",
+          "amount": amount,
+          "account": iban,
           "additional_information": addi,
         })
         headers = {
