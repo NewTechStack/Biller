@@ -4,6 +4,8 @@
   <body>
     <div class=logo />
     </div>
+    <div class=background />
+    </div>
     <div class="address">
       <!-- {% for line in address %} -->
         {{line}}
@@ -28,20 +30,25 @@
       <span style="left:5.38in;">HEURES</span>
       <span style="left:6.215in;">CHF</span>
     </div>
+    <!-- {% set ns = namespace (top = 0) %} -->
     <!-- {% for l in lines %} -->
-      <!-- {% set top = 0.23 * (loop.index - 1) %} -->
-      <div class="line" style="top: 4.4in; margin-top:{{top}}in;">
+      <div class="line" style="top: 4.4in; margin-top:{{ns.top}}in;">
         <span style="left:0.15in;"><b>{{l.date}}</b></span>
-        <span style="left:1.25in;">{{l.activite}}</span>
-        <span style="left:3.1in;">{{l.user}}</span>
+        <span style="left:1.25in;">
+          <!-- {% for act in l.activite %} -->
+          <!-- {% set ns.top = ns.top + 0.22 %} -->
+          {{act}}<br>
+          <!-- {% endfor %} -->
+        </span>
+        <span style="left:3.1in;">{{l.username}}</span>
         <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
         <span style="left:5.38in;width: 1.5in;">{{l.time|replace('h0', 'h00')}}</span>
-        <span style="left:6.215in;width: 1.5in;">CHF {{l.priceHT}}</span>
+        <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
         <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
       </div>
+      <!-- {% set ns.top = ns.top + 0.22 %} -->
     <!-- {% endfor %} -->
-    <!-- {% set top = 0.23 * lines|length %} -->
-    <div class="invoice_recap" style="left:5.06in; margin-top:{{top}}in">
+    <div class="invoice_recap" style="left:5.06in; margin-top:{{ns.top}}in">
       <b>SOUS-TOTAL (HT)</b><br/>
       <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
         <div style="width: 3.3in;background-color: #000; border-radius: 40in;"></div>
@@ -55,19 +62,16 @@
         TVA ({{tva_amount}}%)<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
-      <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
+      <!-- {% if provision_amount != 0 %} -->
         <div style="width: 3.3in;background-color: #000; border-radius: 40in;"></div>
         <!-- {% if provision_amount != 0 %} -->
           Provision (TTC)<br/>
-        <!-- {% endif %} -->
-        <!-- {% if retainer_amount != 0 %}  -->
-          Avance de frais<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
       <div style="width: 3.3in;background-color: #000; border-radius: 40in;margin-bottom: 0.09in;"></div>
       <b>TOTAL</b>
     </div>
-    <div class="invoice_recap" style="width:0.45in; left:6.86in; text-align: right; margin-top:{{top}}in">
+    <div class="invoice_recap" style="width:0.45in; left:6.86in; text-align: right; margin-top:{{ns.top}}in">
       <b>CHF</b><br/>
       <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
         <div></div>
@@ -81,19 +85,16 @@
           CHF<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
-      <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
+      <!-- {% if provision_amount != 0 %} -->
         <div></div>
         <!-- {% if provision_amount != 0 %} -->
           - CHF<br/>
-        <!-- {% endif %} -->
-        <!-- {% if retainer_amount != 0 %} -->
-          CHF<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
       <div style="margin-bottom: 0.09in;"></div>
       <b>CHF</b>
     </div>
-    <div class="invoice_recap" style="width:1.5in; left:6.86in; text-align: right; margin-top:{{top}}in">
+    <div class="invoice_recap" style="width:1.5in; left:6.86in; text-align: right; margin-top:{{ns.top}}in">
       <b>
         {{timesheet_sum|replace('.-', '.-<div style="display: inline-block;width: 0.085in;"></div>')}}
       </b>
@@ -113,14 +114,10 @@
           <br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
-      <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
+      <!-- {% if provision_amount != 0 %} -->
         <div></div>
         <!-- {% if provision_amount != 0 %} -->
           {{provision_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
-          <br/>
-        <!-- {% endif %} -->
-        <!-- {% if retainer_amount != 0 %} -->
-          {{retainer_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
           <br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
@@ -129,21 +126,29 @@
         {{total_ttc|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
       </b>
     </div>
-
-<div style="position:absolute;top:8in;left:0.91in;width:4.00in;line-height:0.21in; margin-top:{{top}}in;">
-  <!-- {% for line in banq %} -->
-  {{line}}
-  <br/>
-  <!-- {% endfor %} -->
-</div>
-
+{% if qr is none %}
+  <div style="position:absolute;top:8in;left:1in;width:4.00in;line-height:0.21in; margin-top:{{ns.top}}in;">
+    Banque : {{bank.name}} <br/>
+    Bénéficiaire : {{bank.benef.name}}<br/>
+    IBAN : <b>{{bank.iban}}</b><br/>
+    Clearing : {{bank.clearing}}<br/>
+    BIC/Swif : {{bank.bic}}<br/>
+    REF. : <b>Facture #{{num}}</b><br/>
+    Délai de paiement :  {{before}} jours net<br/>
+    <br/>
+  </div>
+{%else %}
+  <div style="position:absolute;top:7.8in;left:0.3in; width:8.5in; margin-top:{{ns.top}}in; overflow: hidden">
+    {{ qr }}
+  </div>
+{% endif %}
 </body>
 <STYLE>
   div.address {
     position:absolute;
     top:1.60in;
-    left:5.56in;
-    width:2.80in;
+    left:6in;
+    width:2.20in;
     line-height:0.23in;
     font-style:normal;
     font-weight:normal;
