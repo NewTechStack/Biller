@@ -36,10 +36,10 @@
         <span style="left:0.15in;"><b>{{l.date}}</b></span>
         <span style="left:1.25in;">
           <!-- {% for act in l.activite %} -->
-          <!-- {% set ns.top = ns.top + 0.22 %} -->
           {{act}}i<br>
           <!-- {% endfor %} -->
         </span>
+        <!-- {% set ns.top = ns.top + 0.22 * (l.activite|length - 1)%} -->
         <span style="left:3.1in; width: 1in">
           <!-- {% if l.activite|length < 2 %} -->
             <!-- {% set ns.top = ns.top + 0.22 %} -->
