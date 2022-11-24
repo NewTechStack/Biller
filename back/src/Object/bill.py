@@ -2,6 +2,7 @@ from .CRUD import Crud, StatusObject
 from .timesheet import Timesheet
 from .folder import Folder
 from .user import User
+from .bank import Bank
 import requests
 import uuid
 from datetime import datetime
@@ -25,7 +26,11 @@ class Bill(Crud, StatusObject):
         if not "bill_type" in data or data["bill_type"] not in ["invoice", "provision"]:
           return [False, "Invalid 'type' of bill", 404]
         if not "TVA" in data or not any([isinstance(data["TVA"], x) for x in [float, int]]):
-          return [False, "Invalid 'TVA' float", 400]
+          return [False, "Invalid 'TVA' float or int", 400]
+        if not "bank" in data or not isinstance(data["bank"], str):
+          return [False, "Invalid 'bank' str", 400]
+        if not "before_payment" in data or not isinstance(data["before_payment"], int):
+          return [False, "Invalid 'before_payment' int", 400]
         tva = data["TVA"]
         data["TVA"] = float(data["TVA"])
         if data["bill_type"] == "invoice":
@@ -58,7 +63,9 @@ class Bill(Crud, StatusObject):
         if ret[0] is False:
             return ret
         data = ret[1]
-
+        bank = Bank(data["bank"]).get()
+        if bank[1] is None:
+            return [False, f"Invalid bank id: '{data['bank']}'", 404]
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
@@ -69,8 +76,30 @@ class Bill(Crud, StatusObject):
                 "amount_HT": self.__currency_format(data["price"]["HT"]),
                 "tva_amount": data["TVA"],
                 "amount_TTC": self.__currency_format(data["price"]["total"]),
-                "banq": data["banq"],
-                "address": data["address"]
+                "bank": {
+                    "benef": bank[1]["benef"],
+                    "bic": bank[1]["bic"],
+                    "clearing": bank[1]["clearing"],
+                    "iban": bank[1]["iban"],
+                    "name": bank[1]["name"]      
+                },
+                "address": data["address"],
+                "qr": self.swiss_qr(
+                    {
+                        "name": bank[1]["benef"]["name"],
+                        "line1": f'{bank[1]["benef"]["house_num"]} {bank[1]["benef"]["street"]}',
+                        "line2": f'{bank[1]["benef"]["city"]}, {bank[1]["benef"]["pcode"]}, {bank[1]["benef"]["country"]}',
+                    }, 
+                    {
+                        "name": data["address"][0],
+                        "line1": data["address"][1],
+                        "line2": data["address"][2],
+                    }, 
+                    data["lang"], 
+                    data["price"]["total"], 
+                    bank[1]["iban"], 
+                    f"provision//preview")[1]
+            }
             }
         }
         data["url"] = self.__generate_fact(data)
@@ -83,11 +112,16 @@ class Bill(Crud, StatusObject):
             return [False, f"Invalid folder id: '{folder_id}'", 404]
         if not "timesheet" in data or not isinstance(data["timesheet"], list) or not all([isinstance(x, str) for x in data['timesheet']]):
             return [False, "Invalid 'timesheet' list", 400]
+        bank = Bank(data["bank"]).get()
+        if bank[1] is None:
+            return [False, f"Invalid bank id: '{data['bank']}'", 404]
         timesheets = data["timesheet"]
         if len(timesheets) == 0:
             return [False, "Invalid 'timsheet' list", 400]
         if len(timesheets) != len(set(timesheets)):
             return [False, "Duplicates in 'timesheet' list", 400]
+        if not "format" in data or not isinstance( data["format"], list) or not all(x in ["date","desc","hours","user","user_price","amount"] for x in data["format"]):
+            return [False, "Invalid in 'format' list", 400]
         provision_objects = []
         timesheet_objects = []
         prov = []
@@ -97,7 +131,6 @@ class Bill(Crud, StatusObject):
                 bill_object = Bill(prov_id)
                 bill = bill_object.get()
                 provision_objects.append(bill_object)
-                print(bill[1] is None, bill[1]["bill_type"] != "provision", bill[1]["bill_type"])
                 if bill[1] is None or bill[1]["bill_type"] != "provision":
                     return [False, f"Invalid provision id: '{prov_id}'", 404]
                 if bill[1]["status"] in [0, 1]:
@@ -137,6 +170,7 @@ class Bill(Crud, StatusObject):
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
         data["timesheet"] = lines
+        data['lang'] = 'fr'
         data["template"] = {
             "name": f"invoice_preview{data['lang']}.html",
             "title": f"preview_{self.id.split('/')[-1]}",
@@ -160,9 +194,31 @@ class Bill(Crud, StatusObject):
                 "provision_value": self.__currency_format(sum(t["price"] for t in data["provisions"])),
 
                 "total_ttc": self.__currency_format(data["price"]["total"] - sum(t["price"] for t in data["provisions"])),
-                "banq": data["banq"],
+                "bank": {
+                    "benef": bank[1]["benef"],
+                    "bic": bank[1]["bic"],
+                    "clearing": bank[1]["clearing"],
+                    "iban": bank[1]["iban"],
+                    "name": bank[1]["name"]      
+                },
+                "before": data["before_payment"],
                 "address": data["address"],
-                "qr": self.swiss_qr(data)
+                "format": {x: (x in data["format"]) for x in ["date","desc","hours","user","user_price","amount"]}
+                "qr": self.swiss_qr(
+                    {
+                        "name": bank[1]["benef"]["name"],
+                        "line1": f'{bank[1]["benef"]["house_num"]} {bank[1]["benef"]["street"]}',
+                        "line2": f'{bank[1]["benef"]["city"]}, {bank[1]["benef"]["pcode"]}, {bank[1]["benef"]["country"]}',
+                    }, 
+                    {
+                        "name": data["address"][0],
+                        "line1": data["address"][1],
+                        "line2": data["address"][2],
+                    }, 
+                    data["lang"], 
+                    data["price"]["total"] - sum(t["price"] for t in data["provisions"]) , 
+                    bank[1]["iban"], 
+                    f"invoice/{data['before_payment']}/preview")[1]
             }
         }
         data["url"] = self.__generate_fact(data)
@@ -320,32 +376,25 @@ class Bill(Crud, StatusObject):
                 data["price"]["HT"] -= price
         return [True, data, None]
    
-    def swiss_qr(self, data):
+    def swiss_qr(self, creditor, debtor, lang, amount, iban, addi):
         url = "http://qr:8080/generate/svg"
 
         payload = json.dumps({
           "creditor": {
-            "name": "name",
-            "street": "street",
-            "house_num": "house_n",
-            "pcode": "postcode",
-            "city": "city",
-            "country": "CH"
+            "name": creditor["name"],
+            "line1": creditor["line1"],
+            "line2": creditor["line2"],
           },
           "debtor": {
-            "name": "name",
-            "street": "street",
-            "house_num": "house_n",
-            "pcode": "postcode",
-            "city": "city",
-            "country": "CH"
+            "name": debtor["name"],
+            "line1": debtor["line1"],
+            "line2": debtor["line2"],
           },
-          "language": "fr",
+          "language": lang,
           "currency": "CHF",
-          "amount": 10000,
-          "account": "CH9580808001170939132",
-          "reference_number": "210000000003139471430009017",
-          "additional_information": "test",
+          "amount": amount,
+          "account": iban,
+          "additional_information": addi,
         })
         headers = {
           'Content-Type': 'application/json'
@@ -353,5 +402,5 @@ class Bill(Crud, StatusObject):
 
         response = requests.request("POST", url, headers=headers, data=payload)
 
-        svg = json.loads(response.text)["svg"]
+        svg = json.loads(response.text)["svg"].replace("height='106mm'", "height='135mm'").replace("width='210mm'", "width='269mm'")
         return [True, svg, None]

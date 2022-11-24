@@ -40,10 +40,10 @@
           {{act}}<br>
           <!-- {% endfor %} -->
         </span>
-        <span style="left:3.1in;">{{l.user}}</span>
+        <span style="left:3.1in;">{{l.username}}</span>
         <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
         <span style="left:5.38in;width: 1.5in;">{{l.time|replace('h0', 'h00')}}</span>
-        <span style="left:6.215in;width: 1.5in;">CHF {{l.priceHT}}</span>
+        <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
         <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
       </div>
       <!-- {% set ns.top = ns.top + 0.22 %} -->
@@ -62,7 +62,7 @@
         TVA ({{tva_amount}}%)<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
-      <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
+      <!-- {% if provision_amount != 0 %} -->
         <div style="width: 3.3in;background-color: #000; border-radius: 40in;"></div>
         <!-- {% if provision_amount != 0 %} -->
           Provision (TTC)<br/>
@@ -85,7 +85,7 @@
           CHF<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
-      <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
+      <!-- {% if provision_amount != 0 %} -->
         <div></div>
         <!-- {% if provision_amount != 0 %} -->
           - CHF<br/>
@@ -114,7 +114,7 @@
           <br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
-      <!-- {% if provision_amount != 0 or retainer_amount != 0 %} -->
+      <!-- {% if provision_amount != 0 %} -->
         <div></div>
         <!-- {% if provision_amount != 0 %} -->
           {{provision_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
@@ -126,22 +126,29 @@
         {{total_ttc|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
       </b>
     </div>
-
-<div style="position:absolute;top:8in;left:0.91in;width:4.00in;line-height:0.21in; margin-top:{{ns.top}}in;">
-  <!-- {% for line in banq %} -->
-  {{line}}
-  <br/>
-  <!-- {% endfor %} -->
-</div>
+{% if qr is none %}
+  <div style="position:absolute;top:8in;left:1in;width:4.00in;line-height:0.21in; margin-top:{{ns.top}}in;">
+    Banque : {{bank.name}} <br/>
+    Bénéficiaire : {{bank.benef.name}}<br/>
+    IBAN : <b>{{bank.iban}}</b><br/>
+    Clearing : {{bank.clearing}}<br/>
+    BIC/Swif : {{bank.bic}}<br/>
+    REF. : <b>Facture #{{num}}</b><br/>
+    Délai de paiement :  {{before}} jours net<br/>
+    <br/>
+  </div>
+{%else %}
+  <div style="position:absolute;top:7.8in;left:0.3in; width:8.5in; margin-top:{{ns.top}}in; overflow: hidden">
+    {{ qr }}
+  </div>
+{% endif %}
 </body>
 <STYLE>
-
-
   div.address {
     position:absolute;
     top:1.60in;
-    left:5.56in;
-    width:2.80in;
+    left:6in;
+    width:2.20in;
     line-height:0.23in;
     font-style:normal;
     font-weight:normal;

@@ -12,7 +12,7 @@ def index():
 def index():
     response.content_type = 'application/json'
     creditor = request.json.get("creditor", {})
-    person_mandatory = ["name", "street", "house_num", "pcode",  "country"]
+    person_mandatory = ["name", "line1", "line2"]
     if any([x not in creditor for x in person_mandatory]) or any([not isinstance(creditor[x], str) for x in person_mandatory]):
         return json.dumps({"svg": None, "error": "creditor"})
     debtor = request.json.get("debtor", {})
