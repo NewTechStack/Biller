@@ -39,15 +39,16 @@
           <!-- {% for act in l.activite %} -->
           {{act}}i<br>
           <!-- {% endfor %} -->
-          {{ (l.activite|length - 1) }}
+          <!-- {% set temp = temp + 0.22 * (l.activite|length - 1) %} -->
+          {{ temp }}
         </span>
-        
-        <!-- {% set temp = temp + 0.22 * (l.activite|length - 1) %} -->
         <span style="left:3.1in; width: 1.2in">
-          <!-- {% if l.activite|length < 2 %} -->
-            <!-- {% set temp = temp + 0.22 * ((l.username|length /16)|round(method='ceil') - 1) %} -->
-          {{ ((l.username|length /16)|round(method='ceil') - 1) }}
+          <!-- {% set user_size = ((l.username|length /16)|round(method='ceil')) %} -->
+          <!-- {% if l.activite|length < user_size %} -->
+            <!-- {% set temp = temp + 0.22 * (user_size - 1) %} -->
+            
           <!-- {% endif %} -->
+        {{temp}}
         {{ l.username }}
         </span>
         <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
