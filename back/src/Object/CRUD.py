@@ -5,7 +5,12 @@ import math
 class StatusObject:
     def __init__(self, trigger = None):
         self.status = True
-        self.trigger = trigger
+        if isinstance(trigger, int):
+            self.trigger = [trigger]
+        elif isinstance(trigger, list) and all([isinstance(x, int) for x in trigger]):
+            self.trigger = trigger
+        else:
+            self.trigger = []
 
     def change_status(self, status):
         if status not in [1, 2]:
@@ -19,7 +24,7 @@ class StatusObject:
             return [False, "Can't skip status", 401]
         if int(ret[1]["status"]) == status:
             return [False, "No status update", 401]
-        if status == self.trigger:
+        if status in self.trigger:
             ret = self.status_trigger(status)
             if not ret[0]:
                 return ret
