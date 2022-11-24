@@ -120,6 +120,8 @@ class Bill(Crud, StatusObject):
             return [False, "Invalid 'timsheet' list", 400]
         if len(timesheets) != len(set(timesheets)):
             return [False, "Duplicates in 'timesheet' list", 400]
+        if not "format" in data or not isinstance( data["format"], list) or not all(x in ["date","desc","hours","user","user_price","amount"] for x in data["format"]):
+            return [False, "Invalid in 'format' list", 400]
         provision_objects = []
         timesheet_objects = []
         prov = []
@@ -201,6 +203,7 @@ class Bill(Crud, StatusObject):
                 },
                 "before": data["before_payment"],
                 "address": data["address"],
+                "format": {x: (x in data["format"]) for x in ["date","desc","hours","user","user_price","amount"]}
                 "qr": self.swiss_qr(
                     {
                         "name": bank[1]["benef"]["name"],
