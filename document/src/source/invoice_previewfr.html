@@ -37,21 +37,19 @@
         <span style="left:1.25in;">
           <!-- {% for act in l.activite %} -->
           <!-- {% set ns.top = ns.top + 0.22 %} -->
-          {{act}}<br>
+          {{act}}i<br>
           <!-- {% endfor %} -->
         </span>
         <span style="left:3.1in; width: 1in">
           <!-- {% if l.activite|length < 2 %} -->
-          {{ns.top}}
             <!-- {% set ns.top = ns.top + 0.22 %} -->
-          {{ns.top}}
           <!-- {% endif %} -->
           {{l.username}}
         </span>
         <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
         <span style="left:5.38in;width: 1.5in;">{{l.time|replace('h0', 'h00')}}</span>
         <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
-        <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
+        <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)margin-top:{{ns.top}}in;"></div>
       </div>
       <!-- {% set ns.top = ns.top + 0.22 %} -->
     <!-- {% endfor %} -->
