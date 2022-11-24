@@ -202,7 +202,7 @@ class Bill(Crud, StatusObject):
                 },
                 "before": data["before_payment"],
                 "address": data["address"],
-                "format": {x: (x in data["format"]) for x in ["date","desc","hours","user","user_price","amount"]}
+                "format": {x: (x in data["format"]) for x in ["date","desc","hours","user","user_price","amount"]},
                 "qr": self.swiss_qr(
                     {
                         "name": bank[1]["benef"]["name"],
