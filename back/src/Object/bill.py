@@ -249,6 +249,8 @@ class Bill(Crud, StatusObject):
         if ret[1] is None:
             retun [False, "error", 500]
         data = ret[1]
+        if status not in [1, 2]:
+            return [True, {}, None]
         if status == 2:
             if "provisions" in data:
                 for i in data["provisions"]:
@@ -256,17 +258,18 @@ class Bill(Crud, StatusObject):
             if "lines" in data:
                 for i in data["lines"]:
                     self.__status_object_set(2, [Timesheet(i["timesheet_id"])])
-        if status != 1:
-            return [True, {}, None]
-        if "template" in data:
-            data["template"]["name"] = data["template"]["name"].replace("_preview", "")
-            data["template"]["bucket"] = "files"
-            data["template"]["variables"]["num"] = "2022-" + str(int(self.red.filter(
-               lambda bill: bill["status"] >= 2
-            ).count().run()))
-            data["template"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
-            data["url"] = self.__generate_fact(data)
-        self._push(data)
+        if status == 1:
+            
+            if "template" in data:
+                data["template"]["name"] = data["template"]["name"].replace("_preview", "")
+                data["template"]["bucket"] = "files"
+                data["template"]["variables"]["num"] = "2022-" + str(int(self.red.filter(
+                   lambda bill: bill["status"] >= 2
+                ).count().run()))
+                data["template"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
+                data["url"] = self.__generate_fact(data)
+            self._push(data)
+        print(status, data["url"])
         return [True, data, None]
 
     def __generate_fact(self, data):
