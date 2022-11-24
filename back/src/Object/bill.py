@@ -259,7 +259,6 @@ class Bill(Crud, StatusObject):
                 for i in data["lines"]:
                     self.__status_object_set(2, [Timesheet(i["timesheet_id"])])
         if status == 1:
-            
             if "template" in data:
                 data["template"]["name"] = data["template"]["name"].replace("_preview", "")
                 data["template"]["bucket"] = "files"
@@ -269,7 +268,6 @@ class Bill(Crud, StatusObject):
                 data["template"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
                 data["url"] = self.__generate_fact(data)
             self._push(data)
-        print(status, data["url"])
         return [True, data, None]
 
     def __generate_fact(self, data):
