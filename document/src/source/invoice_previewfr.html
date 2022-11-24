@@ -54,8 +54,8 @@
         <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
         <span style="left:5.38in;width: 1.5in;">{{l.time|replace('h0', 'h00')}}</span>
         <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
-        <div style="position:absolute;width:7.215in;top: 0.22; height:0.02in;background-color:rgba(200, 200, 200, 0.6);margin-top:{{temp}}in;"></div>
         <!-- {% set ns.top = ns.top + 0.22 + temp %} -->
+        <div style="position:absolute;width:7.215in;top: 0.22; height:0.02in;background-color:rgba(200, 200, 200, 0.6);margin-top:{{ns.top - 0.22}}in;"></div>
       </div>
      
     <!-- {% endfor %} -->
