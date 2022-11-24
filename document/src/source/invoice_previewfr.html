@@ -45,7 +45,7 @@
           <!-- {% if l.activite|length < 2 %} -->
             <!-- {% set ns.top = ns.top + 0.21 * ((l.username|length /16)|round(method='ceil') - 1) %} -->
           <!-- {% endif %} -->
-          {{l.username}}
+          {{l.username}} {{ ns.top }}
         </span>
         <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
         <span style="left:5.38in;width: 1.5in;">{{l.time|replace('h0', 'h00')}}</span>
