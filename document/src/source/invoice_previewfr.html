@@ -41,9 +41,7 @@
           <!-- {% endfor %} -->
         </span>
         <!-- {% set ns.top = ns.top + 0.21 * (l.activite|length - 1) %} -->
-        {{ ns.top }}
         <span style="left:3.1in; width: 1in">
-          {{ ((l.username|length /16)|round(method='ceil') - 1) }}
           <!-- {% if l.activite|length < 2 %} -->
             <!-- {% set ns.top = ns.top + 0.21 * ((l.username|length /16)|round(method='ceil') - 1) %} -->
           <!-- {% endif %} -->
@@ -52,7 +50,7 @@
         <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
         <span style="left:5.38in;width: 1.5in;">{{l.time|replace('h0', 'h00')}}</span>
         <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
-        <div style="position:absolute;top:0.1in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);margin-top:{{ns.top}}in;"></div>
+        <div style="position:absolute;top:0.2in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);margin-top:{{ns.top}}in;"></div>
       </div>
       <!-- {% set ns.top = ns.top + 0.22 %} -->
     <!-- {% endfor %} -->
