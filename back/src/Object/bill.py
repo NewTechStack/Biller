@@ -27,6 +27,10 @@ class Bill(Crud, StatusObject):
           return [False, "Invalid 'type' of bill", 404]
         if not "TVA" in data or not any([isinstance(data["TVA"], x) for x in [float, int]]):
           return [False, "Invalid 'TVA' float or int", 400]
+        if not "bank" in data or not isinstance(data["bank"], str):
+          return [False, "Invalid 'bank' str", 400]
+        if not "before_payment" in data or not isinstance(data["before_payment"], int):
+          return [False, "Invalid 'before_payment' int", 400]
         tva = data["TVA"]
         data["TVA"] = float(data["TVA"])
         if data["bill_type"] == "invoice":
@@ -59,7 +63,9 @@ class Bill(Crud, StatusObject):
         if ret[0] is False:
             return ret
         data = ret[1]
-
+        bank = Bank(data["bank"]).get()
+        if bank[1] is None:
+            return [False, f"Invalid bank id: '{data['bank']}'", 404]
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
@@ -70,8 +76,30 @@ class Bill(Crud, StatusObject):
                 "amount_HT": self.__currency_format(data["price"]["HT"]),
                 "tva_amount": data["TVA"],
                 "amount_TTC": self.__currency_format(data["price"]["total"]),
-                "banq": data["banq"],
-                "address": data["address"]
+                "bank": {
+                    "benef": bank[1]["benef"],
+                    "bic": bank[1]["bic"],
+                    "clearing": bank[1]["clearing"],
+                    "iban": bank[1]["iban"],
+                    "name": bank[1]["name"]      
+                },
+                "address": data["address"],
+                "qr": self.swiss_qr(
+                    {
+                        "name": bank[1]["benef"]["name"],
+                        "line1": f'{bank[1]["benef"]["house_num"]} {bank[1]["benef"]["street"]}',
+                        "line2": f'{bank[1]["benef"]["city"]}, {bank[1]["benef"]["pcode"]}, {bank[1]["benef"]["country"]}',
+                    }, 
+                    {
+                        "name": data["address"][0],
+                        "line1": data["address"][1],
+                        "line2": data["address"][2],
+                    }, 
+                    data["lang"], 
+                    data["price"]["total"], 
+                    bank[1]["iban"], 
+                    f"provision//preview")[1]
+            }
             }
         }
         data["url"] = self.__generate_fact(data)
@@ -84,10 +112,6 @@ class Bill(Crud, StatusObject):
             return [False, f"Invalid folder id: '{folder_id}'", 404]
         if not "timesheet" in data or not isinstance(data["timesheet"], list) or not all([isinstance(x, str) for x in data['timesheet']]):
             return [False, "Invalid 'timesheet' list", 400]
-        if not "bank" in data or not isinstance(data["bank"], str):
-          return [False, "Invalid 'bank' str", 400]
-        if not "before_payment" in data or not isinstance(data["before_payment"], int):
-          return [False, "Invalid 'before_payment' int", 400]
         bank = Bank(data["bank"]).get()
         if bank[1] is None:
             return [False, f"Invalid bank id: '{data['bank']}'", 404]
@@ -105,7 +129,6 @@ class Bill(Crud, StatusObject):
                 bill_object = Bill(prov_id)
                 bill = bill_object.get()
                 provision_objects.append(bill_object)
-                print(bill[1] is None, bill[1]["bill_type"] != "provision", bill[1]["bill_type"])
                 if bill[1] is None or bill[1]["bill_type"] != "provision":
                     return [False, f"Invalid provision id: '{prov_id}'", 404]
                 if bill[1]["status"] in [0, 1]:
