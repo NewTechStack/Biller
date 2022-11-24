@@ -34,20 +34,19 @@
     <!-- {% for l in lines %} -->
       
       <div class="line" style="top: 4.4in; margin-top:{{ns.top}}in;">
-        <!-- {% set temp = 0.22 %} -->
+        <!-- {% set temp = 0.21 %} -->
         <span style="left:0.15in;"><b>{{l.date}}</b></span>
         <span style="left:1.25in;">
           <!-- {% for act in l.activite %} -->
           {{act}}i<br>
           <!-- {% endfor %} -->
-            <!-- {% set temp = temp + 0.22 * (l.activite|length - 1) %} -->
+            <!-- {% set temp = temp + 0.21 * (l.activite|length - 1) %} -->
           {{ temp }}
         </span>
         <span style="left:3.1in; width: 1.2in">
           <!-- {% set user_size = ((l.username|length /16)|round(method='ceil')) %} -->
           <!-- {% if l.activite|length < user_size %} -->
-            <!-- {% set temp2 = temp + 0.22 * (user_size - 1) %} -->
-            
+            <!-- {% set temp = temp + 0.21 * (user_size - 1) %} -->
           <!-- {% endif %} -->
         {{temp}}
         {{ l.username }}
@@ -57,7 +56,7 @@
         <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
         
         <div style="position:absolute;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);margin-top:{{temp}}in;"></div>
-        <!-- {% set ns.top = ns.top + 0.04 + temp %} -->
+        <!-- {% set ns.top = ns.top + 0.08 + temp %} -->
       </div>
      
     <!-- {% endfor %} -->
