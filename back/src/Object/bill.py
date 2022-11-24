@@ -241,7 +241,6 @@ class Bill(Crud, StatusObject):
                 self.__status_object_set(2, [Bill(i["provision_id"])])
         if "timesheet" in data:
             for i in data["timesheet"]:
-                print(i["timesheet_id"])
                 self.__status_object_set(0, [Timesheet(i["timesheet_id"])])
         return [True, data, None]
 
@@ -301,7 +300,6 @@ class Bill(Crud, StatusObject):
         if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
             return [False, f"Invalid price in timesheet: '{timsheet_id}'", 400]
         if d[1]["status"] == 1:
-            print(d[1])
             return [False, f"Timesheet '{timsheet_id}' already in a unpaid bill", 400]
         if d[1]["status"] == 2:
             return [False, f"Timesheet already in a paid bill", 400]
@@ -334,10 +332,8 @@ class Bill(Crud, StatusObject):
 
     def __calc__fees(self, data):
         if "fees" in data:
-            print(data["fees"])
             if (not isinstance(data["fees"], int) and not isinstance(data["fees"], float)) or float(data["fees"]) <= 0.0:
                 return [False, "Invalid fees value, float", 400]
-            print(data["price"]["HT"], data["fees"])
             price_HT = self.__fees_price(data["price"]["HT"], data["fees"])
             data["fees"] = {
                 "fees": data["fees"],
