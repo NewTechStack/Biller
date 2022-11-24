@@ -50,30 +50,44 @@
       {% if format.hours == true %}
          <span style="left:5.38in;">HEURES</span>
       {% endif %}
-      <span style="left:6.215in;">CHF</span>
+      {% if format.amount == true %}
+        <span style="left:6.215in;">CHF</span>
+      {% endif %}
     </div>
     <!-- {% set ns = namespace (top = 0.00) %} -->
     <!-- {% for l in lines %} -->
       
       <div class="line" style="top: 4.4in; margin-top:{{ns.top}}in;">
         <!-- {% set temp = 0.22 %} -->
-        <span style="left:0.15in;"><b>{{l.date}}</b></span>
-        <span style="left:1.25in;">
-          <!-- {% for act in l.activite %} -->
-          {{act}}<br>
-          <!-- {% endfor %} -->
-          <!-- {% set temp = temp + 0.21 * (l.activite|length - 1) %} -->
-        </span>
-        <span style="left:3.1in; width: 1.2in">
-          <!-- {% set user_size = ((l.username|length /16)|round(method='ceil')) %} -->
-          <!-- {% if l.activite|length < user_size %} -->
-            <!-- {% set temp = temp + 0.21 * (user_size - 1) %} -->
-          <!-- {% endif %} -->
-        {{ l.username }}
-        </span>
-        <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
+        {% if format.date == true %}
+          <span style="left:0.15in;"><b>{{l.date}}</b></span>
+        {% endif %}
+        {% if format.desc == true %}
+          <span style="left:1.25in;">
+            <!-- {% for act in l.activite %} -->
+            {{act}}<br>
+            <!-- {% endfor %} -->
+            <!-- {% set temp = temp + 0.21 * (l.activite|length - 1) %} -->
+          </span>
+        {% endif %}
+        {% if format.user == true %}
+          <span style="left:3.1in; width: 1.2in">
+            <!-- {% set user_size = ((l.username|length /16)|round(method='ceil')) %} -->
+            <!-- {% if l.activite|length < user_size %} -->
+              <!-- {% set temp = temp + 0.21 * (user_size - 1) %} -->
+            <!-- {% endif %} -->
+          {{ l.username }}
+          </span>
+        {% endif %}
+        {% if format.user_price == true %}
+          <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
+        {% endif %}
+        {% if format.hours == true %}
         <span style="left:5.38in;width: 1.5in;">{{l.time|replace('h0', 'h00')}}</span>
-        <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
+        {% endif %}
+        {% if format.amount == true %}
+          <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
+        {% endif %}
         <div style="position:absolute;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);margin-top:{{temp}}in;"></div>
         <!-- {% set ns.top = ns.top + 0.08 + temp %} -->
       </div>
