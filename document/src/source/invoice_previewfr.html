@@ -24,15 +24,32 @@
   </div>
     <div class="array_header">
       {% set left_activite = 0.1 %}
+      {% set left_user = 0.1 %}
+      {% set left_user_price = 0.1 %}
       {% if format.date == true %}
-      <span style="left:0.15in;">DATE</span>
-       {% set wsize == 1.15 %}
-       {% set left_activite = left_activite + wsize %}
+        <span style="left:0.15in;">DATE</span>
+        {% set wsize = 1.15 %}
+        {% set left_activite = left_activite + wsize %}
+        {% set left_user = left_user + wsize %}
+        {% set left_user_price = left_user_price + wsize %}
       {% endif %}
-      <span style="left:{{left_activite}}in;">ACTIVITÉ</span>
-      <span style="left:3.1in;">AVOCAT(S)</span>
-      <span style="left:4.49in;">TAUX</span>
-      <span style="left:5.38in;">HEURES</span>
+      {% if format.desc == true %}
+        <span style="left:{{left_activite}}in;">ACTIVITÉ</span>
+        {% set wsize = 1.85 %}
+        {% set left_user = left_user + wsize %}
+        {% set left_user_price = left_user_price + wsize %}
+      {% endif %}
+      {% if format.user == true %}
+        <span style="left:{{left_user}}in;">AVOCAT(S)</span>
+        {% set wsize = 1.39 %}
+        {% set left_user_price = left_user_price + wsize %}
+      {% endif %}
+      {% if format.user_price == true %}
+         <span style="left:{{left_user_price}}in;">TAUX</span>
+      {% endif %}
+      {% if format.hours == true %}
+         <span style="left:5.38in;">HEURES</span>
+      {% endif %}
       <span style="left:6.215in;">CHF</span>
     </div>
     <!-- {% set ns = namespace (top = 0.00) %} -->
