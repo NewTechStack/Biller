@@ -23,8 +23,13 @@
     {{name}}
   </div>
     <div class="array_header">
+      {% set left_activite = 0.1 %}
+      {% if format.date == true %}
       <span style="left:0.15in;">DATE</span>
-      <span style="left:1.25in;">ACTIVITÉ</span>
+       {% set wsize == 1.15 %}
+       {% set left_activite = left_activite + wsize %}
+      {% endif %}
+      <span style="left:{{left_activite}}in;">ACTIVITÉ</span>
       <span style="left:3.1in;">AVOCAT(S)</span>
       <span style="left:4.49in;">TAUX</span>
       <span style="left:5.38in;">HEURES</span>
