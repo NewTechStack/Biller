@@ -42,7 +42,7 @@
         <!-- {% set ns.top = ns.top + 0.21 * (l.activite|length) %} -->
         <span style="left:3.1in; width: 1in">
           <!-- {% if l.activite|length < 2 %} -->
-            <!-- {% set ns.top = ns.top + 0.21 * ((l.username|length /16)|round(method='ceil')) %} -->
+            <!-- {% set ns.top = ns.top + 0.21 * ((l.username|length /16)|round(method='ceil') - 1) %} -->
           <!-- {% endif %} -->
           {{l.username}}
         </span>
