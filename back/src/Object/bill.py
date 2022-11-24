@@ -100,7 +100,6 @@ class Bill(Crud, StatusObject):
                     bank[1]["iban"], 
                     f"provision//preview")[1]
             }
-            }
         }
         data["url"] = self.__generate_fact(data)
         return [True, data, None]
