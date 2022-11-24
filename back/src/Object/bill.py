@@ -11,7 +11,7 @@ import json
 class Bill(Crud, StatusObject):
     def __init__(self, id = None):
         Crud.__init__(self, id, 'bill')
-        StatusObject.__init__(self, 2)
+        StatusObject.__init__(self, [1, 2])
 
     def new(self, client_id, folder_id):
         bill_id = str(uuid.uuid4())
