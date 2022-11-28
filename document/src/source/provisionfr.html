@@ -24,14 +24,20 @@
       à titre de provision sur le compte de mon Étude dont
       les coordonnées sont les suivantes :
       </br>
-      <!-- {% for line in banq %} -->
-      {{line}}
-    </br>
-      <!-- {% endfor %} -->
+      Banque : {{bank.name}} <br/>
+      Bénéficiaire : {{bank.benef.name}}<br/>
+      IBAN : <b>{{bank.iban}}</b><br/>
+      Clearing : {{bank.clearing}}<br/>
+      BIC/Swif : {{bank.bic}}<br/>
       </br>
       Je vous remercie de votre confiance et vous prie de croire, cher Monsieur, chère Madame, à
       l’assurance de mes sentiments bien dévoués.
     </div>
+    {% if qr is not none %}
+      <div style="position:absolute;top:7.8in;left:0.3in; width:8.5in; margin-top:{{ns.top}}in; overflow: hidden">
+        {{ qr }}
+      </div>
+    {% endif %}
 </body>
 <STYLE>
   div.address {
