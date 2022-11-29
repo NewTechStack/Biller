@@ -90,7 +90,7 @@ class BillV2():
                     "id": timesheet["timesheet_id"],
                     "price": timesheet["price_HT"] / timesheet["duration"],
                     "sum": timesheet["price"],
-                    "user": dict(self.ru.get(timesheet["user"]).pluck(["image", "lang", "first_name", "last_name"]).run())
+                    "user": dict(self.ru.get(timesheet["user"]).pluck(["id", "image", "lang", "first_name", "last_name"]).run())
                     }
                     t.append(timesheet)
                 bill["timesheet"] = t
