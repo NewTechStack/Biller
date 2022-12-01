@@ -5,6 +5,8 @@
     <div class=logo />
     </div>
     <div class="address">
+      <b style='text-decoration:underline'>Par voie électronique</b>
+      <br/>
       <!-- {% for line in address %} -->
         {{line}}
         <br/>
@@ -23,23 +25,24 @@
       <b>CHF {{ amount_TTC }}</b>,
       à titre de provision sur le compte de mon Étude dont
       les coordonnées sont les suivantes :
-      </br>
+      <br/><br/>
       Banque : {{bank.name}} <br/>
       Bénéficiaire : {{bank.benef.name}}<br/>
       IBAN : <b>{{bank.iban}}</b><br/>
       Clearing : {{bank.clearing}}<br/>
       BIC/Swif : {{bank.bic}}<br/>
-      </br>
+      <br/>
       Je vous remercie de votre confiance et vous prie de croire, cher Monsieur, chère Madame, à
       l’assurance de mes sentiments bien dévoués.
     </div>
     {% if qr is not none %}
-      <div style="position:absolute;top:7.8in;left:0.3in; width:8.5in; margin-top:{{ns.top}}in; overflow: hidden">
+      <div style="position:absolute;top:7.8in;left:0.1in; width:8.9in; overflow: hidden">
         {{ qr }}
       </div>
     {% endif %}
 </body>
 <STYLE>
+
   div.address {
     position:absolute;
     top:1.60in;
@@ -68,7 +71,7 @@
 
   div.provision_text {
     left:0.90in;
-    width:7.215in;
+    width:8.215in;
     position:absolute;
     top:2.84in;
     line-height:0.23in;
