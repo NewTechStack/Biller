@@ -21,30 +21,75 @@
     {{name}}
   </div>
     <div class="array_header">
-      <span style="left:0.15in;">DATE</span>
-      <span style="left:1.25in;">ACTIVITÉ</span>
-      <span style="left:3.1in;">AVOCAT(S)</span>
-      <span style="left:4.49in;">TAUX</span>
-      <span style="left:5.38in;">HEURES</span>
-      <span style="left:6.215in;">CHF</span>
+      {% set left_activite = 0.1 %}
+      {% set left_user = 0.1 %}
+      {% set left_user_price = 0.1 %}
+      {% if format.date == true %}
+        <span style="left:0.15in;">DATE</span>
+        {% set wsize = 1.15 %}
+        {% set left_activite = left_activite + wsize %}
+        {% set left_user = left_user + wsize %}
+        {% set left_user_price = left_user_price + wsize %}
+      {% endif %}
+      {% if format.desc == true %}
+        <span style="left:{{left_activite}}in;">ACTIVITÉ</span>
+        {% set wsize = 1.85 %}
+        {% set left_user = left_user + wsize %}
+        {% set left_user_price = left_user_price + wsize %}
+      {% endif %}
+      {% if format.user == true %}
+        <span style="left:{{left_user}}in;">AVOCAT(S)</span>
+        {% set wsize = 1.39 %}
+        {% set left_user_price = left_user_price + wsize %}
+      {% endif %}
+      {% if format.user_price == true %}
+         <span style="left:{{left_user_price}}in;">TAUX</span>
+      {% endif %}
+      {% if format.hours == true %}
+         <span style="left:5.38in;">HEURES</span>
+      {% endif %}
+      {% if format.amount == true %}
+        <span style="left:6.215in;">CHF</span>
+      {% endif %}
     </div>
-    <!-- {% set ns = namespace (top = 0) %} -->
+    <!-- {% set ns = namespace (top = 0.00) %} -->
     <!-- {% for l in lines %} -->
+      
       <div class="line" style="top: 4.4in; margin-top:{{ns.top}}in;">
-        <span style="left:0.15in;"><b>{{l.date}}</b></span>
-        <span style="left:1.25in;">
-          <!-- {% for act in l.activite %} -->
-          <!-- {% set ns.top = ns.top + 0.22 %} -->
-          {{act}}<br>
-          <!-- {% endfor %} -->
-        </span>
-        <span style="left:3.1in;">{{l.username}}</span>
-        <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
+        <!-- {% set temp = 0.22 %} -->
+        {% if format.date == true %}
+          <span style="left:0.15in;"><b>{{l.date}}</b></span>
+        {% endif %}
+        {% if format.desc == true %}
+          <span style="left:1.25in;">
+            <!-- {% for act in l.activite %} -->
+            {{act}}<br>
+            <!-- {% endfor %} -->
+            <!-- {% set temp = temp + 0.21 * (l.activite|length - 1) %} -->
+          </span>
+        {% endif %}
+        {% if format.user == true %}
+          <span style="left:3.1in; width: 1.2in">
+            <!-- {% set user_size = ((l.username|length /16)|round(method='ceil')) %} -->
+            <!-- {% if l.activite|length < user_size %} -->
+              <!-- {% set temp = temp + 0.21 * (user_size - 1) %} -->
+            <!-- {% endif %} -->
+          {{ l.username }}
+          </span>
+        {% endif %}
+        {% if format.user_price == true %}
+          <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
+        {% endif %}
+        {% if format.hours == true %}
         <span style="left:5.38in;width: 1.5in;">{{l.time|replace('h0', 'h00')}}</span>
-        <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
-        <div style="position:absolute;top:0.21in;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6)"></div>
+        {% endif %}
+        {% if format.amount == true %}
+          <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
+        {% endif %}
+        <div style="position:absolute;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);margin-top:{{temp}}in;"></div>
+        <!-- {% set ns.top = ns.top + 0.08 + temp %} -->
       </div>
-      <!-- {% set ns.top = ns.top + 0.22 %} -->
+     
     <!-- {% endfor %} -->
     <div class="invoice_recap" style="left:5.06in; margin-top:{{ns.top}}in">
       <b>SOUS-TOTAL (HT)</b><br/>
@@ -136,7 +181,7 @@
     <br/>
   </div>
 {%else %}
-  <div style="position:absolute;top:7.8in;left:0.3in; width:8.5in; margin-top:{{ns.top}}in; overflow: hidden">
+  <div style="position:absolute;top:6.5in; left: 0.6in; width:8.5in; margin-top:{{ns.top}}in; overflow: hidden">
     {{ qr }}
   </div>
 {% endif %}
@@ -220,7 +265,7 @@
 
   div.invoice_recap {
     position:absolute;
-    top:5.2in;
+    top:4.6in;
     line-height:0.27in;
     font-style:normal;
     font-weight:normal;
