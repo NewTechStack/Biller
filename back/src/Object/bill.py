@@ -31,6 +31,8 @@ class Bill(Crud, StatusObject):
           return [False, "Invalid 'bank' str", 400]
         if not "before_payment" in data or not isinstance(data["before_payment"], int):
           return [False, "Invalid 'before_payment' int", 400]
+        if not "qr" in data or data["qr"] not in [True, False]:
+            return [False, "Missing 'QR' boolean", 400]
         tva = data["TVA"]
         data["TVA"] = float(data["TVA"])
         if data["bill_type"] == "invoice":
@@ -49,6 +51,15 @@ class Bill(Crud, StatusObject):
     def __provision(self, data):
         if not "prov_amount" in data or not any([isinstance(data["prov_amount"], x) for x in [float, int]]):
             return [False, "Invalid 'prov_amount' float or int", 400]
+        folder_id = self.id.rsplit('/', 1)[0]
+        folder = Folder(folder_id).get()
+        if folder[1] is None:
+            return [False, f"Invalid folder id: '{folder_id}'", 404]
+        user_in_charge_id = folder[1]["user_in_charge"]
+        user = User(user_in_charge_id).get()
+        name = ""
+        if user[1] is not None:
+            name = f"{user[1]['first_name']} {user[1]['last_name']}"
         prov_amount = data["prov_amount"]
         data["price"] = {
             "HT": self.__HT_price(prov_amount),
@@ -84,6 +95,7 @@ class Bill(Crud, StatusObject):
                     "name": bank[1]["name"]      
                 },
                 "address": data["address"],
+                "user_name": name,
                 "qr": self.swiss_qr(
                     {
                         "name": bank[1]["benef"]["name"],
@@ -98,7 +110,7 @@ class Bill(Crud, StatusObject):
                     data["lang"], 
                     data["price"]["total"], 
                     bank[1]["iban"], 
-                    f"provision//preview")[1]
+                    f"provision//{self.id.split('/')[-1].split('-')[1]}")[1] if data["qr"] is True else False
             }
         }
         data["url"] = self.__generate_fact(data)
@@ -200,6 +212,7 @@ class Bill(Crud, StatusObject):
                     "iban": bank[1]["iban"],
                     "name": bank[1]["name"]      
                 },
+                
                 "before": data["before_payment"],
                 "address": data["address"],
                 "format": {x: (x in data["format"]) for x in ["date","desc","hours","user","user_price","amount"]},
@@ -217,7 +230,7 @@ class Bill(Crud, StatusObject):
                     data["lang"], 
                     data["price"]["total"] - sum(t["price"] for t in data["provisions"]) , 
                     bank[1]["iban"], 
-                    f"invoice/{data['before_payment']}/preview")[1]
+                    f"invoice/j{data['before_payment']}/{self.id.split('/')[-1].split('-')[1]}")[1] if data["qr"] is True else False
             }
         }
         data["url"] = self.__generate_fact(data)
