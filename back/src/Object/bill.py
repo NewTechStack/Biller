@@ -110,7 +110,7 @@ class Bill(Crud, StatusObject):
                     data["lang"], 
                     data["price"]["total"], 
                     bank[1]["iban"], 
-                    f"provision//{self.id.split('/')[-1].split('-')[1]}")[1] if data["qr"] is True else False
+                    f"provision//{self.id.split('/')[-1].split('-')[1]}")[1] if data["qr"] is True else None
             }
         }
         data["url"] = self.__generate_fact(data)
@@ -230,7 +230,7 @@ class Bill(Crud, StatusObject):
                     data["lang"], 
                     data["price"]["total"] - sum(t["price"] for t in data["provisions"]) , 
                     bank[1]["iban"], 
-                    f"invoice/j{data['before_payment']}/{self.id.split('/')[-1].split('-')[1]}")[1] if data["qr"] is True else False
+                    f"invoice/j{data['before_payment']}/{self.id.split('/')[-1].split('-')[1]}")[1] if data["qr"] is True else None
             }
         }
         data["url"] = self.__generate_fact(data)
