@@ -32,7 +32,7 @@ class Bill(Crud, StatusObject):
         if not "before_payment" in data or not isinstance(data["before_payment"], int):
           return [False, "Invalid 'before_payment' int", 400]
         if not "qr" in data or data["qr"] not in [True, False]:
-            return [False, "Missing 'QR' boolean", 400]
+            data["qr"] = False
         tva = data["TVA"]
         data["TVA"] = float(data["TVA"])
         if data["bill_type"] == "invoice":
