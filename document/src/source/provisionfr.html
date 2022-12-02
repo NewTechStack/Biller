@@ -35,8 +35,11 @@
       Je vous remercie de votre confiance et vous prie de croire, cher Monsieur, chère Madame, à
       l’assurance de mes sentiments bien dévoués.
     </div>
+    <div class="username">
+    {{user_name}}
+    </div>
     {% if qr is not none %}
-      <div style="position:absolute;top:7.8in;left:0.1in; width:8.9in; overflow: hidden">
+      <div style="position:absolute;top:8.0in;left:0.1in; width:8.9in; overflow: hidden">
         {{ qr }}
       </div>
     {% endif %}
@@ -56,9 +59,9 @@
     color:#000000;
   }
 
-  div.address {
+  div.username {
     position:absolute;
-    top:1.60in;
+    top:7.60in;
     left:5.56in;
     width:2.80in;
     line-height:0.23in;
