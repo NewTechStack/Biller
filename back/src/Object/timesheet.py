@@ -22,5 +22,5 @@ class Timesheet(Crud, StatusObject):
         input["price"] = data.get("price", None)
         input["status"] = 0
         if "desc" in data:
-            input["desc"] = [data["desc"][i:i+30] for i in range(0, len(data["desc"]), 30)]
+            input["desc"] = [data["desc"]]
         return self._push(input)
