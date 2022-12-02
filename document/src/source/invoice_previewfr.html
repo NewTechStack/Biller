@@ -61,20 +61,19 @@
           <span style="left:0.15in;"><b>{{l.date}}</b></span>
         {% endif %}
         {% if format.desc == true %}
-          <span style="left:1.25in;">
-            <!-- {% for act in l.activite %} -->
-            {{act}}<br>
-            <!-- {% endfor %} -->
-            <!-- {% set temp = temp + 0.21 * (l.activite|length - 1) %} -->
+          <span style="left:1.25in; width1.8in;">
+            <!-- {% set act_size = ((l.activite|length /25)|round(method='ceil')) %} -->
+              {{act}}<br>
+            <!-- {% set temp = temp + 0.21 * (act_size - 1) %} -->
           </span>
         {% endif %}
         {% if format.user == true %}
           <span style="left:3.1in; width: 1.2in">
             <!-- {% set user_size = ((l.username|length /16)|round(method='ceil')) %} -->
-            <!-- {% if l.activite|length < user_size %} -->
+            <!-- {% if act_size < user_size %} -->
               <!-- {% set temp = temp + 0.21 * (user_size - 1) %} -->
             <!-- {% endif %} -->
-          {{ l.username }}
+            {{ l.username }}
           </span>
         {% endif %}
         {% if format.user_price == true %}
