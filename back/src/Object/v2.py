@@ -82,7 +82,7 @@ class BillV2():
             sum["total"] += bill["price"]["total"]
             if bill["bill_type"] == "invoice":
                 bill_folder = bill["client_folder"]
-                bill['provision_available'] = list(self.rb.filter({"type": "provision", "status": 2, "client_folder": bill_folder}).pluck("id", "price", "date", "url").run())
+                bill['provision_available'] = list(self.rb.filter({"bill_type": "provision", "status": 2, "client_folder": bill_folder}).pluck("id", "price", "date", "url").run())
             del bill["client_folder"]
             t = []
             if "timesheet" in bill:
