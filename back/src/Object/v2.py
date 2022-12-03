@@ -67,7 +67,7 @@ class BillV2():
         ).without(
             {"right": {"id": True}}
         ).zip().pluck(
-            ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions", "bill_type", "url", "user"]
+            ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions", "bill_type", "url", "user", "client_folder"]
         )
         total = int(req.count().run())
         bills = list(req.skip(page * number).limit(number).run())
@@ -80,6 +80,9 @@ class BillV2():
             sum["HT"] += bill["price"]["HT"]
             sum["taxes"] += bill["price"]["taxes"]
             sum["total"] += bill["price"]["total"]
+            if bill["type"] == "invoice":
+                bill['provision_available'] = list(self.rb.filter({"type": "provision", "status": 2, "client_folder": bill["client_folder"]}).pluck("id", "price", "date", "url"))
+            del bill["client_folder"]
             t = []
             if "timesheet" in bill:
                 for timesheet in bill["timesheet"]:
