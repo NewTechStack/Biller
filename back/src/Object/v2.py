@@ -70,7 +70,7 @@ class BillV2():
             ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions", "bill_type", "url", "user"]
         )
         total = int(req.count().run())
-        bills = list(req.run())
+        bills = list(req.run().skip(page * number).limit(number))
         sum = {
             "HT": 0,
             "taxes": 0,
@@ -157,7 +157,7 @@ class FolderV2():
                 "actual_page": page + 1
             }
         }
-        return [True, {"list": list(req.run()), "pagination": pagination}, None]
+        return [True, {"list": list(req.run().skip(page * number).limit(number)), "pagination": pagination}, None]
 
 class TimesheetV2():
     def __init__(self):
