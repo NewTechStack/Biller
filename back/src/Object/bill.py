@@ -179,7 +179,7 @@ class Bill(Crud, StatusObject):
         data = ret[1]
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
-        data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
+        data["price"]["total"] =  round(data["price"]["HT"] + data["price"]["taxes"], 2)
         data["timesheet"] = lines
         data['lang'] = 'fr'
         data["template"] = {
@@ -401,7 +401,7 @@ class Bill(Crud, StatusObject):
           },
           "language": lang,
           "currency": "CHF",
-          "amount": amount,
+          "amount":  round(amount, 2),
           "account": iban,
           "additional_information": addi,
         })
