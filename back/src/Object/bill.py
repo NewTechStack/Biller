@@ -411,8 +411,9 @@ class Bill(Crud, StatusObject):
         headers = {
           'Content-Type': 'application/json'
         }
-
-        response = requests.request("POST", url, headers=headers, data=payload)
-
-        svg = json.loads(response.text)["svg"].replace("height='106mm'", "height='135mm'").replace("width='210mm'", "width='269mm'")
+        try:
+            response = requests.request("POST", url, headers=headers, data=payload)
+            svg = json.loads(response.text)["svg"].replace("height='106mm'", "height='135mm'").replace("width='210mm'", "width='269mm'")
+        except:
+            svg = None
         return [True, svg, None]
