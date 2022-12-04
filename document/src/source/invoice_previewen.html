@@ -11,12 +11,12 @@
       <!-- {% endfor %} -->
     </div>
     <div class="invoice_details">
-      <b>FACTURE #{{num}}</b>
+      <b>INVOICE #{{num}}</b>
       <br/>
       {{date}}
     </div>
   <div class="folder_details">
-    <b>DOSSIER</b>
+    <b>MATTER</b>
     <br/>
     {{name}}
   </div>
@@ -32,21 +32,21 @@
         {% set left_user_price = left_user_price + wsize %}
       {% endif %}
       {% if format.desc == true %}
-        <span style="left:{{left_activite}}in;">ACTIVITÉ</span>
+        <span style="left:{{left_activite}}in;">ACTIVITY</span>
         {% set wsize = 1.85 %}
         {% set left_user = left_user + wsize %}
         {% set left_user_price = left_user_price + wsize %}
       {% endif %}
       {% if format.user == true %}
-        <span style="left:{{left_user}}in;">AVOCAT(S)</span>
+        <span style="left:{{left_user}}in;">ATTORNEY(S)</span>
         {% set wsize = 1.39 %}
         {% set left_user_price = left_user_price + wsize %}
       {% endif %}
       {% if format.user_price == true %}
-         <span style="left:{{left_user_price}}in;">TAUX</span>
+         <span style="left:{{left_user_price}}in;">RATE</span>
       {% endif %}
       {% if format.hours == true %}
-         <span style="left:5.38in;">HEURES</span>
+         <span style="left:5.38in;">HOURS</span>
       {% endif %}
       {% if format.amount == true %}
         <span style="left:6.215in;">CHF</span>
@@ -91,23 +91,23 @@
      
     <!-- {% endfor %} -->
     <div class="invoice_recap" style="left:5.06in; margin-top:{{ns.top}}in">
-      <b>SOUS-TOTAL (HT)</b><br/>
+      <b>SUB-TOTAL (excl. tax)</b><br/>
       <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
         <div style="width: 3.3in;background-color: #000; border-radius: 40in;"></div>
         <!-- {% if fees_percent != 0 %} -->
-          Frais admin.({{fees_percent}}%)<br/>
+          Admin fees.({{fees_percent}}%)<br/>
         <!-- {% endif %} -->
         <!-- {% if reduction_amount != 0 %} -->
-          Réduction({{reduction_amount}}{{reduction_unit}})<br/>
+          Discount({{reduction_amount}}{{reduction_unit}})<br/>
         <!-- {% endif %} -->
         <!-- {% if tva_amount != 0 %} -->
-        TVA ({{tva_amount}}%)<br/>
+        VAT ({{tva_amount}}%)<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
       <!-- {% if provision_amount != 0 %} -->
         <div style="width: 3.3in;background-color: #000; border-radius: 40in;"></div>
         <!-- {% if provision_amount != 0 %} -->
-          Provision (TTC)<br/>
+          Advance payment (TTC)<br/>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
       <div style="width: 3.3in;background-color: #000; border-radius: 40in;margin-bottom: 0.09in;"></div>
@@ -170,13 +170,13 @@
     </div>
 {% if qr is none %}
   <div style="position:absolute;top:8in;left:1in;width:4.00in;line-height:0.21in; margin-top:{{ns.top}}in;">
-    Banque : {{bank.name}} <br/>
-    Bénéficiaire : {{bank.benef.name}}<br/>
+    Bank : {{bank.name}} <br/>
+    beneficiary : {{bank.benef.name}}<br/>
     IBAN : <b>{{bank.iban}}</b><br/>
     Clearing : {{bank.clearing}}<br/>
     BIC/Swif : {{bank.bic}}<br/>
     REF. : <b>Facture #{{num}}</b><br/>
-    Délai de paiement :  {{before}} jours net<br/>
+    Payment term :  {{before}} days net<br/>
     <br/>
   </div>
 {%else %}
