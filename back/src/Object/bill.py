@@ -387,7 +387,7 @@ class Bill(Crud, StatusObject):
    
     def swiss_qr(self, creditor, debtor, lang, amount, iban, addi):
         url = "http://qr:8080/generate/svg"
-
+        print("amount", amount)
         payload = json.dumps({
           "creditor": {
             "name": creditor["name"],
