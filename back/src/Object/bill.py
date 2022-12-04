@@ -185,7 +185,6 @@ class Bill(Crud, StatusObject):
         if data["price"]["total"] < 0:
             data["qr"] = False
         data["timesheet"] = lines
-        data['lang'] = 'fr'
         data["template"] = {
             "name": f"invoice_preview{data['lang']}.html",
             "title": f"preview_{self.id.split('/')[-1]}",
