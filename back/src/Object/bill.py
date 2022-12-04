@@ -80,6 +80,8 @@ class Bill(Crud, StatusObject):
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] = data["price"]["HT"] + data["price"]["taxes"]
+        if data["price"]["HT"] < 0:
+            data["qr"] = False
         data["template"] = {
             "name": f"provision_preview{data['lang']}.html",
             "title": f"preview_{self.id.split('/')[-1]}",
@@ -180,6 +182,8 @@ class Bill(Crud, StatusObject):
         data["price"]["HT"] = round(data["price"]["HT"], 2)
         data["price"]["taxes"] = round(self.__taxe(data["price"]["HT"], data["TVA"]), 2)
         data["price"]["total"] =  round(data["price"]["HT"] + data["price"]["taxes"], 2)
+        if data["price"]["HT"] < 0:
+            data["qr"] = False
         data["timesheet"] = lines
         data['lang'] = 'fr'
         data["template"] = {
@@ -387,7 +391,6 @@ class Bill(Crud, StatusObject):
    
     def swiss_qr(self, creditor, debtor, lang, amount, iban, addi):
         url = "http://qr:8080/generate/svg"
-        print("amount", amount)
         payload = json.dumps({
           "creditor": {
             "name": creditor["name"],
