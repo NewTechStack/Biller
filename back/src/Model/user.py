@@ -31,3 +31,11 @@ def user_edit(cn, nextc):
 def user_delete(cn, nextc):
     err = cn.private['ged_user'].delete()
     return cn.call_next(nextc, err)
+
+def user_nointerest_add(cn, nextc):
+    err = cn.private['user'].nointerest_add(cn.private['folder'].id)
+    return cn.call_next(nextc, err)
+
+def user_nointerest_delete(cn, nextc):
+    err = cn.private['user'].nointerest_delete(cn.private['folder'].id)
+    return cn.call_next(nextc, err)
