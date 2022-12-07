@@ -25,3 +25,23 @@ class User(Crud):
         if extra is not None:
             data['extra'] = extra
         return self._push(data)
+    
+    def nointerest_add(folder_id):
+        data = self.get()
+        if data is None:
+            return [False, "Invalid user", 404]
+        if not "no_interest" in data:
+            data["no_interest"] = []
+        data["no_interest"].append(folder_id)
+        return self._push(data)
+    
+    def nointerest_delete(folder_id):
+        data = self.get()
+        if data is None:
+            return [False, "Invalid user", 404]
+        if not "no_interest" in data:
+            data["no_interest"] = []
+        if not folder_id in data["no_interest"]:
+            return [False, f"folder '{folder_id}'not in no interest list", 404]
+        data["no_interest"].remove(folder_id)
+        return self._push(data)
