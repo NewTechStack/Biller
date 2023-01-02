@@ -60,7 +60,7 @@ def index():
     name = request.json.get("name", None)
     title = request.json.get("title", "facture")
     bucket = request.json.get("bucket", "previews")
-    bucket = bucket if bucket in ["files", "previews"] else "previews"
+    bucket = bucket if bucket in ["files", "previews", "reports"] else "previews"
     variables = request.json.get("variables", {})
     if name is None:
         return json.dumps(False)
