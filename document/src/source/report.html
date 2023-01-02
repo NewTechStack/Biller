@@ -9,55 +9,24 @@
         margin: 0.5in; /* Marge de 0,5 pouce autour de la page */
       }
 
-      @property --p{
-        syntax: '<number>';
-        inherits: true;
-        initial-value: 0;
+      .bar {
+        height: 20px;
       }
 
-      .pie {
-        --p:20;
-        --b:22px;
-        --c:darkred;
-        --w:150px;
+      .paid {
+        background-color: rgb(21, 101, 192);
+        width: 50%;
+        float: left;
+      }
+      
+      .billed {
+        background-color: rgb(255, 152, 0);
+        float: left;
+      }
 
-        width:var(--w);
-        aspect-ratio:1;
-        position:relative;
-        display:inline-grid;
-        margin:5px;
-        place-content:center;
-        font-size:25px;
-        font-weight:bold;
-        font-family:sans-serif;
-      }
-      .pie:before,
-      .pie:after {
-        content:"";
-        position:absolute;
-        border-radius:50%;
-      }
-      .pie:before {
-        inset:0;
-        background:
-          radial-gradient(farthest-side,var(--c) 98%,#0000) top/var(--b) var(--b) no-repeat,
-          conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
-        -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
-                mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
-      }
-      .pie:after {
-        inset:calc(50% - var(--b)/2);
-        background:var(--c);
-        transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
-      }
-      .no-round:before {
-        background-size:0 0,auto;
-      }
-      .no-round:after {
-        content:none;
-      }
-      @keyframes p {
-        from{--p:0}
+      .non {
+        background-color: red;
+        float: right;
       }
 
       body {
@@ -91,12 +60,13 @@
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <!-- Nom -->
         <div>{{line.name}}</div>
-        <!-- Graphique non payé -->
-        <div class="pie no-round" style="--p:{{line.total_non_payed}};--c:rgb(21, 101, 192);">{{line.total_non_payed}}%</div>
-        <!-- Graphique payé -->
-        <div class="pie no-round" style="--p:{{line.total_payed}};--c:rgb(21, 101, 192);">{{line.total_payed}}%</div>
-        <!-- Temps -->
         <div>{{ line.time }}</div>
+        <!-- Graphique -->
+        <br>
+        <div class="payed" style="width: {{line.payed}}%"></div>
+        <div class="billed" style="width: {{line.billed}}%"></div>
+        <div class="non" style="width: {{line.non_payed}}%"></div>
+        
       </div>
     <!-- {% endfor %} -->
   </div>
