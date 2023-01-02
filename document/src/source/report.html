@@ -62,11 +62,11 @@
         <div>{{line.name}}</div>
         <div>{{ line.time }}</div>
         <!-- Graphique -->
-        <br>
-        <div class="payed" style="width: {{line.payed}}%"></div>
-        <div class="billed" style="width: {{line.billed}}%"></div>
-        <div class="non" style="width: {{line.non_payed}}%"></div>
-        
+       </div>
+      <div>
+        <div class="bar paid" style="width: {{line.payed}}%"></div>
+        <div class="bar billed" style="width: {{line.billed}}%"></div>
+        <div class="bar non" style="width: {{line.non_payed}}%"></div> 
       </div>
     <!-- {% endfor %} -->
   </div>
