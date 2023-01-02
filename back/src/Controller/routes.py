@@ -60,8 +60,8 @@ def setuproute(app, call):
     @app.route('/v2/timsheet',                          ['OPTIONS', 'GET'],          lambda x = None: call([sso_verify_token, timesheets_all]))
     @app.route('/v2/timsheet/byfolders',                ['OPTIONS', 'GET'],          lambda x = None: call([sso_verify_token, timesheets_by_folder]))
     @app.route('/v2/bill',                              ['OPTIONS', 'GET'],          lambda x = None: call([sso_verify_token, bills_all]))
-    @app.route('/v2/user/<>/client/<>/folder/<>/nointerest' ['OPTIONS', 'POST'],     lambda x = None: call([sso_verify_token, user_set_by_id, user_exist, client_set_by_id, client_exist, folder_set_by_id, folder_exist, user_nointerest_add]))
-    @app.route('/v2/user/<>/client/<>/folder/<>/nointerest' ['OPTIONS', 'DELETE'],     lambda x = None: call([sso_verify_token, user_set_by_id, user_exist, client_set_by_id, client_exist, folder_set_by_id, folder_exist, user_nointerest_delete]))
+    @app.route('/v2/user/<>/client/<>/folder/<>/nointerest', ['OPTIONS', 'POST'],     lambda x = None: call([sso_verify_token, user_set_by_id, user_exist, client_set_by_id, client_exist, folder_set_by_id, folder_exist, user_nointerest_add]))
+    @app.route('/v2/user/<>/client/<>/folder/<>/nointerest', ['OPTIONS', 'DELETE'],     lambda x = None: call([sso_verify_token, user_set_by_id, user_exist, client_set_by_id, client_exist, folder_set_by_id, folder_exist, user_nointerest_delete]))
 
 
     def base():
