@@ -157,5 +157,7 @@ services:
       /usr/bin/mc policy set public myminio/files;
       /usr/bin/mc mb myminio/previews;
       /usr/bin/mc policy set public myminio/previews;
+      /usr/bin/mc mb myminio/reports;
+      /usr/bin/mc policy set public myminio/reports;
       exit 0;
       "
