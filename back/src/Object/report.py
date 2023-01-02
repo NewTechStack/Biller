@@ -26,7 +26,7 @@ class Report():
                         "total_non_payed": 10,
                         "time": "10H30"
                     }
-                ]
+                ],
                 "total": "300.- CHF",
                 "total_payed": "30.- CHF"
             }
