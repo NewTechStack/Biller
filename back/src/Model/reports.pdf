@@ -1,0 +1,6 @@
+from Controller.basic import check
+from Object.reports import Reports
+
+def reports(cn, nextc):
+    err = Reports().get()
+    return cn.call_next(nextc, err)
