@@ -22,8 +22,9 @@ class Report():
                 "lines": [
                     {
                         "name": "test",
-                        "total_payed": 90,
-                        "total_non_payed": 10,
+                        "payed": 80,
+                        "non_payed": 10,
+                        "billed": 10,
                         "time": "10H30"
                     }
                 ],
