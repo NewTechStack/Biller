@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Graphiques camembert</title>
+    <style>
+      /* Définition de la taille de la page */
+      @page {
+        size: 8.5in 11in; /* Taille format A4 en pouces */
+        margin: 0.5in; /* Marge de 0,5 pouce autour de la page */
+      }
+
+      @property --p{
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
+      }
+
+      .pie {
+        --p:20;
+        --b:22px;
+        --c:darkred;
+        --w:150px;
+
+        width:var(--w);
+        aspect-ratio:1;
+        position:relative;
+        display:inline-grid;
+        margin:5px;
+        place-content:center;
+        font-size:25px;
+        font-weight:bold;
+        font-family:sans-serif;
+      }
+      .pie:before,
+      .pie:after {
+        content:"";
+        position:absolute;
+        border-radius:50%;
+      }
+      .pie:before {
+        inset:0;
+        background:
+          radial-gradient(farthest-side,var(--c) 98%,#0000) top/var(--b) var(--b) no-repeat,
+          conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
+        -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+                mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+      }
+      .pie:after {
+        inset:calc(50% - var(--b)/2);
+        background:var(--c);
+        transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
+      }
+      .no-round:before {
+        background-size:0 0,auto;
+      }
+      .no-round:after {
+        content:none;
+      }
+      @keyframes p {
+        from{--p:0}
+      }
+
+      body {
+        font-size:25px !important;
+        font-weight:bold;
+        font-family:sans-serif;
+      }
+
+      h1 {
+        margin-left: 1.4in;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Reports</h1>
+  <div style="margin-left: 1.4in">
+    {{ name }} have worked on  {{ lines | length }}
+    <!-- {% if my_dict|length <= 1 %}  -->
+    folder
+    <!-- {% else %} -->
+    folders
+    <!-- {% endif %} -->
+    <br>
+    For a total of {{total}}, {{total_payed}} have since been paid.
+    <br>
+    <br>
+  </div>
+  <div style="width: 6in; margin: 0 auto;">
+    <!-- {% for line in lines %} -->
+      <!-- Ligne -->
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <!-- Nom -->
+        <div>{{line.name}}</div>
+        <!-- Graphique non payé -->
+        <div class="pie no-round" style="--p:{{line.total_non_payed}};--c:rgb(21, 101, 192);">{{line.total_non_payed}}%</div>
+        <!-- Graphique payé -->
+        <div class="pie no-round" style="--p:{{line.total_payed}};--c:rgb(21, 101, 192);">{{line.total_payed}}%</div>
+        <!-- Temps -->
+        <div>{{ line.time }}</div>
+      </div>
+    <!-- {% endfor %} -->
+  </div>
+</body>
+</html>
