@@ -16,7 +16,20 @@ class Report():
         data = {
             "name": f"report.html",
             "title": f"damn",
-            "variables": {}
+            "bucket": "reports",
+            "variables": {
+                "name": "Eliot Dujardin",
+                "lines": [
+                    {
+                        "name": "test",
+                        "total_payed": 90,
+                        "total_non_payed": 10,
+                        "time": "10H30"
+                    }
+                ]
+                "total": "300.- CHF",
+                "total_payed": "30.- CHF"
+            }
         }
         response = requests.request("POST", url, data=json.dumps(data), headers={'content-type': "application/json"})
         return [True, json.loads(response.text), 200]
