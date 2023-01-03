@@ -14,8 +14,8 @@ class Report():
     def __currency_format(self, price):
         return f"{price:_.2f}".replace(".00", ".-").replace("_", " ")
     
-    def __hours_format(self, price):
-        return f"{price:_.2f}".split(".")[0] + "h"
+    def __hours_format(self, hours):
+        return f"{hours:_.2f}".split(".")[0] + "h"
     
     def get(self):
         url = "http://template:8080/template/pdf"
