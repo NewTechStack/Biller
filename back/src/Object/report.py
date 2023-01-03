@@ -47,6 +47,7 @@ class Report():
             
                         "total_raw": total
                     })
+        total_hours = sum([line["time_raw"] for line in lines])
         
         url = "http://template:8080/template/pdf"
         data = {
@@ -55,9 +56,9 @@ class Report():
             "bucket": "reports",
             "variables": {
                 "name": "Eliot Dujardin",
-                "total_hours": self.__hours_format(sum([line["time_raw"] for line in lines])),
+                "total_hours": self.__hours_format(total_hours),
                 "total_priced": self.__currency_format(sum([line["total_raw"] for line in lines])) + " CHF",
-                "avg_price": self.__currency_format((sum([line["total_raw"] for line in lines]) / len(lines)) if len(lines) > 0 else 0) + " CHF",
+                "avg_price": self.__currency_format((sum([line["total_raw"] for line in lines]) / total_hours if total_hours > 0 else 1) + " CHF",
                 "total_payed": self.__currency_format(sum([line["paid_price_raw"] for line in lines])) + " CHF",
                 "lines": lines,
             }
