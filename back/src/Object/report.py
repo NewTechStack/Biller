@@ -10,6 +10,7 @@ class Report():
         self.rt = get_conn().db("ged").table("timesheet")
         self.cl = get_conn().db("ged").table("client")
         self.fo = get_conn().db("ged").table("folder")
+        self.us = get_conn().db("ged").table("user")
         
     def __currency_format(self, price):
         return f"{price:_.2f}".replace(".00", ".-").replace("_", " ")
@@ -55,12 +56,13 @@ class Report():
         total_hours = sum([d["duration"] for d in list(self.rt.filter({"user": user}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run())])
         
         url = "http://template:8080/template/pdf"
+        user =  dict(self.us.get(user).run())
         data = {
             "name": f"report.html",
             "title": f"damn",
             "bucket": "reports",
             "variables": {
-                "name": "Eliot Dujardin",
+                "name": f"{user['first_name']} {user['last_name']}",
                 "total_hours": self.__hours_format(total_hours),
                 "total_priced": self.__currency_format(sum([line["total_raw"] for line in lines])) + " CHF",
                 "avg_price": self.__currency_format(sum([line["total_raw"] for line in lines]) / (total_hours if total_hours > 0 else 1)) + " CHF",
