@@ -61,6 +61,7 @@ class Report():
                 "lines": lines,
             }
         }
+        print(damn)
         response = requests.request("POST", url, data=json.dumps(data), headers={'content-type': "application/json"})
-        return [True, {"url": json.loads(response.text), "data": damn}, 200]
+        return [True, {"url": json.loads(response.text), "data": ""}, 200]
       
