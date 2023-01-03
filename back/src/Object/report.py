@@ -17,8 +17,8 @@ class Report():
     def get(self, start = 0, end=1670239999, user = "ca1e6590-47d9-4ee0-ba9f-533c1de65325"):
         
         lines = []
-        
-        damn = self.rt.filter({"status": 0, "user": user}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run()
+        base = self.rt.filter({"status": 0, "user": user}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
+        damn = sum([d["duration"] for d in list(base.pluck(["duration"]).run())])
         paid_price = 10000
         billed_price = 1000
         non_price = 200
@@ -62,5 +62,5 @@ class Report():
             }
         }
         response = requests.request("POST", url, data=json.dumps(data), headers={'content-type': "application/json"})
-        return [True, {"url": json.loads(response.text), "data": list(damn)}, 200]
+        return [True, {"url": json.loads(response.text), "data": damn}, 200]
       
