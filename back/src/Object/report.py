@@ -18,6 +18,36 @@ class Report():
         return f"{hours:_.2f}".split(".")[0] + "h"
     
     def get(self):
+        
+        lines = []
+        
+        paid_price = 1000
+        billed_price = 1000
+        non_price = 200
+        total = paid_price + billed_price + non_price
+        time = 10
+        lines.append({
+                        "name": "test",
+                        "avg_price": self.__currency_format(total/time) + " CHF",
+                        
+                        "paid_perc": int(f"{paid_price/total:_.0f}"),
+                        "paid_price": self.__currency_format(paid_price) + " CHF",
+                        "paid_price_raw": paid_price,
+                        
+                        "billed_perc": int(f"{billed_price/total:_.0f}"),
+                        "billed_price": self.__currency_format(billed_price) + " CHF",
+                        "billed_price_raw": billed_price,
+                        
+                        "non_perc": int(f"{non_price/total:_.0f}"),
+                        "non_price": self.__currency_format(non_price) + " CHF",
+                        "non_price_raw": non_price,
+                        
+                        "time":  self.__hours_format(time),
+                        "time_raw": time,
+            
+                        "total_raw": total
+                    })
+        
         url = "http://template:8080/template/pdf"
         data = {
             "name": f"report.html",
@@ -25,27 +55,11 @@ class Report():
             "bucket": "reports",
             "variables": {
                 "name": "Eliot Dujardin",
-                "total_hours": self.__hours_format(10),
-                "total_priced": self.__currency_format(1999) + " CHF",
-                "avg_price": self.__currency_format(300) + " CHF",
-                "total_payed": self.__currency_format(1599) + " CHF",
-                "lines": [
-                    {
-                        "name": "test",
-                        "avg_price": self.__currency_format(300) + " CHF",
-                        
-                        "paid_perc": 80,
-                        "paid_price": self.__currency_format(1999) + " CHF",
-                        
-                        "billed_perc": 10,
-                        "billed_price": self.__currency_format(80) + " CHF",
-                        
-                        "non_perc": 10,
-                        "non_price": self.__currency_format(80) + " CHF",
-                        
-                        "time":  self.__hours_format(10)
-                    }
-                ],
+                "total_hours": self.__hours_format(sum([line["time_raw"] for line in lines])),
+                "total_priced": self.__currency_format(sum([line["total_raw"] for line in lines])) + " CHF",
+                "avg_price": self.__currency_format((sum([line["total_raw"] for line in lines]) / len(lines)) if len(lines) > 0 else 0) + " CHF",
+                "total_payed": self.__currency_format(sum([line["paid_price_raw"] for line in lines])) + " CHF",
+                "lines": lines,
             }
         }
         response = requests.request("POST", url, data=json.dumps(data), headers={'content-type': "application/json"})
