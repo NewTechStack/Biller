@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime
 import json
 from math import ceil
+import datetime
 
 class Report():
     def __init__(self, id = None):
@@ -63,6 +64,8 @@ class Report():
             "bucket": "reports",
             "variables": {
                 "name": f"{user['first_name']} {user['last_name']}",
+                "date_start":  datetime.datetime.fromtimestamp(start).strftime('%d/%m/%Y'),
+                "date_end":  datetime.datetime.fromtimestamp(end).strftime('%d/%m/%Y'),
                 "total_hours": self.__hours_format(total_hours),
                 "total_priced": self.__currency_format(sum([line["total_raw"] for line in lines])) + " CHF",
                 "avg_price": self.__currency_format(sum([line["total_raw"] for line in lines]) / (total_hours if total_hours > 0 else 1)) + " CHF",
