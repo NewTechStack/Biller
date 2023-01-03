@@ -20,6 +20,8 @@ class Timesheet(Crud, StatusObject):
         input["duration"] = data.get("duration", None)
         input["user"] = data.get("user", None)
         input["price"] = data.get("price", None)
+        if "extra" in data:
+            input["extra"] = data["extra"]
         input["status"] = 0
         if "desc" in data:
             input["desc"] = data["desc"]
