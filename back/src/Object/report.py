@@ -58,7 +58,7 @@ class Report():
                 "name": "Eliot Dujardin",
                 "total_hours": self.__hours_format(total_hours),
                 "total_priced": self.__currency_format(sum([line["total_raw"] for line in lines])) + " CHF",
-                "avg_price": self.__currency_format((sum([line["total_raw"] for line in lines]) / total_hours if total_hours > 0 else 1) + " CHF",
+                "avg_price": self.__currency_format(sum([line["total_raw"] for line in lines]) / (total_hours if total_hours > 0 else 1)) + " CHF",
                 "total_payed": self.__currency_format(sum([line["paid_price_raw"] for line in lines])) + " CHF",
                 "lines": lines,
             }
