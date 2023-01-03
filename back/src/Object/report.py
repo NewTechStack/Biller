@@ -26,7 +26,7 @@ class Report():
             time =  sum([d["duration"] for d in list(self.rt.filter({"user": user,  "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run())])
             lines.append({
                         "name": "test",
-                        "avg_price": self.__currency_format(total/time) + " CHF",
+                        "avg_price": self.__currency_format(total/(time if time > 0 else 1)) + " CHF",
                         
                         "paid_perc": int(f"{paid_price*100/total:_.0f}"),
                         "paid_price": self.__currency_format(paid_price) + " CHF",
