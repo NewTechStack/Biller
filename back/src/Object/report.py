@@ -57,7 +57,10 @@ class Report():
         total_hours = sum([d["duration"] for d in list(self.rt.filter({"user": user}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run())])
         
         url = "http://template:8080/template/pdf"
-        user =  dict(self.us.get(user).run())
+        try:
+            user =  dict(self.us.get(user).run())
+        except:
+            return [False, "err", 500]
         data = {
             "name": f"report.html",
             "title": f"damn",
