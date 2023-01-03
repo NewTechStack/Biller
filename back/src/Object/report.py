@@ -30,15 +30,15 @@ class Report():
                         "name": "test",
                         "avg_price": self.__currency_format(total/time) + " CHF",
                         
-                        "paid_perc": int(f"{paid_price/total:_.0f}"),
+                        "paid_perc": int(f"{paid_price*100/total:_.0f}"),
                         "paid_price": self.__currency_format(paid_price) + " CHF",
                         "paid_price_raw": paid_price,
                         
-                        "billed_perc": int(f"{billed_price/total:_.0f}"),
+                        "billed_perc": int(f"{billed_price*100/total:_.0f}"),
                         "billed_price": self.__currency_format(billed_price) + " CHF",
                         "billed_price_raw": billed_price,
                         
-                        "non_perc": int(f"{non_price/total:_.0f}"),
+                        "non_perc": int(f"{non_price*100/total:_.0f}"),
                         "non_price": self.__currency_format(non_price) + " CHF",
                         "non_price_raw": non_price,
                         
