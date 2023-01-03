@@ -34,13 +34,13 @@ class Report():
                         "name": "test",
                         "avg_price": self.__currency_format(300) + " CHF",
                         
-                        "paid_percent": 80,
+                        "paid_perc": 80,
                         "paid_price": self.__currency_format(1999) + " CHF",
                         
-                        "billed_percent": 10,
+                        "billed_perc": 10,
                         "billed_price": self.__currency_format(80) + " CHF",
                         
-                        "non_percent": 10,
+                        "non_perc": 10,
                         "non_price": self.__currency_format(80) + " CHF",
                         
                         "time":  self.__hours_format(10)
