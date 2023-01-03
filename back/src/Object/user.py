@@ -4,7 +4,7 @@ class User(Crud):
     def __init__(self, id = None):
         super().__init__(id, 'user')
 
-    def edit(self, first_name, last_name, email, phone, image, price, index):
+    def edit(self, first_name, last_name, email, phone, image, price, index, extra):
         data = {
             'id': self.id
         }
