@@ -55,9 +55,9 @@
   <div style="width: 6in; margin: 0 auto;">
     <!-- {% for line in lines %} -->
       <div style="font-size:25px">{{ line.name }}</div>
-      <div style="display: flex; align-items: center; justify-content: space-between; font-size: 14px;">
-        <div>Total time: {{ line.time }}</div>
-        <div>Avg price per hour: {{line.avg_price}}</div>
+      <div style="font-size: 14px;">
+        <div style="left: 0in;display: inline-block;">Total time: {{ line.time }}</div>
+        <div style="right: 0in; float: right">Avg price per hour: {{line.avg_price}}</div>
       </div>
       <div style="text-align: center; font-size: 17px">
         <div class="bar paid" style="width: {{ line.paid_perc }}%">
