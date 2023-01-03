@@ -60,13 +60,13 @@
         <div style="right: 0in; float: right">Avg price per hour: {{line.avg_price}}</div>
       </div>
       <div style="text-align: center; font-size: 17px">
-        <!-- {% if line.non_perc > 0 %} -->
+        <!-- {% if line.paid_perc > 0 %} -->
         <div class="bar paid" style="width: {{ line.paid_perc }}%">
           <div style="color:white">{{ line.paid_perc }}% </div>
           <div style="font-size: 12px">{{ line.paid_price}}</div>
         </div>
         <!-- {% endif %} -->
-        <!-- {% if line.non_perc > 0 %} -->
+        <!-- {% if line.billed_perc > 0 %} -->
         <div class="bar billed" style="width: {{line.billed_perc}}%">
           <div style="color:white">{{ line.billed_perc }}%</div>
           <div style="font-size: 12px">{{ line.billed_price }}</div>
