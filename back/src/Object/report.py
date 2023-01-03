@@ -23,7 +23,7 @@ class Report():
             billed_price = self.rt.filter({"status": 1, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
             non_price = self.rt.filter({"status": 0, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
             total = paid_price + billed_price + non_price
-            time =  sum([d["duration"] for d in list(self.rt.filter({"user": user,  "client_folder": i["client_folder"]}}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run())])
+            time =  sum([d["duration"] for d in list(self.rt.filter({"user": user,  "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run())])
             lines.append({
                         "name": "test",
                         "avg_price": self.__currency_format(total/time) + " CHF",
