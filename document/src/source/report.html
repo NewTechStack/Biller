@@ -40,7 +40,7 @@
   </head>
   <body>
     <h1>Report</h1>
-    <div style="font-size=15">
+    <div style="font-size=15; margin-left: 1.4in">
       {{date_start}} - {{date_end}}
     </div>
   <div style="margin-left: 1.4in">
@@ -51,7 +51,9 @@
     folders
     <!-- {% endif %} -->
     <br>
-    For a total of {{ total_hours }}, {{ total_priced }} (avg {{ avg_price }}/hr), {{ total_payed }} have since been paid.
+    For a total of {{ total_hours }}, {{ total_priced }} (avg {{ avg_price }}/hr)
+    <br>
+    {{ total_payed }} have since been paid.
     <br>
     <br>
   </div>
