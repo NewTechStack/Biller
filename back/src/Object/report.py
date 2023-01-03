@@ -7,6 +7,8 @@ import json
 class Report():
     def __init__(self, id = None):
         self.rt = get_conn().db("ged").table("timesheet")
+        self.cl = get_conn().db("ged").table("client")
+        self.fo = get_conn().db("ged").table("folder")
         
     def __currency_format(self, price):
         return f"{price:_.2f}".replace(".00", ".-").replace("_", " ")
@@ -17,15 +19,16 @@ class Report():
     def get(self, start = 0, end=1670239999, user = "ca1e6590-47d9-4ee0-ba9f-533c1de65325"):
         
         lines = []
-        clients = list(self.rt.filter({"user": user}).pluck("client_folder").distinct().run())
+        clients = list(self.rt.filter({"user": user}).pluck("client_folder", "client").distinct().run())
         for i in clients:
+            name = dict(self.cl.get(i["client"]))["name"]
             paid_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 2, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).run())])
             billed_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 1, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).run())])
             non_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 0, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).run())])
             total = paid_price + billed_price + non_price
             time =  sum([d["duration"] for d in list(self.rt.filter({"user": user,  "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run())])
             lines.append({
-                        "name": "test",
+                        "name": name,
                         "avg_price": self.__currency_format(total/(time if time > 0 else 1)) + " CHF",
                         
                         "paid_perc": int(f"{paid_price*100/(total if total > 0 else 1):_.0f}"),
