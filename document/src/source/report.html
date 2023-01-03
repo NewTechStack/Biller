@@ -15,18 +15,17 @@
 
       .paid {
         background-color: rgb(21, 101, 192);
-        width: 50%;
         float: left;
       }
-      
+
       .billed {
         background-color: rgb(255, 152, 0);
         float: left;
       }
 
       .non {
-        background-color: red;
-        float: left;
+        background-color: #742D2C;
+        float: right;
       }
 
       body {
@@ -50,23 +49,27 @@
     folders
     <!-- {% endif %} -->
     <br>
-    For a total of {{total}}, {{total_payed}} have since been paid.
+    For a total of {{ total_hours }}, {{ total_priced }} (avg {{ avg_price }}/hr), {{ total_payed }} have since been paid.
     <br>
     <br>
   </div>
   <div style="width: 6in; margin: 0 auto;">
     <!-- {% for line in lines %} -->
-      <!-- Ligne -->
-      <div style="display: flex; align-items: center; justify-content: space-between;">
-        <!-- Nom -->
-        <div>{{line.name}}</div>
-        <div>{{ line.time }}</div>
-        <!-- Graphique -->
-       </div>
-      <div>
-        <div class="bar paid" style="width: {{line.payed}}%"></div>
-        <div class="bar billed" style="width: {{line.billed}}%"></div>
-        <div class="bar non" style="width: {{line.non_payed}}%"></div> 
+      <div style="font-size:25px">{{ line.name }}</div>
+      <div style="display: flex; align-items: center; justify-content: space-between; font-size: 14px;">
+        <div>Total time: {{ line.time }}</div>
+        <div>Avg price per hour: {{line.avg_price}}</div>
+      </div>
+      <div style="text-align: center; font-size: 17px">
+        <div class="bar paid" style="width: {{ line.paid_percent }}%">
+          {{ line.paid_percent }}% <br> {{ line.paid_price}}
+        </div>
+        <div class="bar billed" style="width: {{line.billed_percent}}%">
+          {{ line.billed_percent }}% <br> {{ line.billed_price }}
+        </div>
+        <div class="bar non" style="width: {{line.non_percent}}%">
+          {{ line.non_percent }}% <br> {{ line.non_price }}
+        </div>
       </div>
     <!-- {% endfor %} -->
   </div>
