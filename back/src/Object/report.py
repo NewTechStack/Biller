@@ -21,7 +21,9 @@ class Report():
         lines = []
         clients = list(self.rt.filter({"user": user}).pluck("client_folder", "client").distinct().run())
         for i in clients:
-            name = dict(self.cl.get(i["client"]).run())["name"]
+            c_name = dict(self.cl.get(i["client"]).run())
+            name = f"{name_1} {name_2}".strip()
+            name += ": " + dict(self.fo.get(i["client"]).run())["name"]
             paid_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 2, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).run())])
             billed_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 1, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).run())])
             non_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 0, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).run())])
