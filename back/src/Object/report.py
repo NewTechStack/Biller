@@ -3,6 +3,7 @@ import requests
 import uuid
 from datetime import datetime
 import json
+from math import ceil
 
 class Report():
     def __init__(self, id = None):
@@ -45,7 +46,7 @@ class Report():
                         "non_price": self.__currency_format(non_price) + " CHF",
                         "non_price_raw": non_price,
                         
-                        "time":  self.__hours_format(time),
+                        "time":  self.__hours_format(ceil(time)),
                         "time_raw": time,
             
                         "total_raw": total
