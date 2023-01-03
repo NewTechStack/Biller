@@ -17,14 +17,16 @@ class Report():
     def get(self, start = 0, end=1670239999, user = "ca1e6590-47d9-4ee0-ba9f-533c1de65325"):
         
         lines = []
-        base = self.rt.filter({"status": 0, "user": user}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
-        damn = sum([d["duration"] for d in list(base.pluck(["duration"]).run())])
-        paid_price = 10000
-        billed_price = 1000
-        non_price = 200
-        total = paid_price + billed_price + non_price
-        time = 10
-        lines.append({
+        damn = list(self.rt.filter({"user": user}).pluck("client_folder").distinct())
+        for i in damn:
+            
+            base = 
+            paid_price = self.rt.filter({"status": 2, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
+            billed_price = self.rt.filter({"status": 1, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
+            non_price = self.rt.filter({"status": 0, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
+            total = paid_price + billed_price + non_price
+            time =  sum([d["duration"] for d in list(self.rt.filter({"user": user,  "client_folder": i["client_folder"]}}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run())])
+            lines.append({
                         "name": "test",
                         "avg_price": self.__currency_format(total/time) + " CHF",
                         
@@ -45,7 +47,7 @@ class Report():
             
                         "total_raw": total
                     })
-        total_hours = sum([line["time_raw"] for line in lines])
+        total_hours = sum([d["duration"] for d in list(self.rt.filter({"user": user}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run())])
         
         url = "http://template:8080/template/pdf"
         data = {
