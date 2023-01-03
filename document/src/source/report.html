@@ -11,21 +11,20 @@
 
       .bar {
         height: 20px;
+        float: left;
       }
 
       .paid {
         background-color: rgb(21, 101, 192);
-        float: left;
+
       }
 
       .billed {
         background-color: rgb(255, 152, 0);
-        float: left;
       }
 
       .non {
         background-color: #742D2C;
-        float: right;
       }
 
       body {
@@ -61,14 +60,17 @@
         <div>Avg price per hour: {{line.avg_price}}</div>
       </div>
       <div style="text-align: center; font-size: 17px">
-        <div class="bar paid" style="width: {{ line.paid_percent }}%">
-          {{ line.paid_percent }}% <br> {{ line.paid_price}}
+        <div class="bar paid" style="width: {{ line.paid_perc }}%">
+          <div style="color:white">{{ line.paid_perc }}% </div>
+          <div style="font-size: 12px">{{ line.paid_price}}</div>
         </div>
-        <div class="bar billed" style="width: {{line.billed_percent}}%">
-          {{ line.billed_percent }}% <br> {{ line.billed_price }}
+        <div class="bar billed" style="width: {{line.billed_perc}}%">
+          <div style="color:white">{{ line.billed_perc }}%</div>
+          <div style="font-size: 12px">{{ line.billed_price }}</div>
         </div>
-        <div class="bar non" style="width: {{line.non_percent}}%">
-          {{ line.non_percent }}% <br> {{ line.non_price }}
+        <div class="bar non" style="width: {{line.non_perc}}%">
+          <div style="color:white">{{ line.non_perc }}%</div>
+          <div style="font-size: 12px">{{ line.non_price }}</div>
         </div>
       </div>
     <!-- {% endfor %} -->
