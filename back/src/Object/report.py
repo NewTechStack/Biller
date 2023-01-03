@@ -74,5 +74,5 @@ class Report():
             }
         }
         response = requests.request("POST", url, data=json.dumps(data), headers={'content-type': "application/json"})
-        return [True, {"url": json.loads(response.text), "data": data}, 200]
+        return [True, {"url": json.loads(response.text)}, 200]
       
