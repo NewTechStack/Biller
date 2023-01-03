@@ -17,10 +17,8 @@ class Report():
     def get(self, start = 0, end=1670239999, user = "ca1e6590-47d9-4ee0-ba9f-533c1de65325"):
         
         lines = []
-        damn = list(self.rt.filter({"user": user}).pluck("client_folder").distinct())
-        for i in damn:
-            
-            base = 
+        clients = list(self.rt.filter({"user": user}).pluck("client_folder").distinct())
+        for i in clients:
             paid_price = self.rt.filter({"status": 2, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
             billed_price = self.rt.filter({"status": 1, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
             non_price = self.rt.filter({"status": 0, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end)
@@ -64,5 +62,5 @@ class Report():
             }
         }
         response = requests.request("POST", url, data=json.dumps(data), headers={'content-type': "application/json"})
-        return [True, {"url": json.loads(response.text), "data": damn}, 200]
+        return [True, {"url": json.loads(response.text), "data": data}, 200]
       
