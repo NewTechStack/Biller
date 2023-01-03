@@ -28,7 +28,7 @@
       }
 
       body {
-        font-size:25px !important;
+        font-size:18px !important;
         font-weight:bold;
         font-family:sans-serif;
       }
@@ -39,7 +39,10 @@
     </style>
   </head>
   <body>
-    <h1>Reports</h1>
+    <h1>Report</h1>
+    <div style="font-size=15">
+      {{date_start}} - {{date_end}}
+    </div>
   <div style="margin-left: 1.4in">
     {{ name }} have worked on  {{ lines | length }}
     <!-- {% if my_dict|length <= 1 %}  -->
