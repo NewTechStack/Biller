@@ -36,7 +36,7 @@ class Report():
                         "billed_price": self.__currency_format(billed_price) + " CHF",
                         "billed_price_raw": billed_price,
                         
-                        "non_perc": int(f"{non_price*100/total:_.0f}"),
+                        "non_perc": int(f"{non_price*100/(total if total > 0 else 1):_.0f}"),
                         "non_price": self.__currency_format(non_price) + " CHF",
                         "non_price_raw": non_price,
                         
