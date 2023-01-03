@@ -9,19 +9,20 @@ import json
 
 class Report():
     def __init__(self, id = None):
-        pass
-    
+        self.rt = get_conn().db("ged").table("timesheet")
+        
     def __currency_format(self, price):
         return f"{price:_.2f}".replace(".00", ".-").replace("_", " ")
     
     def __hours_format(self, hours):
         return f"{hours:_.2f}".split(".")[0] + "h"
     
-    def get(self):
+    def get(self, start = 0, end=1670239999, user = "ca1e6590-47d9-4ee0-ba9f-533c1de65325"):
         
         lines = []
         
-        paid_price = 1000
+        damn = self.rt.filter({"status": 0, "user": user}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"])
+        paid_price = 10000
         billed_price = 1000
         non_price = 200
         total = paid_price + billed_price + non_price
@@ -64,5 +65,5 @@ class Report():
             }
         }
         response = requests.request("POST", url, data=json.dumps(data), headers={'content-type': "application/json"})
-        return [True, {"url": json.loads(response.text), "data": data["variables"]}, 200]
+        return [True, {"url": json.loads(response.text), "data": damn}, 200]
       
