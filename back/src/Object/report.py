@@ -17,7 +17,7 @@ class Report():
         return f"{price:_.2f}".replace(".00", ".-").replace("_", " ")
     
     def __hours_format(self, hours):
-        d=f"{hours:_.2f}".split(".")
+        d=f"{hours:_.2f}".split(".").replace("_", " ")
         return d[0] + "h" + f"{(int(d[1]) * 0.6):_.0f}"
     
     def get(self, start = 0, end=1670239999, user = "ca1e6590-47d9-4ee0-ba9f-533c1de65325"):
