@@ -18,6 +18,7 @@ class BillV2():
         if number < 1:
             number = 1
         req = self.rb
+        req = req.order_by(r.desc('date'))
         if user is not None:
             user = urllib.parse.unquote(user)
             req = req.filter(
@@ -56,7 +57,6 @@ class BillV2():
             req = req.filter(
                {"status": status}
             )
-        req = req.order_by(r.desc('date'))
         req = req.eq_join(
             "client", 
             self.rc
