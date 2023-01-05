@@ -216,7 +216,6 @@ class TimesheetV2():
                {"status": status}
             )
         total = int(req.count().run())
-        req = req.order_by(r.desc('date'))
         req = req.eq_join(
             "client_folder", 
             self.rf
@@ -234,7 +233,7 @@ class TimesheetV2():
             {"right": "id"}
         ).zip().pluck(
             ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang"]
-        ).skip(page * number).limit(number)
+        ).order_by(r.desc('date')).skip(page * number).limit(number)
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
         if max < page + 1:
@@ -317,7 +316,7 @@ class TimesheetV2():
             ).eq_join(
                 "client_folder", 
                 self.rf
-            ).group("right").without("right").zip().ungroup().skip(page * number).limit(number).map(
+            ).group("right").without("right").zip().ungroup().order_by(r.desc('date')).skip(page * number).limit(number).map(
                 lambda doc:
                     {
                         "id": doc["group"]["id"],
