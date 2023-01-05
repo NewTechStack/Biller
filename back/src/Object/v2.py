@@ -18,7 +18,6 @@ class BillV2():
         if number < 1:
             number = 1
         req = self.rb
-        req = req.order_by(r.desc('date'))
         if user is not None:
             user = urllib.parse.unquote(user)
             req = req.filter(
@@ -70,6 +69,7 @@ class BillV2():
             ["id", "type", "date", "name_1", "name_2", "lang", "name", "fees", "status", "price", "timesheet", "provisions", "bill_type", "url", "user", "client_folder"]
         )
         total = int(req.count().run())
+        req = req.order_by(r.desc('date'))
         bills = list(req.skip(page * number).limit(number).run())
         sum = {
             "HT": 0,
