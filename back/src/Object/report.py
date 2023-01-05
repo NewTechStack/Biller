@@ -28,9 +28,9 @@ class Report():
             c_name = dict(self.cl.get(i["client"]).run())
             name = f"{c_name['name_1']} {c_name['name_2']}".strip()
             name += ": " + dict(self.fo.get(i["client_folder"]).run())["name"]
-            paid_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 2, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).run())])
-            billed_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 1, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).run())])
-            non_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 0, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).run())])
+            paid_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 2, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["price", "duration"]).run())])
+            billed_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 1, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["price", "duration"]).run())])
+            non_price = sum([d["price"] * d["duration"] for d in list(self.rt.filter({"status": 0, "user": user, "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["price", "duration"]).run())])
             total = paid_price + billed_price + non_price
             time =  sum([d["duration"] for d in list(self.rt.filter({"user": user,  "client_folder": i["client_folder"]}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck(["duration"]).run())])
             lines.append({
