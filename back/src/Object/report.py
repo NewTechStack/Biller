@@ -63,7 +63,7 @@ class Report():
             return [False, "err", 500]
         data = {
             "name": f"report.html",
-            "title": f"damn",
+            "title": f"Report {user['first_name']} {user['last_name']} {datetime.datetime.fromtimestamp(start).strftime('%d/%m/%Y')} {datetime.datetime.fromtimestamp(end).strftime('%d/%m/%Y')}",
             "bucket": "reports",
             "variables": {
                 "name": f"{user['first_name']} {user['last_name']}",
