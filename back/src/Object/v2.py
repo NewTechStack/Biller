@@ -233,7 +233,7 @@ class TimesheetV2():
             {"right": "id"}
         ).zip().pluck(
             ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang"]
-        ).order_by(r.desc('date')).skip(page * number).limit(number)
+        ).skip(page * number).limit(number)
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
         if max < page + 1:
