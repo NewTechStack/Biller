@@ -217,10 +217,10 @@ class TimesheetV2():
             )
         res = list(req.pluck(["price", "duration"]).run())
         sum_arr = {
-            "price": sum([t["price"] * t["duration"] for t in res]),
-            "duration": sum([t["duration"] for t in res])
+            "price": float(req.pluck(["price"]).sum(lambda t: t["price"] * t["duration"]).run()),
+            "duration": float(req.pluck(["price"]).sum('price').run())
         }
-        total = len(res)
+        total = int(req.count().run())
         req = req.eq_join(
             "client_folder", 
             self.rf
