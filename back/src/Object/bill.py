@@ -278,7 +278,7 @@ class Bill(Crud, StatusObject):
             if "template" in data:
                 data["template"]["name"] = data["template"]["name"].replace("_preview", "")
                 data["template"]["bucket"] = "files"
-                data["template"]["variables"]["num"] = "2022-" + str(int(self.red.filter(
+                data["template"]["variables"]["num"] = "2023-" + str(int(self.red.filter(
                    lambda bill: bill["status"] >= 2
                 ).count().run()))
                 data["template"]["title"] = self.id.rsplit('/', 1)[0] + "/facture_" + data["template"]["variables"]["num"]
