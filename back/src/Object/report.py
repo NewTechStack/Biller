@@ -20,10 +20,10 @@ class Report():
         d=f"{hours:_.2f}".split(".")
         return d[0].replace("_", " ") + "h" + f"{(int(d[1]) * 0.6):_.0f}"
     
-    def get(self, start = 0, end=1670239999, user = "ca1e6590-47d9-4ee0-ba9f-533c1de65325"):
+    def get(self, start, end, user):
         
         lines = []
-        clients = list(self.rt.filter({"user": user}).filter(lambda timesheet: timesheet["date"] >= start & timesheet["date"] <= end).pluck("client_folder", "client").distinct().run())
+        clients = list(self.rt.filter({"user": user}).filter((r.row["date"] > start) & (r.row["date"] < end)).pluck("client_folder", "client").distinct().run())
         for i in clients:
             c_name = dict(self.cl.get(i["client"]).run())
             name = f"{c_name['name_1']} {c_name['name_2']}".strip()
