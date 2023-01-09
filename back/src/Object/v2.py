@@ -216,7 +216,7 @@ class TimesheetV2():
                {"status": status}
             )
         res = list(req.pluck(["price", "duration"]).run())
-        sum = {
+        sum_arr = {
             "price": sum([t["price"] * t["duration"] for t in res]),
             "duration": sum([t["duration"] for t in res])
         }
@@ -253,7 +253,7 @@ class TimesheetV2():
             }
         }
         timesheets = list(req.run())
-        return [True, {"list": timesheets, "sum": sum, "pagination": pagination}, None]
+        return [True, {"list": timesheets, "sum": sum_arr, "pagination": pagination}, None]
 
     def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime, status, user):
         if page < 1:
