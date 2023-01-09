@@ -248,11 +248,14 @@ class TimesheetV2():
             }
         }
         timesheets = list(req.run())
-        sum_arr = {
-            "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
-            "duration": float(req.sum('price').run())
+        sum = {
+            "price": 0,
+            "duration": 0
         }
-        return [True, {"list": timesheets, "sum": sum_arr, "pagination": pagination}, None]
+        for timesheet in timesheets:
+            sum["price"] += timesheet["price"] * timesheet["duration"]
+            sum["duration"] += timesheet["duration"]
+        return [True, {"list": timesheets, "sum": sum, "pagination": pagination}, None]
 
     def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime, status, user):
         if page < 1:
