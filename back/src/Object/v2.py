@@ -215,7 +215,12 @@ class TimesheetV2():
             req = req.filter(
                {"status": status}
             )
-        total = int(req.count().run())
+        res = list(req.pluck(["price", "duration"]).run())
+        sum = {
+            "price": sum([t["price"] * t["duration"] for t in res]),
+            "duration": sum([t["duration"] for t in res])
+        }
+        total = len(res)
         req = req.eq_join(
             "client_folder", 
             self.rf
@@ -248,13 +253,6 @@ class TimesheetV2():
             }
         }
         timesheets = list(req.run())
-        sum = {
-            "price": 0,
-            "duration": 0
-        }
-        for timesheet in timesheets:
-            sum["price"] += timesheet["price"] * timesheet["duration"]
-            sum["duration"] += timesheet["duration"]
         return [True, {"list": timesheets, "sum": sum, "pagination": pagination}, None]
 
     def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime, status, user):
