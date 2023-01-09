@@ -216,6 +216,10 @@ class TimesheetV2():
                {"status": status}
             )
         total = int(req.count().run())
+        sum_arr = {
+            "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
+            "duration": float(req.sum('duration').run())
+        }
         req = req.eq_join(
             "client_folder", 
             self.rf
@@ -248,14 +252,7 @@ class TimesheetV2():
             }
         }
         timesheets = list(req.run())
-        sum = {
-            "price": 0,
-            "duration": 0
-        }
-        for timesheet in timesheets:
-            sum["price"] += timesheet["price"] * timesheet["duration"]
-            sum["duration"] += timesheet["duration"]
-        return [True, {"list": timesheets, "sum": sum, "pagination": pagination}, None]
+        return [True, {"list": timesheets, "sum": sum_arr, "pagination": pagination}, None]
 
     def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime, status, user):
         if page < 1:
@@ -302,6 +299,10 @@ class TimesheetV2():
             req = req.filter(
                {"status": status}
             )
+        sum_arr = {
+            "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
+            "duration": float(req.sum('duration').run())
+        }
         req = req.order_by(r.desc('date'))
         total = int(
             req.eq_join("client_folder", self.rf).group("right").without("right").zip().ungroup().count().run()
@@ -332,10 +333,6 @@ class TimesheetV2():
         if max < page + 1:
             return [False, "Invalid pagination", 404]
         folders = list(req.run())
-        sum = {
-            "price": 0,
-            "duration": 0
-        }
         for folder in folders:
             folder["sum"] = {
             "duration": 0,
@@ -356,8 +353,6 @@ class TimesheetV2():
                     }
                 )
             folder["associates"] = associates
-            sum["duration"] += folder["sum"]["duration"]
-            sum["price"] += folder["sum"]["price"]
         pagination = {
             "total": total,
             "pages": {
@@ -367,4 +362,4 @@ class TimesheetV2():
                 "actual_page": page + 1
             }
         }
-        return [True, {"list": folders, "sum": sum, "pagination": pagination}, None]
+        return [True, {"list": folders, "sum": sum_arr, "pagination": pagination}, None]
