@@ -230,7 +230,7 @@ class TimesheetV2():
             "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
             "duration": float(req.sum('duration').run())
         }
-        print(order, page * number, (page + 1) * number)
+        print(order, total - page * number, total - (page + 1) * number)
         req = req.filter(
         (r.row["order"][order] >= page * number) & (r.row["order"][order] <= (page + 1) * number)
         )
