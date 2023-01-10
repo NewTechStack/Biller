@@ -208,6 +208,11 @@ class TimesheetV2():
                 order = "user/client_folder"
             else:
                 order = "client_folder"
+        if status is not None:
+            status = int(status)
+            req = req.filter(
+               {"status": status}
+            )
         if stime is not None:
             stime = int(stime)
             req = req.filter(
@@ -220,19 +225,15 @@ class TimesheetV2():
                 lambda doc:
                     doc["date"] <= etime
             )
-        if status is not None:
-            status = int(status)
-            req = req.filter(
-               {"status": status}
-            )
         total = int(req.count().run())
         sum_arr = {
             "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
             "duration": float(req.sum('duration').run())
         }
-        print(order, total - page * number, total - (page + 1) * number)
+        max = int(req.max(lambda timesheet: timesheet["order"]["order"]).run())
+        print(max)
         req = req.filter(
-        (r.row["order"][order] <= total - page * number) & (r.row["order"][order] >= total - (page + 1) * number)
+        (r.row["order"][order] <= max - page * number) & (r.row["order"][order] >= max - (page + 1) * number)
         )
         print(list(req.run()))
         req = req.eq_join(
