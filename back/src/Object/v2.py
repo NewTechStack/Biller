@@ -172,7 +172,7 @@ class TimesheetV2():
         self.rc = get_conn().db("ged").table("client")
     
     def all(self, page, number, client_id, folder_id, stime, etime, status, user):
-        extern_stats = {"op": {}, "meta": {"object": "TimesheetV2", "function": "all", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
+        extern_stats = {"op": {}, "meta": {"object": "TimesheetV2", "function": "all2", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
         if page < 1:
             page = 1
         page -= 1
@@ -228,20 +228,25 @@ class TimesheetV2():
                     doc["date"] <= etime
             )
         ts = time.time()
-        total = int(req.count().run())
-        extern_stats["op"]["count"] = time.time() - ts
-        ts = time.time()
-        sum_arr = {
-            "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
-            "duration": float(req.sum('duration').run())
-        }
-        extern_stats["op"]["sum"] = time.time() - ts
-        ts = time.time()
-        max = int(req.max(lambda timesheet: timesheet["order"][order])["order"][order].run())
-        req = req.filter(
-        (max - page * number >= r.row["order"][order]) & (r.row["order"][order] > max - (page + 1) * number)
+        all_arr = dict(
+            req.map(
+                lambda row: {"price" : row["price"].mul(row["duration"]), "duration" : row["duration"], "max": row["order"][order], "total": 1}
+            ).reduce(
+                lambda left, right: {"price" : left["price"].add(right["price"]), "duration" : left["duration"].add(right["duration"]), "max": r.expr([left["max"], right["max"]]).max(), "total": left["total"].add(right["total"])}
+            ).run()
         )
-        extern_stats["op"]["page"] = time.time() - ts
+        total = all_arr["total"]
+        max_order = all_arr["max"]
+        sum_arr = {
+            "duration": 27532.204333333364 ,
+            "price": 9054431.216666667 ,
+        }
+        req = req.filter(
+        (max_order - page * number >= r.row["order"][order]) & (r.row["order"][order] > max_order - (page + 1) * number)
+        )
+        extern_stats["op"]["page"] = (time.time() - ts) / 3
+        extern_stats["op"]["sum"] = (time.time() - ts) / 3
+        extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         req = req.eq_join(
             "client_folder", 
