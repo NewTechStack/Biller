@@ -109,7 +109,7 @@ services:
       
   rethink2:
     image: rethinkdb:latest
-    container_name: biller-rethink
+    container_name: biller-rethink2
     restart: always
     ports:
       - 8089:8080
