@@ -172,7 +172,7 @@ class TimesheetV2():
         self.rc = get_conn().db("ged").table("client")
     
     def all(self, page, number, client_id, folder_id, stime, etime, status, user):
-        extern_stats = {}
+        extern_stats = {"meta": {"object": "TimesheetV2", "function": "all", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
         if page < 1:
             page = 1
         page -= 1
@@ -239,7 +239,7 @@ class TimesheetV2():
         ts = time.time()
         max = int(req.max(lambda timesheet: timesheet["order"][order])["order"][order].run())
         req = req.filter(
-        (r.row["order"][order] <= max - page * number) & (r.row["order"][order] >= max - (page + 1) * number)
+        (max - page * number >= r.row["order"][order]) & (r.row["order"][order] > max - (page + 1) * number)
         )
         extern_stats["page"] = time.time() - ts
         ts = time.time()
