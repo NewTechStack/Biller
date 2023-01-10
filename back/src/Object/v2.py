@@ -228,22 +228,22 @@ class TimesheetV2():
             )
        
         ts = time.time()
-        print("start ", ts - time.time())
+        print("start ", time.time() - ts )
         ts = time.time()
         total = int(req.count().run())
-        print("total ", ts - time.time())
+        print("total ", time.time() - ts)
         ts = time.time()
         sum_arr = {
             "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
             "duration": float(req.sum('duration').run())
         }
-        print("sum ", ts - time.time())
+        print("sum ", time.time() - ts)
         ts = time.time()
         max = int(req.max(lambda timesheet: timesheet["order"][order])["order"][order].run())
         req = req.filter(
         (r.row["order"][order] <= max - page * number) & (r.row["order"][order] >= max - (page + 1) * number)
         )
-        print("page ", ts - time.time())
+        print("page ", time.time() - ts)
         ts = time.time()
         req = req.eq_join(
             "client_folder", 
@@ -263,7 +263,7 @@ class TimesheetV2():
         ).zip().pluck(
             ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang"]
         ).order_by(r.desc("date"))
-        print("data ", ts - time.time())
+        print("data ", time.time() - ts))
         ts = time.time()
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
@@ -278,10 +278,10 @@ class TimesheetV2():
                 "actual_page": page + 1
             }
         }
-        print("form ", ts - time.time())
+        print("form ", time.time() - ts)
         ts = time.time()
         timesheets = list(req.run())
-        print("data2 ", ts - time.time())
+        print("data2 ", time.time() - ts)
         return [True, {"list": timesheets, "sum": sum_arr, "pagination": pagination}, None]
 
     def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime, status, user):
