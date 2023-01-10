@@ -229,19 +229,19 @@ class TimesheetV2():
             )
         ts = time.time()
         total = int(req.count().run())
-        extern_stats["total"] = time.time() - ts
+        extern_stats["op"]["count"] = time.time() - ts
         ts = time.time()
         sum_arr = {
             "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
             "duration": float(req.sum('duration').run())
         }
-        extern_stats["sum"] = time.time() - ts
+        extern_stats["op"]["sum"] = time.time() - ts
         ts = time.time()
         max = int(req.max(lambda timesheet: timesheet["order"][order])["order"][order].run())
         req = req.filter(
         (max - page * number >= r.row["order"][order]) & (r.row["order"][order] > max - (page + 1) * number)
         )
-        extern_stats["page"] = time.time() - ts
+        extern_stats["op"]["page"] = time.time() - ts
         ts = time.time()
         req = req.eq_join(
             "client_folder", 
@@ -261,7 +261,7 @@ class TimesheetV2():
         ).zip().pluck(
             ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang"]
         ).order_by(r.desc("date"))
-        extern_stats["setup_request"] = time.time() - ts
+        extern_stats["op"]["setup_request"] = time.time() - ts
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
         if max < page + 1:
@@ -277,7 +277,8 @@ class TimesheetV2():
         }
         ts = time.time()
         timesheets = list(req.run())
-        extern_stats["request"] = time.time() - ts
+        extern_stats["op"]["request"] = time.time() - ts
+        extern_stats["total"] = sum(extern_stats["op"].values())
         self.rt = get_conn().db("ged").table("stats").insert([extern_stats]).run()
         return [True, {"list": timesheets, "sum": sum_arr, "pagination": pagination}, None]
 
