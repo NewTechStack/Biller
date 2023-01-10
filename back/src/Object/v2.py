@@ -263,7 +263,7 @@ class TimesheetV2():
         ).zip().pluck(
             ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang"]
         ).order_by(r.desc("date"))
-        print("data ", time.time() - ts))
+        print("data ", time.time() - ts)
         ts = time.time()
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
