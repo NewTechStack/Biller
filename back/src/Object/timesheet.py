@@ -25,4 +25,12 @@ class Timesheet(Crud, StatusObject):
         input["status"] = 0
         if "desc" in data:
             input["desc"] = data["desc"]
+        input["order"] = {
+            "client": int(self.red.filter({"client": input["client"]}).count().run()) ,
+            "client_folder": int(self.red.filter({"client_folder": input["client_folder"]}).count().run()) ,
+            "id": int(self.red.count().run()) ,
+            "user": int(self.red.filter({"user": input["user"]}).count().run()),
+            "user/client": int(self.red.filter({"user": input["user"], "client": input["client"]}).count().run()) ,
+            "user/client_folder": int(self.red.filter({"user": input["user"], "client_folder": input["client_folder"]}).count().run())
+        }
         return self._push(input)
