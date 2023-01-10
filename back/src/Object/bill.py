@@ -56,7 +56,7 @@ class Bill(Crud, StatusObject):
         if folder[1] is None:
             return [False, f"Invalid folder id: '{folder_id}'", 404]
         user_in_charge_id = folder[1]["user_in_charge"]
-        user = User(user_in_charge_id).get()
+        user = User(data['user']).get() #User(user_in_charge_id).get()
         name = ""
         if user[1] is not None:
             name = f"{user[1]['first_name']} {user[1]['last_name']}"
