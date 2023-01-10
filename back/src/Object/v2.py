@@ -230,7 +230,7 @@ class TimesheetV2():
             "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
             "duration": float(req.sum('duration').run())
         }
-        max = int(req.max(lambda timesheet: timesheet["order"][order]).run())
+        max = int(req.max(lambda timesheet: timesheet["order"][order])["order"][order].run())
         print(max)
         req = req.filter(
         (r.row["order"][order] <= max - page * number) & (r.row["order"][order] >= max - (page + 1) * number)
