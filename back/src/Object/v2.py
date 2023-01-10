@@ -172,7 +172,7 @@ class TimesheetV2():
         self.rc = get_conn().db("ged").table("client")
     
     def all(self, page, number, client_id, folder_id, stime, etime, status, user):
-        extern_stats = {"meta": {"object": "TimesheetV2", "function": "all", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
+        extern_stats = {"op": {}, "meta": {"object": "TimesheetV2", "function": "all", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
         if page < 1:
             page = 1
         page -= 1
