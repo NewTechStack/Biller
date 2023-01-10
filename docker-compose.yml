@@ -102,7 +102,21 @@ services:
       - 28015:28015
     volumes:
       - ./db/rethink/data:/data:rw
-    command: rethinkdb --bind all -d /data
+    command: rethinkdb --join rethink2 --bind all -d /data --server-tag primary --server-name rethink
+    networks:
+      - dbnet
+      - proxy
+      
+  rethink2:
+    image: rethinkdb:latest
+    container_name: biller-rethink
+    restart: always
+    ports:
+      - 8081:8080
+      - 28015:28015
+    volumes:
+      - ./db/rethink/data:/data:rw
+    command: rethinkdb --join rethink --bind all --server-tag primary --server-name rethink
     networks:
       - dbnet
       - proxy
