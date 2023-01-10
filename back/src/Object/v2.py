@@ -177,6 +177,7 @@ class TimesheetV2():
         if number < 1:
             number = 1
         req = self.rt
+        order = "id"
         if user is not None:
             user = urllib.parse.unquote(user)
             req = req.filter(
@@ -184,6 +185,7 @@ class TimesheetV2():
                     "user": urllib.parse.unquote(user)
                 }
             )
+            order = "user"
         if client_id is not None:
             client_id = urllib.parse.unquote(client_id)
             req = req.filter(
@@ -191,6 +193,10 @@ class TimesheetV2():
                     "client": urllib.parse.unquote(client_id)
                 }
             )
+            if order in ["user"]:
+                order = "user/client"
+            else:
+                order = "client"
         if folder_id is not None:
             folder_id = urllib.parse.unquote(folder_id)
             req = req.filter(
@@ -198,6 +204,10 @@ class TimesheetV2():
                     "client_folder": folder_id
                 }
             )
+            if order in ["user", "user/client"]:
+                order = "user/client_folder"
+            else:
+                order = "client_folder"
         if stime is not None:
             stime = int(stime)
             req = req.filter(
@@ -220,6 +230,9 @@ class TimesheetV2():
             "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
             "duration": float(req.sum('duration').run())
         }
+        req = req.filter(
+        (r.row["order"][order] > page * number) & (r.row["order"][order] < (page + 1) * number)
+        )
         req = req.eq_join(
             "client_folder", 
             self.rf
@@ -237,7 +250,7 @@ class TimesheetV2():
             {"right": "id"}
         ).zip().pluck(
             ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang"]
-        ).order_by(r.desc('date')).skip(page * number).limit(number)
+        ).order_by(r.desc("date"))
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
         if max < page + 1:
