@@ -232,7 +232,7 @@ class TimesheetV2():
         }
         print(order, total - page * number, total - (page + 1) * number)
         req = req.filter(
-        (r.row["order"][order] >= page * number) & (r.row["order"][order] <= (page + 1) * number)
+        (r.row["order"][order] <= total - page * number) & (r.row["order"][order] >= total - (page + 1) * number)
         )
         print(list(req.run()))
         req = req.eq_join(
