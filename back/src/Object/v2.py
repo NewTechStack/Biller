@@ -233,7 +233,7 @@ class TimesheetV2():
                 lambda row: {"price" : row["price"].mul(row["duration"]), "duration" : row["duration"], "max": row["order"][order], "total": 1}
             ).reduce(
                 lambda left, right: {"price" : left["price"].add(right["price"]), "duration" : left["duration"].add(right["duration"]), "max": r.expr([left["max"], right["max"]]).max(), "total": left["total"].add(right["total"])}
-            ).run()
+            ).default({{"price" : 0, "duration" : 0, "max": 0, "total": 0}).run()
         )
         total = all_arr["total"]
         max_order = all_arr["max"]
