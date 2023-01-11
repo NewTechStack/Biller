@@ -31,7 +31,7 @@ class Timesheet(Crud, StatusObject):
         input["order"] = {
             "client": int(base_inf.filter({"client": input["client"]}).count().run()) ,
             "client_folder": int(base_inf.filter({"client_folder": input["client_folder"]}).count().run()) ,
-            "id": int(base_inf.count().run()) ,
+            "id": int(base_inf.count().run()),
             "user": int(base_inf.filter({"user": input["user"]}).count().run()),
             "user/client": int(base_inf.filter({"user": input["user"], "client": input["client"]}).count().run()) ,
             "user/client_folder": int(base_inf.filter({"user": input["user"], "client_folder": input["client_folder"]}).count().run())
@@ -46,7 +46,7 @@ class Timesheet(Crud, StatusObject):
             "order": {"id": (r.row["order"]["id"] + 1)}
         }).run()
         base_sup.filter({"user": input["user"]}).update({
-            "order": {"user": (r.row["user"]["user"] + 1)}
+            "order": {"user": (r.row["order"]["user"] + 1)}
         }).run()
         base_sup.filter({"user": input["user"], "client": input["client"]}).update({
             "order": {"user/client": (r.row["order"]["user/client"] + 1)}
