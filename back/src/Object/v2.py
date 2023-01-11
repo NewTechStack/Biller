@@ -217,16 +217,10 @@ class TimesheetV2():
             )
         if stime is not None:
             stime = int(stime)
-            req = req.filter(
-                lambda doc:
-                    doc["date"] >= stime
-            )
+            req = req.filter(r("date").ge(stime))
         if etime is not None:
             etime = int(etime)
-            req = req.filter(
-                lambda doc:
-                    doc["date"] <= etime
-            )
+            req = req.filter(r("date").le(etime))
         ts = time.time()
         all_arr = dict(
             req.map(
