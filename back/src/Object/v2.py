@@ -232,8 +232,8 @@ class TimesheetV2():
         total = all_arr["total"]
         max_order = all_arr["max"]
         sum_arr = {
-            "duration": 27532.204333333364 ,
-            "price": 9054431.216666667 ,
+            "duration": all_arr["duration"] ,
+            "price": all_arr["price"]
         }
         req = req.filter(
         (max_order - page * number >= r.row["order"][order]) & (r.row["order"][order] > max_order - (page + 1) * number)
