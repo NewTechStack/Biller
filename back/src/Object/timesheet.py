@@ -48,10 +48,10 @@ class Timesheet(Crud, StatusObject):
         base_sup.filter({"user": input["user"]}).update({
             "order": {"user": (r.row["user"]["user"] + 1)}
         }).run()
-        base_sup.filter({"user/client": input["user/client"]}).update({
+        base_sup.filter({"user": input["user"], "client": input["client"]}).update({
             "order": {"user/client": (r.row["order"]["user/client"] + 1)}
         }).run()
-        base_sup.filter({"user/client_folder": input["user/client_folder"]}).update({
+        base_sup.filter({"user": input["user"], "client_folder": input["client_folder"]}).update({
             "order": {"user/client_folder": (r.row["order"]["user/client_folder"] + 1)}
         }).run()
         return self._push(input)
