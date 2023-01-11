@@ -258,7 +258,7 @@ class TimesheetV2():
         ).without(
             {"right": "id"}
         ).zip().pluck(
-            ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang"]
+            ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order"]
         ).order_by(r.desc("date"))
         extern_stats["op"]["setup_request"] = time.time() - ts
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
@@ -267,7 +267,7 @@ class TimesheetV2():
             return [False, "Invalid pagination", 404]
         pagination = {
             "total": total,
-            "max_order": max_order,
+            "order": {"order": order, "max": max_order, "from": max_order - page * number, "to": max_order - (page + 1) * number},
             "pages": {
                 "min": 1,
                 "max": max,
