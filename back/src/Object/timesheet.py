@@ -1,5 +1,6 @@
 from .CRUD import Crud, StatusObject
 import uuid
+from .rethink import r
 
 class Timesheet(Crud, StatusObject):
     def __init__(self, id = None):
