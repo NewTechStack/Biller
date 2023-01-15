@@ -53,7 +53,7 @@ class Timesheet(Crud, StatusObject):
             res = self.red.filter(actual_filter).filter(r.row["id"].ne(self.id)).filter(r.row["date"].lt("date")).max().default(None).run()
             if res is not None:
                 self.red.get(self.id).update({"following": {following: {"is_after_id": res["id"], "is_before_id": None}}}).run()
-            print(res["following"][following], res["id"])
+            print(res["following"], res["id"])
             if res["following"][following]["is_after_id"] is not None:
                 self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": self.id}}}).run()
             if res is None:
