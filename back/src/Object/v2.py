@@ -241,14 +241,33 @@ class TimesheetV2():
             while i < page * number and res["following"][order]["is_after_id"] is not None:
                 res = self.rt.get(res["following"][order]["is_after_id"]).run()
                 i += 1
-            timesheets = [res]
+                
         extern_stats["op"]["page"] = (time.time() - ts) / 3
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         if res is not None:
             i = 0
-            while i < number and res["following"][order]["is_after_id"] is not None:  
+            timesheets = []
+            res = self.rt.filter({"id": res["id"]}).eq_join(
+                    "client_folder", 
+                    self.rf
+                ).without(
+                    {"right": "id"}
+                ).zip().eq_join(
+                    "user",
+                    self.ru
+                ).without(
+                    {"right": {"id": True, "price": True}}
+                ).zip().eq_join(
+                    "client",
+                    self.rc
+                ).without(
+                    {"right": "id"}
+                ).zip().pluck(
+                    ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order", "following"]
+                ).run()
+            while i < number - 1 and res["following"][order]["is_after_id"] is not None:  
                 res = self.rt.filter({"id": res["following"][order]["is_after_id"] }).eq_join(
                     "client_folder", 
                     self.rf
