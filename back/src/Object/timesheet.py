@@ -47,9 +47,9 @@ class Timesheet(Crud, StatusObject):
             res = {"id": None, "following": {following: {"is_before_id": None, "is_after_id": None}}}
         else:
             res = list(res)[0]
-        self.red.get(self.id).update({"following": {following: {"is_after_id": res["id"], "is_before_id": res["following"][following]["is_before_id"]}}})
-        self.red.get(res["id"]).update({"following": {following: {"is_after_id": self.id}}})
-        self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": self.id}}})
+        self.red.get(self.id).update({"following": {following: {"is_after_id": res["id"], "is_before_id": res["following"][following]["is_before_id"]}}}).run()
+        self.red.get(res["id"]).update({"following": {following: {"is_after_id": self.id}}}).run()
+        self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": self.id}}}).run()
         
     
     def delete(self):
@@ -67,6 +67,6 @@ class Timesheet(Crud, StatusObject):
         res = self.red.get(self.id).run()
         if res is None:
             return
-        self.red.get(self.id).update({"following": {following: {"is_after_id": None, "is_before_id": None}}})
-        self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": res["following"][following]["is_before_id"]}}})
-        self.red.get(res["following"][following]["is_before_id"]).update({"following": {following: {"is_after_id": res["following"][following]["is_after_id"]}}})
+        self.red.get(self.id).update({"following": {following: {"is_after_id": None, "is_before_id": None}}}).run()
+        self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": res["following"][following]["is_before_id"]}}}).run()
+        self.red.get(res["following"][following]["is_before_id"]).update({"following": {following: {"is_after_id": res["following"][following]["is_after_id"]}}}).run()
