@@ -241,8 +241,8 @@ class TimesheetV2():
             res = {"following": {order: {"is_before_id": None}}}
         else:
             res = res[0]
-        while i < page * number or res["following"][following]["is_before_id"] is not None:
-            res = self.rt.get(res["following"][following]["is_before_id"]).run()
+        while i < page * number or res["following"][order]["is_before_id"] is not None:
+            res = self.rt.get(res["following"][order]["is_before_id"]).run()
             i += 1
         extern_stats["op"]["page"] = (time.time() - ts) / 3
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
@@ -250,8 +250,8 @@ class TimesheetV2():
         ts = time.time()
         timesheets = []
         i = 0
-        while i < number or res["following"][following]["is_before_id"] is not None:  
-            ret = self.get(res["following"][following]["is_before_id"]).eq_join(
+        while i < number or res["following"][order]["is_before_id"] is not None:  
+            res = self.get(res["following"][order]["is_before_id"]).eq_join(
                 "client_folder", 
                 self.rf
             ).without(
@@ -269,7 +269,7 @@ class TimesheetV2():
             ).zip().pluck(
                 ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order"]
             )
-            timesheets.append(ret)
+            timesheets.append(res)
             i += 1
         extern_stats["op"]["request"] = time.time() - ts
         extern_stats["op"]["setup_request"] = 0
