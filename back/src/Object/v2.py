@@ -278,7 +278,7 @@ class TimesheetV2():
             return [False, "Invalid pagination", 404]
         pagination = {
             "total": total,
-            "ret": [ret, ret1]
+            "ret": [ret, ret1],
             "pages": {
                 "min": 1,
                 "max": max,
