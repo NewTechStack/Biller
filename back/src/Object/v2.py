@@ -249,7 +249,7 @@ class TimesheetV2():
         if res is not None:
             i = 0
             timesheets = []
-            res = self.rt.filter({"id": res["id"]}).eq_join(
+            res = list(self.rt.filter({"id": res["id"]}).eq_join(
                     "client_folder", 
                     self.rf
                 ).without(
@@ -266,7 +266,7 @@ class TimesheetV2():
                     {"right": "id"}
                 ).zip().pluck(
                     ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order", "following"]
-                ).run()
+                ).run())[0]
             while i < number - 1 and res["following"][order]["is_after_id"] is not None:  
                 res = self.rt.filter({"id": res["following"][order]["is_after_id"] }).eq_join(
                     "client_folder", 
