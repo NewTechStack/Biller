@@ -268,6 +268,10 @@ class TimesheetV2():
             ).zip().pluck(
                 ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order"]
             ).run()
+            res = list(res)
+            if len(res) == 0:
+                break
+            res = res[0]
             timesheets.append(res)
             i += 1
         extern_stats["op"]["request"] = time.time() - ts
