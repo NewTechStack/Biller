@@ -61,23 +61,5 @@ class Timesheet(Crud, StatusObject):
         return [True, {}, None]
         res = dict(self.red.get(self.id).run())
         order = res["order"]
-        self.red.filter({"client": res["client"]}).filter(r.row["order"]["client"] > res["order"]["client"]).update({
-            "order": {"client": (r.row["order"]["client"] - 1)}
-        }).run()
-        self.red.filter(}).filter(r.row["order"]["client_folder"] > res["order"]["client_folder"]).update({
-            "order": {"client_folder": (r.row["order"]["client_folder"] - 1)}
-        }).run()
-        self.red.filter({"id": res["id"]}).filter(r.row["order"]["id"] > res["order"]["id"]).update({
-            "order": {"id": (r.row["order"]["id"] - 1)}
-        }).run()
-        self.red.filter({"user": res["user"]}).filter(r.row["order"]["user"] > res["order"]["user"]).update({
-            "order": {"user": (r.row["order"]["user"] - 1)}
-        }).run()
-        self.red.filter({"user": res["user"], "client": res["client"]}).filter(r.row["order"]["user/client"] > res["order"]["user/client"]).update({
-            "order": {"user/client": (r.row["order"]["user/client"] - 1)}
-        }).run()
-        self.red.filter({"user": res["user"], "client_folder": res["client_folder"]}).filter(r.row["order"]["user/client_folder"] > res["order"]["user/client_folder"]).update({
-            "order": {"user/client_folder": (r.row["order"]["user/client_folder"] - 1)}
-        }).run()
-        ret = self.red.filter({'id': self.id}).delete().run()
+        
         return [True, {'id': self.id}, None]
