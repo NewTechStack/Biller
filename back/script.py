@@ -8,7 +8,7 @@ time = r.db("ged").table("timesheet")
 filters = [['client'], ['user'], ['client_folder'], ['user', 'client_folder'], ['user', 'client']]
 
 timesheets = list(time.order_by('date').pluck("id").run())[10:12]
-for i in tqdm(range(len(timesheets))):
+for i in (range(len(timesheets))):
     print(None if i > (len(timesheets) + 1) else timesheets[i + 1]['id'])
     print(i + 1, i > (len(timesheets) + 1))
     f = {"following": {"id": {"before":  None if i > (len(timesheets) + 1) else timesheets[i + 1]['id'], "after": timesheets[i - 1]['id'] if i > -1 else None}}}
