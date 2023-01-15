@@ -238,19 +238,19 @@ class TimesheetV2():
         res = req.max('date').default(None).run()
         ret1 = res
         if res is None:
-            res = {"following": {order: {"is_before_id": None}}}
-        while i < page * number and res["following"][order]["is_before_id"] is not None:
+            res = {"following": {order: {"is_after_id": None}}}
+        while i < page * number and res["following"][order]["is_after_id"] is not None:
             res = self.rt.get(res["following"][order]["is_before_id"]).run()
             i += 1
         extern_stats["op"]["page"] = (time.time() - ts) / 3
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
-        timesheets = []
+        timesheets = [res]
         ret = res
         i = 0
-        while i < number and res["following"][order]["is_before_id"] is not None:  
-            res = self.rt.get(res["following"][order]["is_before_id"]).eq_join(
+        while i < number and res["following"][order]["is_after_id"] is not None:  
+            res = self.rt.get(res["following"][order]["is_after_id"]).eq_join(
                 "client_folder", 
                 self.rf
             ).without(
