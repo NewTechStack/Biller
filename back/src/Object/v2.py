@@ -241,7 +241,7 @@ class TimesheetV2():
             res = {"following": {order: {"is_before_id": None}}}
         else:
             res = res[0]
-        while i < page * number or res["following"][order]["is_before_id"] is not None:
+        while i < page * number and res["following"][order]["is_before_id"] is not None:
             res = self.rt.get(res["following"][order]["is_before_id"]).run()
             i += 1
         extern_stats["op"]["page"] = (time.time() - ts) / 3
@@ -250,7 +250,7 @@ class TimesheetV2():
         ts = time.time()
         timesheets = []
         i = 0
-        while i < number or res["following"][order]["is_before_id"] is not None:  
+        while i < number and res["following"][order]["is_before_id"] is not None:  
             res = self.rt.get(res["following"][order]["is_before_id"]).eq_join(
                 "client_folder", 
                 self.rf
