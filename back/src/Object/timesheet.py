@@ -64,7 +64,6 @@ class Timesheet(Crud, StatusObject):
         if self.id is None:
             return [False, "Invalid id", 404]
         res = dict(self.red.get(self.id).run())
-        order = res["order"]
         filter_array =  ["id", "client", "client_folder", "user", "user/client", "user/client_folder"]
         for f in filter_array:
             self.remove_from_chain(self.id, f)
