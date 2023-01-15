@@ -266,7 +266,7 @@ class TimesheetV2():
                     ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order", "following"]
                 ).run())[0]
             timesheets = [res]
-            while i < number - 1 and res["following"][order]["is_after_id"] is not None:  
+            while i < number - 1 and res["following"][order]["is_after_id"] is not None and page * number + i < total - 1:  
                 res = self.rt.filter({"id": res["following"][order]["is_after_id"] }).eq_join(
                     "client_folder", 
                     self.rf
