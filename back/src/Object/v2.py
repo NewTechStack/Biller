@@ -235,12 +235,9 @@ class TimesheetV2():
             "price": all_arr["price"]
         }
         i = 0
-        res = req.max('date').default([]).run()
-        res = list(res)
-        if len(res) == 0:
+        res = req.max('date').default(None).run()
+        if res is None:
             res = {"following": {order: {"is_before_id": None}}}
-        else:
-            res = res[0]
         while i < page * number and res["following"][order]["is_before_id"] is not None:
             res = self.rt.get(res["following"][order]["is_before_id"]).run()
             i += 1
