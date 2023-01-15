@@ -236,6 +236,7 @@ class TimesheetV2():
         }
         i = 0
         res = req.max('date').default(None).run()
+        ret1 = res
         if res is None:
             res = {"following": {order: {"is_before_id": None}}}
         while i < page * number and res["following"][order]["is_before_id"] is not None:
@@ -246,6 +247,7 @@ class TimesheetV2():
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         timesheets = []
+        ret = res
         i = 0
         while i < number and res["following"][order]["is_before_id"] is not None:  
             res = self.rt.get(res["following"][order]["is_before_id"]).eq_join(
@@ -276,6 +278,7 @@ class TimesheetV2():
             return [False, "Invalid pagination", 404]
         pagination = {
             "total": total,
+            "ret": [ret, ret1]
             "pages": {
                 "min": 1,
                 "max": max,
