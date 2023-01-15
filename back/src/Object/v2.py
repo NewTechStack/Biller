@@ -172,7 +172,7 @@ class TimesheetV2():
         self.rc = get_conn().db("ged").table("client")
     
     def all(self, page, number, client_id, folder_id, stime, etime, status, user):
-        extern_stats = {"op": {}, "meta": {"object": "TimesheetV2", "function": "all2", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
+        extern_stats = {"op": {}, "meta": {"object": "TimesheetV2", "function": "all3", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
         if page < 1:
             page = 1
         page -= 1
@@ -224,50 +224,61 @@ class TimesheetV2():
         ts = time.time()
         all_arr = dict(
             req.map(
-                lambda row: {"price" : row["price"].mul(row["duration"]), "duration" : row["duration"], "max": row["order"][order], "total": 1}
+                lambda row: {"price" : row["price"].mul(row["duration"]), "duration" : row["duration"],  "total": 1}
             ).reduce(
-                lambda left, right: {"price" : left["price"].add(right["price"]), "duration" : left["duration"].add(right["duration"]), "max": r.expr([left["max"], right["max"]]).max(), "total": left["total"].add(right["total"])}
-            ).default({"price" : 0, "duration" : 0, "max": 0, "total": 0}).run()
+                lambda left, right: {"price" : left["price"].add(right["price"]), "duration" : left["duration"].add(right["duration"]), "total": left["total"].add(right["total"])}
+            ).default({"price" : 0, "duration" : 0, "total": 0}).run()
         )
         total = all_arr["total"]
-        max_order = all_arr["max"]
         sum_arr = {
             "duration": all_arr["duration"] ,
             "price": all_arr["price"]
         }
-        req = req.filter(
-        (max_order - page * number >= r.row["order"][order]) & (r.row["order"][order] > max_order - (page + 1) * number)
-        )
+        i = 0
+        res = self.red.filter(filter).filter({"following": {order: {"is_before_id": None}}}).run()
+        res = list(res)
+        if len(res) == 0:
+            res = {"following": {order: {"is_before_id": None}}}
+        else:
+            res = res[0]
+        while i < page * number or res["following"][following]["is_before_id"] is not None:
+            res = self.red.get(res["following"][following]["is_before_id"]).run()
+            i += 1
         extern_stats["op"]["page"] = (time.time() - ts) / 3
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
-        req = req.eq_join(
-            "client_folder", 
-            self.rf
-        ).without(
-            {"right": "id"}
-        ).zip().eq_join(
-            "user",
-            self.ru
-        ).without(
-            {"right": {"id": True, "price": True}}
-        ).zip().eq_join(
-            "client",
-            self.rc
-        ).without(
-            {"right": "id"}
-        ).zip().pluck(
-            ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order"]
-        ).order_by(r.desc("date"))
-        extern_stats["op"]["setup_request"] = time.time() - ts
+        timesheets = []
+        i = 0
+        while i < number or res["following"][following]["is_before_id"] is not None:  
+            ret = self.get(res["following"][following]["is_before_id"]).eq_join(
+                "client_folder", 
+                self.rf
+            ).without(
+                {"right": "id"}
+            ).zip().eq_join(
+                "user",
+                self.ru
+            ).without(
+                {"right": {"id": True, "price": True}}
+            ).zip().eq_join(
+                "client",
+                self.rc
+            ).without(
+                {"right": "id"}
+            ).zip().pluck(
+                ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order"]
+            )
+            timesheets.append(ret)
+            i += 1
+        extern_stats["op"]["request"] = time.time() - ts
+        extern_stats["op"]["setup_request"] = 0
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
         if max < page + 1:
             return [False, "Invalid pagination", 404]
         pagination = {
             "total": total,
-            "order": {"order": order, "max": max_order, "from": max_order - page * number, "to": max_order - (page + 1) * number},
             "pages": {
                 "min": 1,
                 "max": max,
@@ -275,9 +286,6 @@ class TimesheetV2():
                 "actual_page": page + 1
             }
         }
-        ts = time.time()
-        timesheets = list(req.run())
-        extern_stats["op"]["request"] = time.time() - ts
         extern_stats["total"] = sum(extern_stats["op"].values())
         self.rt = get_conn().db("ged").table("stats").insert([extern_stats]).run()
         return [True, {"list": timesheets, "sum": sum_arr, "pagination": pagination}, None]
