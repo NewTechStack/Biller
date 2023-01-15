@@ -56,9 +56,9 @@ class Timesheet(Crud, StatusObject):
             if res is not None:
                 self.red.get(self.id).update({"following": {following: {"is_after_id": res["id"], "is_before_id": None}}}).run()
                 if res["following"][following]["is_after_id"] is not None:
-                    self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": self.id}}}).run()
+                    self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_after_id": self.id}}}).run()
                 if res["following"][following]["is_before_id"] is not None:
-                    self.red.get(res["following"][following]["is_before_id"]).update({"following": {following: {"is_after_id": self.id}}}).run()
+                    self.red.get(res["following"][following]["is_before_id"]).update({"following": {following: {"is_before_id": self.id}}}).run()
             else:
                 self.red.get(self.id).update({"following": {following: {"is_after_id": None, "is_before_id": None}}}).run()
         res = [{"id": None, "following": {following: {"is_before_id": None, "is_after_id": None}}}]
