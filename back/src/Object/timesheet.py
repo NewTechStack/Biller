@@ -42,7 +42,7 @@ class Timesheet(Crud, StatusObject):
         
     
     def insert_from_chain(self, date, actual_filter = {}, following = "id"):
-        res = self.red.filter(actual_filter).filter(r.row["date"].ge("date")).min().default(None).run()
+        res = self.red.filter(actual_filter).filter(r.row("id").ne(self.id)).filter(r.row["date"].ge("date")).min().default(None).run()
         if res is not None:
             self.red.get(self.id).update({"following": {following: {"is_after_id": res["following"][following]["is_before_id"], "is_before_id": res["id"]}}}).run()
             if res["id"] is not None:
@@ -50,12 +50,13 @@ class Timesheet(Crud, StatusObject):
             if res["following"][following]["is_after_id"] is not None:
                 self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": self.id}}}).run()
         else:
-            res = self.red.filter(actual_filter).filter(r.row["date"].lt("date")).max().default(None).run()
+            res = self.red.filter(actual_filter).filter(r.row("id").ne(self.id)).filter(r.row["date"].lt("date")).max().default(None).run()
             if res is not None:
                 self.red.get(self.id).update({"following": {following: {"is_after_id": res["id"], "is_before_id": None}}}).run()
-            print(res)
             if res["following"][following]["is_after_id"] is not None:
                 self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": self.id}}}).run()
+            if res is None:
+                self.red.get(self.id).update({"following": {following: {"is_after_id": None, "is_before_id": None}}}).run()
         res = [{"id": None, "following": {following: {"is_before_id": None, "is_after_id": None}}}]
         
     
