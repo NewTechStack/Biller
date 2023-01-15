@@ -26,35 +26,13 @@ class Timesheet(Crud, StatusObject):
         input["status"] = 0
         if "desc" in data:
             input["desc"] = data["desc"]
-        base_inf = self.red.filter(r.row["date"] <= input["date"])
-        base_sup = self.red.filter(r.row["date"] > input["date"])
-        input["order"] = {
-            "client": int(base_inf.filter({"client": input["client"]}).count().run()) ,
-            "client_folder": int(base_inf.filter({"client_folder": input["client_folder"]}).count().run()) ,
-            "id": int(base_inf.count().run()),
-            "user": int(base_inf.filter({"user": input["user"]}).count().run()),
-            "user/client": int(base_inf.filter({"user": input["user"], "client": input["client"]}).count().run()) ,
-            "user/client_folder": int(base_inf.filter({"user": input["user"], "client_folder": input["client_folder"]}).count().run())
-        }
-        base_sup.filter({"client": input["client"]}).update({
-            "order": {"client": (r.row["order"]["client"] + 1)}
-        }).run()
-        base_sup.filter({"client_folder": input["client_folder"]}).update({
-            "order": {"client_folder": (r.row["order"]["client_folder"] + 1)}
-        }).run()
-        base_sup.filter({"id": input["id"]}).update({
-            "order": {"id": (r.row["order"]["id"] + 1)}
-        }).run()
-        base_sup.filter({"user": input["user"]}).update({
-            "order": {"user": (r.row["order"]["user"] + 1)}
-        }).run()
-        base_sup.filter({"user": input["user"], "client": input["client"]}).update({
-            "order": {"user/client": (r.row["order"]["user/client"] + 1)}
-        }).run()
-        base_sup.filter({"user": input["user"], "client_folder": input["client_folder"]}).update({
-            "order": {"user/client_folder": (r.row["order"]["user/client_folder"] + 1)}
-        }).run()
-        return self._push(input)
+        id = self._push(input)
+    
+    def get_before_date(self, date, actual_filter = {}, following = "id"):
+        res = self.red.filter(filter).filter({"following": {following: {"is_before_id": None}}}).run()
+        while res["date"] > date or res["following"][following]["is_before_id"] is not None:
+            res = self.red.get(res["following"][following]["is_before_id"]).run()
+        return res["following"][following]
     
     def delete(self):
         if self.id is None:
