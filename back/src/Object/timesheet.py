@@ -42,7 +42,7 @@ class Timesheet(Crud, StatusObject):
         
     
     def insert_from_chain(self, date, actual_filter = {}, following = "id"):
-        res = self.red.filter(filter).filter(r.row["date"].ge("date")).min().default(None).run()
+        res = self.red.filter(actual_filter).filter(r.row["date"].ge("date")).min().default(None).run()
         if res is None:
             res = {"following": {order: {"is_before_id": None}}}
         else:
