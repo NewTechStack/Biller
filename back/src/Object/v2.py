@@ -235,14 +235,14 @@ class TimesheetV2():
             "price": all_arr["price"]
         }
         i = 0
-        res = self.red.filter(filter).filter({"following": {order: {"is_before_id": None}}}).run()
+        res = self.rt.filter(filter).filter({"following": {order: {"is_before_id": None}}}).run()
         res = list(res)
         if len(res) == 0:
             res = {"following": {order: {"is_before_id": None}}}
         else:
             res = res[0]
         while i < page * number or res["following"][following]["is_before_id"] is not None:
-            res = self.red.get(res["following"][following]["is_before_id"]).run()
+            res = self.rt.get(res["following"][following]["is_before_id"]).run()
             i += 1
         extern_stats["op"]["page"] = (time.time() - ts) / 3
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
