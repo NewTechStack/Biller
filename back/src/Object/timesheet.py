@@ -33,7 +33,7 @@ class Timesheet(Crud, StatusObject):
             [{"client_folder": input["client_folder"]}, "client_folder"],
             [{"user": input["user"]}, "user"],
             [{"user": input["user"], "client": input["client"]}, "user/client"],
-            [{"user": input["user"], "client": input["client_folder"]}, "user/client_folder"]
+            [{"user": input["user"], "client_folder": input["client_folder"]}, "user/client_folder"]
             
         ]
         for f in filter_array:
@@ -49,12 +49,16 @@ class Timesheet(Crud, StatusObject):
                 self.red.get(res["id"]).update({"following": {following: {"is_after_id": self.id}}}).run()
             if res["following"][following]["is_after_id"] is not None:
                 self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": self.id}}}).run()
+            if res["following"][following]["is_before_id"] is not None:
+                self.red.get(res["following"][following]["is_before_id"]).update({"following": {following: {"is_after_id": self.id}}}).run()
         else:
             res = self.red.filter(actual_filter).filter(r.row["id"].ne(self.id)).filter(r.row["date"].lt("date")).max().default(None).run()
             if res is not None:
                 self.red.get(self.id).update({"following": {following: {"is_after_id": res["id"], "is_before_id": None}}}).run()
                 if res["following"][following]["is_after_id"] is not None:
                     self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": self.id}}}).run()
+                if res["following"][following]["is_before_id"] is not None:
+                    self.red.get(res["following"][following]["is_before_id"]).update({"following": {following: {"is_after_id": self.id}}}).run()
             else:
                 self.red.get(self.id).update({"following": {following: {"is_after_id": None, "is_before_id": None}}}).run()
         res = [{"id": None, "following": {following: {"is_before_id": None, "is_after_id": None}}}]
