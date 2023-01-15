@@ -248,7 +248,6 @@ class TimesheetV2():
         ts = time.time()
         if res is not None:
             i = 0
-            print(res)
             while i < number and res["following"][order]["is_after_id"] is not None:  
                 res = self.rt.filter({"id": res["following"][order]["is_after_id"] }).eq_join(
                     "client_folder", 
@@ -266,13 +265,12 @@ class TimesheetV2():
                 ).without(
                     {"right": "id"}
                 ).zip().pluck(
-                    ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order"]
+                    ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order", "following"]
                 ).run()
                 res = list(res)
                 if len(res) == 0:
                     break
                 res = res[0]
-                print(res)
                 timesheets.append(res)
                 i += 1
         extern_stats["op"]["request"] = time.time() - ts
