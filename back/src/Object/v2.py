@@ -235,7 +235,7 @@ class TimesheetV2():
             "price": all_arr["price"]
         }
         i = 0
-        res = req.max('date').default(None).run()
+        res = req.max('date').default([]).run()
         res = list(res)
         if len(res) == 0:
             res = {"following": {order: {"is_before_id": None}}}
