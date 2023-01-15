@@ -64,7 +64,7 @@ class Timesheet(Crud, StatusObject):
         return [True, {'id': self.id}, None]
 
     def remove_from_chain(self, id, following = "id"):
-        res = self.red.filter(filter).filter(r.row["date"].ge("date")).min().default(None).run()
+        res = self.red.get(self.id).run()
         if res is None:
             return
         self.red.get(self.id).update({"following": {following: {"is_after_id": None, "is_before_id": None}}})
