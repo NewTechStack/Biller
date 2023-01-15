@@ -236,7 +236,6 @@ class TimesheetV2():
         }
         i = 0
         res = req.max('date').default(None).run()
-        ret1 = res
         timesheets = []
         if res is not None:
             while i < page * number and res["following"][order]["is_after_id"] is not None:
@@ -247,33 +246,33 @@ class TimesheetV2():
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
-        ret = res
-        i = 0
-        while i < number and res["following"][order]["is_after_id"] is not None:  
-            res = self.rt.filter({"id": res["following"][order]["is_after_id"] }).eq_join(
-                "client_folder", 
-                self.rf
-            ).without(
-                {"right": "id"}
-            ).zip().eq_join(
-                "user",
-                self.ru
-            ).without(
-                {"right": {"id": True, "price": True}}
-            ).zip().eq_join(
-                "client",
-                self.rc
-            ).without(
-                {"right": "id"}
-            ).zip().pluck(
-                ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order"]
-            ).run()
-            res = list(res)
-            if len(res) == 0:
-                break
-            res = res[0]
-            timesheets.append(res)
-            i += 1
+        if res is not None:
+            i = 0
+            while i < number and res["following"][order]["is_after_id"] is not None:  
+                res = self.rt.filter({"id": res["following"][order]["is_after_id"] }).eq_join(
+                    "client_folder", 
+                    self.rf
+                ).without(
+                    {"right": "id"}
+                ).zip().eq_join(
+                    "user",
+                    self.ru
+                ).without(
+                    {"right": {"id": True, "price": True}}
+                ).zip().eq_join(
+                    "client",
+                    self.rc
+                ).without(
+                    {"right": "id"}
+                ).zip().pluck(
+                    ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order"]
+                ).run()
+                res = list(res)
+                if len(res) == 0:
+                    break
+                res = res[0]
+                timesheets.append(res)
+                i += 1
         extern_stats["op"]["request"] = time.time() - ts
         extern_stats["op"]["setup_request"] = 0
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
@@ -282,7 +281,6 @@ class TimesheetV2():
             return [False, "Invalid pagination", 404]
         pagination = {
             "total": total,
-            "ret": [ret, ret1],
             "pages": {
                 "min": 1,
                 "max": max,
