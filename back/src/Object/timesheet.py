@@ -26,23 +26,41 @@ class Timesheet(Crud, StatusObject):
         input["status"] = 0
         if "desc" in data:
             input["desc"] = data["desc"]
-        id = self._push(input)
+        return [True, {}, None]
+        self._push(input)
+        filter_array =  [
+            [{}, "id"],
+            [{"client": input["client"]}, "client"],
+            [{"client_folder": input["client_folder"]}, "client_folder"],
+            [{"user": input["user"]}, "user"],
+            [{"user": input["user"], "client": input["client"]}, "user/client"],
+            [{"user": input["user"], "client": input["client_folder"]}, "user/client_folder"]
+            
+        ]
+        for f in filter_array:
+            self.insert_date(date, f[0], f[1])
+        return self.get()
+        
     
-    def get_before_date(self, date, actual_filter = {}, following = "id"):
+    def insert_date(self, date, actual_filter = {}, following = "id"):
         res = self.red.filter(filter).filter({"following": {following: {"is_before_id": None}}}).run()
         while res["date"] > date or res["following"][following]["is_before_id"] is not None:
             res = self.red.get(res["following"][following]["is_before_id"]).run()
-        return res["following"][following]
+        self.red.get(self.id).update({"following": {following: {"is_after_id": res["id"], "is_before_id": res["following"][following]["is_before_id"]}}})
+        self.red.get(res["id"]).update({"following": {following: {"is_before_id": self.id}}})
+        self.red.get(res["following"][following]["is_before_id"]).update({"following": {following: {"is_after_id": self.id}}})
+        
     
     def delete(self):
         if self.id is None:
             return [False, "Invalid id", 404]
+        return [True, {}, None]
         res = dict(self.red.get(self.id).run())
         order = res["order"]
         self.red.filter({"client": res["client"]}).filter(r.row["order"]["client"] > res["order"]["client"]).update({
             "order": {"client": (r.row["order"]["client"] - 1)}
         }).run()
-        self.red.filter({"client_folder": res["client_folder"]}).filter(r.row["order"]["client_folder"] > res["order"]["client_folder"]).update({
+        self.red.filter(}).filter(r.row["order"]["client_folder"] > res["order"]["client_folder"]).update({
             "order": {"client_folder": (r.row["order"]["client_folder"] - 1)}
         }).run()
         self.red.filter({"id": res["id"]}).filter(r.row["order"]["id"] > res["order"]["id"]).update({
