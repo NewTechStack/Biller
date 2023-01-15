@@ -45,7 +45,7 @@ class Timesheet(Crud, StatusObject):
     def insert_date(self, date, actual_filter = {}, following = "id"):
         res = self.red.filter(filter).filter({"following": {following: {"is_before_id": None}}}).run()
         if len(res) == 0:
-            res = {"following": {order: {"is_before_id": None}}
+            res = {"following": {order: {"is_before_id": None}}}
         else:
             res = res[0]
         while res["date"] > date or res["following"][following]["is_before_id"] is not None:
