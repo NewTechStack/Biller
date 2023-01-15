@@ -37,7 +37,7 @@ class Timesheet(Crud, StatusObject):
             
         ]
         for f in filter_array:
-            self.insert_from_chain(date, f[0], f[1])
+            self.insert_from_chain(input["date"], f[0], f[1])
         return self.get()
         
     
