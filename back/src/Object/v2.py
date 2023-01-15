@@ -250,7 +250,7 @@ class TimesheetV2():
         ret = res
         i = 0
         while i < number and res["following"][order]["is_after_id"] is not None:  
-            res = self.rt.get(res["following"][order]["is_after_id"]).eq_join(
+            res = self.rt.filter({"id": res["following"][order]["is_after_id"] }).eq_join(
                 "client_folder", 
                 self.rf
             ).without(
