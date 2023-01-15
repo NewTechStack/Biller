@@ -26,7 +26,6 @@ class Timesheet(Crud, StatusObject):
         input["status"] = 0
         if "desc" in data:
             input["desc"] = data["desc"]
-        return [True, {}, None]
         self._push(input)
         filter_array =  [
             [{}, "id"],
@@ -38,28 +37,36 @@ class Timesheet(Crud, StatusObject):
             
         ]
         for f in filter_array:
-            self.insert_date(date, f[0], f[1])
+            self.insert_from_chain(date, f[0], f[1])
         return self.get()
         
     
-    def insert_date(self, date, actual_filter = {}, following = "id"):
-        res = self.red.filter(filter).filter({"following": {following: {"is_before_id": None}}}).run()
-        if len(res) == 0:
+    def insert_from_chain(self, date, actual_filter = {}, following = "id"):
+        res = self.red.filter(filter).filter(r.row["date"].ge("date")).min().default(None).run()
+        if res is None:
             res = {"following": {order: {"is_before_id": None}}}
         else:
-            res = res[0]
-        while res["date"] > date or res["following"][following]["is_before_id"] is not None:
-            res = self.red.get(res["following"][following]["is_before_id"]).run()
+            res = list(res)[0]
         self.red.get(self.id).update({"following": {following: {"is_after_id": res["id"], "is_before_id": res["following"][following]["is_before_id"]}}})
-        self.red.get(res["id"]).update({"following": {following: {"is_before_id": self.id}}})
-        self.red.get(res["following"][following]["is_before_id"]).update({"following": {following: {"is_after_id": self.id}}})
+        self.red.get(res["id"]).update({"following": {following: {"is_after_id": self.id}}})
+        self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": self.id}}})
         
     
     def delete(self):
         if self.id is None:
             return [False, "Invalid id", 404]
-        return [True, {}, None]
         res = dict(self.red.get(self.id).run())
         order = res["order"]
-        
+        filter_array =  ["id", "client", "client_folder", "user", "user/client", "user/client_folder"]
+        for f in filter_array:
+            self.remove_from_chain(self.id, f)
+        self.red.get(self.id).delete().run()
         return [True, {'id': self.id}, None]
+
+    def remove_from_chain(self, id, following = "id"):
+        res = self.red.filter(filter).filter(r.row["date"].ge("date")).min().default(None).run()
+        if res is None:
+            return
+        self.red.get(self.id).update({"following": {following: {"is_after_id": None, "is_before_id": None}}})
+        self.red.get(res["following"][following]["is_after_id"]).update({"following": {following: {"is_before_id": res["following"][following]["is_before_id"]}}})
+        self.red.get(res["following"][following]["is_before_id"]).update({"following": {following: {"is_after_id": res["following"][following]["is_after_id"]}}})
