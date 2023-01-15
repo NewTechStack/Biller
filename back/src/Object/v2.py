@@ -239,7 +239,7 @@ class TimesheetV2():
         timesheets = []
         if res is not None:
             while i < page * number and res["following"][order]["is_after_id"] is not None:
-                res = self.rt.get(res["following"][order]["is_before_id"]).run()
+                res = self.rt.get(res["following"][order]["is_after_id"]).run()
                 i += 1
             timesheets = [res]
         extern_stats["op"]["page"] = (time.time() - ts) / 3
