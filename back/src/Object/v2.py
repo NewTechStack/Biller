@@ -172,7 +172,7 @@ class TimesheetV2():
         self.rc = get_conn().db("ged").table("client")
     
     def all(self, page, number, client_id, folder_id, stime, etime, status, user):
-        extern_stats = {"op": {}, "meta": {"object": "TimesheetV2", "function": "all3", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
+        extern_stats = {"op": {}, "meta": {"object": "TimesheetV2", "function": "all4", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
         if page < 1:
             page = 1
         page -= 1
@@ -234,13 +234,18 @@ class TimesheetV2():
             "duration": all_arr["duration"] ,
             "price": all_arr["price"]
         }
-        i = 0
-        res = req.max('date').default(None).run()
+        res = req.max('date').default(None).do(
+                lambda startDoc: 
+                    r.range(0, page * number - 1).fold(
+                        startDoc, lambda doc, i: 
+                            r.branch(
+                             doc["following"]["id"]["is_after_id"].eq(null),
+                             doc
+                             self.rt.get(doc["following"]["id"]["is_after_id"])
+                        )
+                    )
+        ).run()
         timesheets = []
-        if res is not None:
-            while i < page * number and res["following"][order]["is_after_id"] is not None:
-                res = self.rt.get(res["following"][order]["is_after_id"]).run()
-                i += 1
         extern_stats["op"]["page"] = (time.time() - ts) / 3
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
         extern_stats["op"]["count"] = (time.time() - ts) / 3
@@ -249,7 +254,7 @@ class TimesheetV2():
             timesheets = list(
                 self.rt.get(res["id"]).do(
                     lambda startDoc: 
-                        r.range(0, 10).fold(
+                        r.range(0, number - 1).fold(
                             [startDoc], lambda doc, i: 
                                 r.branch(
                                     doc["following"]["id"]["is_after_id"].eq(None),
