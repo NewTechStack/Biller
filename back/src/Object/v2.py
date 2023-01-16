@@ -284,7 +284,7 @@ class TimesheetV2():
                                 ).zip().pluck(
                                     ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order", "following"]
                                 )])
-                            );
+                            )
                         })
             })
         extern_stats["op"]["request"] = time.time() - ts
