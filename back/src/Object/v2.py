@@ -285,8 +285,8 @@ class TimesheetV2():
                                     ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order", "following"]
                                 )])
                             )
-                        })
-            })
+                        )
+            )
         extern_stats["op"]["request"] = time.time() - ts
         extern_stats["op"]["setup_request"] = 0
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
