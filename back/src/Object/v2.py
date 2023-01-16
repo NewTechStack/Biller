@@ -249,24 +249,7 @@ class TimesheetV2():
             timesheets = list(self.rt.filter({"id": res["id"]}).do(lambda startDoc: r.range(0, 10).fold([startDoc], lambda doc, i: r.branch(
                         doc["following"]["id"]["is_after_id"].eq(None),
                         doc,
-                        doc.add([self.rt.get(doc[i]["following"]["id"]["is_after_id"]).eq_join(
-                                    "client_folder", 
-                                    self.rf
-                                ).without(
-                                    {"right": "id"}
-                                ).zip().eq_join(
-                                    "user",
-                                    self.ru
-                                ).without(
-                                    {"right": {"id": True, "price": True}}
-                                ).zip().eq_join(
-                                    "client",
-                                    self.rc
-                                ).without(
-                                    {"right": "id"}
-                                ).zip().pluck(
-                                    ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order", "following"]
-                                )])
+                        doc.add([self.rt.get(doc[i]["following"]["id"]["is_after_id"])])
                             )
                         )
             ).run())
