@@ -246,7 +246,7 @@ class TimesheetV2():
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         if res is not None:
-            timesheets = list(self.rt.filter({"id": res["id"]}).do(lambda startDoc: r.range(0, 10).fold([startDoc], lambda doc, i: r.branch(
+            timesheets = list(self.rt.get(res["id"]).do(lambda startDoc: r.range(0, 10).fold([startDoc], lambda doc, i: r.branch(
                         doc["following"]["id"]["is_after_id"].eq(None),
                         doc,
                         doc.add([self.rt.get(doc[i]["following"]["id"]["is_after_id"])])
