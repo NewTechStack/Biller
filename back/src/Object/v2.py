@@ -286,7 +286,7 @@ class TimesheetV2():
                                 )])
                             )
                         )
-            )
+            ).run()
         extern_stats["op"]["request"] = time.time() - ts
         extern_stats["op"]["setup_request"] = 0
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
