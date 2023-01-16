@@ -239,7 +239,7 @@ class TimesheetV2():
                     r.range(0, page * number - 1).fold(
                         startDoc, lambda doc, i: 
                             r.branch(
-                             doc["following"]["id"]["is_after_id"].eq(null),
+                             doc["following"]["id"]["is_after_id"].eq(None),
                              doc,
                              self.rt.get(doc["following"]["id"]["is_after_id"])
                         )
