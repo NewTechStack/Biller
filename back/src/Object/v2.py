@@ -179,7 +179,7 @@ class TimesheetV2():
         if number < 1:
             number = 1
         req = self.rt
-        order = "id"
+        following = "id"
         if user is not None:
             user = urllib.parse.unquote(user)
             req = req.filter(
@@ -187,7 +187,7 @@ class TimesheetV2():
                     "user": urllib.parse.unquote(user)
                 }
             )
-            order = "user"
+            following = "user"
         if client_id is not None:
             client_id = urllib.parse.unquote(client_id)
             req = req.filter(
@@ -195,10 +195,10 @@ class TimesheetV2():
                     "client": urllib.parse.unquote(client_id)
                 }
             )
-            if order in ["user"]:
-                order = "user/client"
+            if following in ["user"]:
+                following = "user/client"
             else:
-                order = "client"
+                following = "client"
         if folder_id is not None:
             folder_id = urllib.parse.unquote(folder_id)
             req = req.filter(
@@ -206,10 +206,10 @@ class TimesheetV2():
                     "client_folder": folder_id
                 }
             )
-            if order in ["user", "user/client"]:
-                order = "user/client_folder"
+            if following in ["user", "user/client"]:
+                following = "user/client_folder"
             else:
-                order = "client_folder"
+                following = "client_folder"
         if status is not None:
             status = int(status)
             req = req.filter(
