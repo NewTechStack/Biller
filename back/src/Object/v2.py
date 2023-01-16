@@ -240,7 +240,7 @@ class TimesheetV2():
                         startDoc, lambda doc, i: 
                             r.branch(
                              doc["following"]["id"]["is_after_id"].eq(null),
-                             doc
+                             doc,
                              self.rt.get(doc["following"]["id"]["is_after_id"])
                         )
                     )
