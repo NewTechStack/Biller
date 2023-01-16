@@ -250,7 +250,7 @@ class TimesheetV2():
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
-        to_scroll = number - 1 if (page + 1) * number <= total else total - page * number
+        to_scroll = number - 1 if (page + 1) * number <= total else total - page * number - 1
         if res is not None:
             timesheets = list(
                 self.rt.get(res["id"]).do(
