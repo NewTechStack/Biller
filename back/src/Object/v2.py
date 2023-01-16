@@ -239,9 +239,9 @@ class TimesheetV2():
                     r.range(0, page * number - 1).fold(
                         startDoc, lambda doc, i: 
                             r.branch(
-                             doc["following"]["id"]["is_after_id"].eq(None),
+                             doc["following"][following]["is_after_id"].eq(None),
                              doc,
-                             self.rt.get(doc["following"]["id"]["is_after_id"])
+                             self.rt.get(doc["following"][following]["is_after_id"])
                         )
                     )
         ).run()
@@ -250,16 +250,17 @@ class TimesheetV2():
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
+        to_scroll = number - 1 if (page + 1) * number < total else total - (page + 2) * number
         if res is not None:
             timesheets = list(
                 self.rt.get(res["id"]).do(
                     lambda startDoc: 
-                        r.range(0, number - 1).fold(
+                        r.range(0, to_scroll).fold(
                             [startDoc], lambda doc, i: 
                                 r.branch(
-                                    doc["following"]["id"]["is_after_id"].eq(None),
+                                    doc["following"][following]["is_after_id"].eq(None),
                                     doc,
-                                    doc.add([self.rt.get(doc[i]["following"]["id"]["is_after_id"])])
+                                    doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
                                 )
                         )
                 ).eq_join( 
@@ -275,7 +276,7 @@ class TimesheetV2():
                 ).without(
                     {"right": "id"}
                 ).zip().pluck(
-                    ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order", "following"]
+                    ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang"]
                 ).run()
             )
         extern_stats["op"]["request"] = time.time() - ts
