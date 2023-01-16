@@ -246,24 +246,7 @@ class TimesheetV2():
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         if res is not None:
-            timesheets = self.rt.filter({"id": res["id"]}).eq_join(
-                    "client_folder", 
-                    self.rf
-                ).without(
-                    {"right": "id"}
-                ).zip().eq_join(
-                    "user",
-                    self.ru
-                ).without(
-                    {"right": {"id": True, "price": True}}
-                ).zip().eq_join(
-                    "client",
-                    self.rc
-                ).without(
-                    {"right": "id"}
-                ).zip().pluck(
-                    ["id", "date", "name", "desc", "user", "price", "status", "type", "duration", "image", "first_name", "last_name", "name_1", "name_2", "lang", "order", "following"]
-                ).do(lambda startDoc: r.range(0, 10).fold([startDoc], lambda doc, i: r.branch(
+            timesheets = list(self.rt.filter({"id": res["id"]}).do(lambda startDoc: r.range(0, 10).fold([startDoc], lambda doc, i: r.branch(
                         doc["following"]["id"]["is_after_id"].eq(None),
                         doc,
                         doc.add([self.rt.get(doc[i]["following"]["id"]["is_after_id"]).eq_join(
@@ -286,7 +269,7 @@ class TimesheetV2():
                                 )])
                             )
                         )
-            ).run()
+            ).run())
         extern_stats["op"]["request"] = time.time() - ts
         extern_stats["op"]["setup_request"] = 0
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
