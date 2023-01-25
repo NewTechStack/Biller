@@ -80,9 +80,14 @@
                   {{l.time|replace('h0', 'h00')}}
                 <!-- {% endif %} -->
             </div>
+            <div class="chf">
+                <!-- {% if format.amount == true %} -->
+                CHF
+                <!-- {% endif %} -->
+            </div>
             <div class="price">
                 <!-- {% if format.amount == true %} -->
-                CHF {{l.priceHT}}
+                {{l.priceHT|replace('.-', '.-<div style="display: inline-block;width: 0.126in;"></div>')}}
                 <!-- {% endif %} -->
             </div>
         </div>
@@ -235,9 +240,16 @@
       width: 0.9in
     }
 
+
+    .chf {
+      width: 0.2in;
+      margin-right: 0 !important;
+    }
+
     .price {
-      width: 0.86in;
+      width: 0.66in;
       text-align: right !important;
+      margin-left: 0 !important;
     }
 
     .recap_1 {
