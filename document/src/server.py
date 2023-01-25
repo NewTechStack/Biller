@@ -94,6 +94,7 @@ def index():
                 }
             )
         )
+    print(pdf)
     client = Minio(
         endpoint="minio:8080",
         access_key="admin",
