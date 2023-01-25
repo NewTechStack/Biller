@@ -1,248 +1,336 @@
-<html>
-  <head>
-  </head>
-  <body>
-    <div class=logo />
-    </div>
-    <div class="address">
-      <!-- {% for line in address %} -->
-        {{line}}
+  <html>
+    <head>
+    </head>
+    <body>
+      <div class=logo />
+      </div>
+      <div class="address">
+        <!-- {% for line in address %} -->
+          {{line}}
+          <br/>
+        <!-- {% endfor %} -->
+      </div>
+      <div class="invoice_details">
+        <b>FACTURE nᵒ{{num}}</b>
         <br/>
-      <!-- {% endfor %} -->
-    </div>
-    <div class="invoice_details">
-      <b>FACTURE nᵒ{{num}}</b>
+        {{date}}
+      </div>
+    <div class="folder_details">
+      <b>DOSSIER</b>
       <br/>
-      {{date}}
+      {{name}}
     </div>
-  <div class="folder_details">
-    <b>DOSSIER</b>
-    <br/>
-    {{name}}
-  </div>
-    <div class="array_header">
-        <span style="flex: 0 0 1.15in;">DATE</span>
-        <span style="flex: 0 0 1.85in;">ACTIVITÉ</span>
-        <span style="flex: 0 0 1.39in;">AVOCAT(S)</span>
-        <span style="flex: 0 0 0.8in;background-color:red">TAUX</span>
-        <span style="flex: 0 0 0.8in;">HEURES</span>
-        <span style="flex: 0 0 0.8in;">CHF</span>
-    </div>
-    <div class="lines">
-      <!-- {% for l in lines %} -->
-      <div class="line">
-        <!-- {% if format.date == true %} -->
-          <span style="flex: 0 0 1.15in;"><b>{{l.date}}</b></span>
-        <!-- {% endif %}
-        {% if format.desc == true %} -->
-          <span style="flex: 0 0 1.85in;">{{l.activite}}</span>
-        <!-- {% endif %}
-        {% if format.user == true %} -->
-          <span style="flex: 0 0 1.39in;">{{ l.username }}</span>
-        <!-- {% endif %}
-        {% if format.user_price == true %} -->
-          <span style="flex: 0 0 0.8in;background-color:red">CHF {{l.rate}}</span>
-        <!-- {% endif %}
-        {% if format.hours == true %} -->
-          <span style="flex: 0 0 0.8in;">{{l.time|replace('h0', 'h00')}}</span>
-        <!-- {% endif %} -->
-        <!-- {% if format.amount == true %} -->
-          <span style="flex: 0 0 0.8in;">CHF {{l.priceHT}}</span>
-        <!-- {% endif %} -->
+      <div class="array_header">
+            <div class="date">
+              <!-- {% if format.date == true %} -->
+              DATE
+              <!-- {% endif %} -->
+            </div>
+            <div class="activite">
+              <!-- {% if format.desc == true %} -->
+              ACTIVITE
+              <!-- {% endif %} -->
+            </div>
+            <div class="avocat">
+              <!-- {% if format.user == true %} -->
+              AVOCAT(S)
+              <!-- {% endif %} -->
+            </div>
+            <div class="taux">
+              <!-- {% if format.user_price == true %} -->
+              TAUX
+              <!-- {% endif %} -->
+            </div>
+            <div class="time">
+                <!-- {% if format.hours == true %} -->
+                HEURES
+                <!-- {% endif %} -->
+            </div>
+            <div class="price">
+                <!-- {% if format.amount == true %} -->
+                CHF
+                <!-- {% endif %} -->
+            </div>
       </div>
-      <div style="width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);"></div>
-    <!-- {% endfor %} -->
-    </div>
-    <div class="invoice_recap">
-      <div class="line_recap">
-          <span style="flex: 0 0 2.1in;"><b>SOUS-TOTAL (HT)</b></span>
-          <span style="flex: 0 0 0.35in;"><b>CHF</b></span>
-          <span style="flex: 0 0 0.8in;text-align: right"><b>{{timesheet_sum|replace('.-', '.-<div style="display: inline-block;width: 0.085in;"></div>')}}</b></span>
+      <div class="lines">
+        <!-- {% for l in lines %} -->
+        <div class="line">
+            <div class="date">
+              <!-- {% if format.date == true %} -->
+              <b>{{l.date}}</b>
+              <!-- {% endif %} -->
+            </div>
+            <div class="activite">
+              <!-- {% if format.desc == true %} -->
+              {{l.activite}}
+              <!-- {% endif %} -->
+            </div>
+            <div class="avocat">
+              <!-- {% if format.user == true %} -->
+                {{ l.username }}
+              <!-- {% endif %} -->
+            </div>
+            <div class="taux">
+              <!-- {% if format.user_price == true %} -->
+                CHF {{l.rate}}
+              <!-- {% endif %} -->
+            </div>
+            <div class="time">
+                <!-- {% if format.hours == true %} -->
+                  {{l.time|replace('h0', 'h00')}}
+                <!-- {% endif %} -->
+            </div>
+            <div class="chf">
+                <!-- {% if format.amount == true %} -->
+                CHF
+                <!-- {% endif %} -->
+            </div>
+            <div class="price">
+                <!-- {% if format.amount == true %} -->
+                {{l.priceHT|replace('.-', '.-<div style="display: inline-block;width: 0.11in"></div>')}}
+                <!-- {% endif %} -->
+            </div>
+        </div>
+        <div style="width:8.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);"></div>
+      <!-- {% endfor %} -->
       </div>
-      <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
-        <div class="sep"></div>
-        <!-- {% if fees_percent != 0 %} -->
+      <div class="invoice_recap">
         <div class="line_recap">
-            <span style="flex: 0 0 2in;">Frais admin.({{fees_percent}}%)</span>
-            <span style="flex: 0 0 0.35in;">CHF</span>
-            <span style="flex: 0 0 0.8in;text-align: right">{{fees_price_ht|replace('.-', '.-<div style="display: inline-block;width: 0.126in;"></div>')}}</span>
+            <div class="recap_1"><b>SOUS-TOTAL (HT)</b></div>
+            <div class="recap_2"><b>CHF</b></div>
+            <div class="recap_3"><b>{{timesheet_sum|replace('.-', '.-<div style="display: inline-block;width: 0.085in;"></div>')}}</b></div>
         </div>
-        <!-- {% endif %} -->
-        <!-- {% if reduction_amount != 0 %} -->
-        <div class="line_recap">
-            <span style="flex: 0 0 2in;">Réduction({{reduction_amount}}{{reduction_unit}})</span>
-            <span style="flex: 0 0 0.35in;">CHF</span>
-            <span style="flex: 0 0 0.8in;text-align: right">{{reduction_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</span>
-        </div>
+        <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
+          <div class="sep"></div>
+          <!-- {% if fees_percent != 0 %} -->
+          <div class="line_recap">
+              <div class="recap_1">Frais admin.({{fees_percent}}%)</div>
+              <div class="recap_2">CHF</div>
+              <div class="recap_3">{{fees_price_ht|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</div  >
+          </div>
+          <!-- {% endif %} -->
+          <!-- {% if reduction_amount != 0 %} -->
+          <div class="line_recap">
+              <div class="recap_1">Réduction({{reduction_amount}}{{reduction_unit}})</div>
+              <div class="recap_2">CHF</div>
+              <div class="recap_3">{{reduction_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</div>
+          </div>
 
+          <!-- {% endif %} -->
+          <!-- {% if tva_amount != 0 %} -->
+          <div class="line_recap">
+              <div class="recap_1">TVA ({{tva_amount}}%)</div>
+              <div class="recap_2">CHF</div>
+              <div class="recap_3">{{tva_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</div>
+          </div>
+          <!-- {% endif %} -->
         <!-- {% endif %} -->
-        <!-- {% if tva_amount != 0 %} -->
-        <div class="line_recap">
-            <span style="flex: 0 0 2in;">TVA ({{tva_amount}}%)</span>
-            <span style="flex: 0 0 0.35in;">CHF</span>
-            <span style="flex: 0 0 0.8in;text-align: right">{{tva_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</span>
-        </div>
-        <!-- {% endif %} -->
-      <!-- {% endif %} -->
-      <!-- {% if provision_amount != 0 %} -->
-        <div class="sep"></div>
         <!-- {% if provision_amount != 0 %} -->
-        <div class="line_recap">
-            <span style="flex: 0 0 2in;">Provision (TTC)</span>
-            <span style="flex: 0 0 0.35in;">CHF</span>
-            <span style="flex: 0 0 0.8in;text-align: right">{{provision_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</span>
-        </div>
+          <div class="sep"></div>
+          <!-- {% if provision_amount != 0 %} -->
+          <div class="line_recap">
+              <div class="recap_1">Provision (TTC)</div>
+              <div class="recap_2">CHF</div>
+              <div class="recap_3">{{provision_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</div>
+          </div>
+          <!-- {% endif %} -->
         <!-- {% endif %} -->
-      <!-- {% endif %} -->
-      <div class="sep"></div>
-      <div class="line_recap">
-          <span style="flex: 0 0 2in;"><b>TOTAL</b></span>
-          <span style="flex: 0 0 0.35in;"><b>CHF</b></span>
-          <span style="flex: 0 0 0.8in;text-align: right"><b>{{total_ttc|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</b></span>
+        <div class="sep"></div>
+        <div class="line_recap">
+            <div class="recap_1"><b>TOTAL</b></div>
+            <div class="recap_2"><b>CHF</b></div>
+            <div class="recap_3"><b>{{total_ttc|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</b></div>
+        </div>
       </div>
+  <!-- {% if qr is none %} -->
+    <div style="position:relative;top:6in;left:1in;width:4.00in;line-height:0.21in;">
+      Banque : {{bank.name}} <br/>
+      Bénéficiaire : {{bank.benef.name}}<br/>
+      IBAN : <b>{{bank.iban}}</b><br/>
+      Clearing : {{bank.clearing}}<br/>
+      BIC/Swif : {{bank.bic}}<br/>
+      REF. : <b>Facture #{{num}}</b><br/>
+      Délai de paiement :  {{before}} jours net<br/>
+      <br/>
     </div>
-<!-- {% if qr is none %} -->
-  <div style="position:relative;top:6in;left:1in;width:4.00in;line-height:0.21in;">
-    Banque : {{bank.name}} <br/>
-    Bénéficiaire : {{bank.benef.name}}<br/>
-    IBAN : <b>{{bank.iban}}</b><br/>
-    Clearing : {{bank.clearing}}<br/>
-    BIC/Swif : {{bank.bic}}<br/>
-    REF. : <b>Facture #{{num}}</b><br/>
-    Délai de paiement :  {{before}} jours net<br/>
-    <br/>
-  </div>
-<!-- {% else %} -->
-  <div style="position:relative;top:6.5in; left: 0.6in; width:8.5in; overflow: hidden">
-    {{ qr }}
-  </div>
-<!-- {% endif %} -->
-</body>
-<STYLE>
-  div.address {
-    position:absolute;
-    top:1.60in;
-    left:6in;
-    width:2.20in;
-    line-height:0.23in;
-    font-style:normal;
-    font-weight:normal;
-    font-size:11pt;
-    font-family:Arial;
-    color:#000000;
-  }
+  <!-- {% else %} -->
+    <div style="position:relative;top:6.5in; left: 0.6in; width:7.5in; overflow: hidden">
+      {{ qr }}
+    </div>
+  <!-- {% endif %} -->
+  </body>
+  <STYLE>
+    div.address {
+      position:absolute;
+      top:1.60in;
+      left:6in;
+      width:2.20in;
+      line-height:0.23in;
+      font-style:normal;
+      font-weight:normal;
+      font-size:11pt;
+      font-family:Arial;
+      color:#000000;
+    }
 
-  div.invoice_details {
-    position:absolute;
-    top:2.84in;
-    left:0.91in;
-    width:3.31in;
-    line-height:0.23in;
-    font-style:normal;
-    font-weight:normal;
-    font-size:10pt;
-    font-family:Arial;
-    color:#000000;
-  }
+    div.invoice_details {
+      position:absolute;
+      top:2.84in;
+      left:0.91in;
+      width:3.31in;
+      line-height:0.23in;
+      font-style:normal;
+      font-weight:normal;
+      font-size:10pt;
+      font-family:Arial;
+      color:#000000;
+    }
 
-  div.folder_details {
-    position:absolute;
-    top:2.84in;
-    left:3.41in;
-    width:4.85in;
-    line-height:0.23in;
-    font-style:normal;
-    font-weight:normal;
-    font-size:10pt;
-    font-family:Arial;
-    color:#000000;
-  }
+    div.folder_details {
+      position:absolute;
+      top:2.84in;
+      left:3.41in;
+      width:4.85in;
+      line-height:0.23in;
+      font-style:normal;
+      font-weight:normal;
+      font-size:10pt;
+      font-family:Arial;
+      color:#000000;
+    }
 
-  div.array_header {
-    position: relative;
-    top:4.12in;
-    left:0.60in;
-    width:7.215in;
-    height:0.25in;
-    background-color:rgb(156,190,209);
-    display: flex;
-  }
-  div.array_header > span{
-    flex: 1 1 1in;
-    text-align: center;
-    margin-left: 0.05in;
-    margin-right: 0.05in;
-    line-height:0.24in;
-    font-style:normal;
-    font-weight:bold;
-    font-size:11pt;
-    font-family: Arial;
-    color:#000000;
-  }
+    div.array_header {
+      position: relative;
+      top:4.12in;
+      left:0.60in;
+      width:8.215in;
+      height:0.25in;
+      background-color:rgb(156,190,209);
+    }
+    div.array_header > div{
+      text-align: center;
+      margin-left: 0.05in;
+      margin-right: 0.05in;
+      line-height:0.24in;
+      font-style:normal;
+      font-weight:bold;
+      font-size:11pt;
+      font-family: Arial;
+      color:#000000;
+      display: inline-block;
+      vertical-align:top;
+    }
 
-  div.lines {
-    position:relative;
-    top: 4.2in;
-    left:0.6in;
-    width:7.215in;
-  }
+    .date {
+      width: 1.15in;
+    }
 
-  div.line {
-    display: flex;
-    margin-bottom: 0.05in;
-  }
+    .activite {
+      width: 2.09in;
+    }
 
-  div.line > span{
-    flex: 0 0 1in;
-    text-align: justify;
-    margin-left: 0.05in;
-    margin-right: 0.05in;
-    overflow: hidden;
-    font-style:normal;
-    font-weight:normal;
-    font-size:10pt;
-    font-family:Arial;
-    color:#000000;
-  }
+    .avocat {
+      width: 1.4in;
+    }
 
-  div.invoice_recap {
-    position:relative;
-    top:5in;
-    width: 3.3in;
-    left: 4.55in;
-    line-height:0.27in;
-    font-style:normal;
-    font-weight:normal;
-    font-size:10pt;
-    font-family:Arial;
-    color:#000000;
-    overflow: hidden;
-  }
+    .taux {
+      width: 0.9in;
+    }
+    .time {
+      width: 0.9in
+    }
 
-  div.line_recap {
-    display: flex;
-  }
 
-  div.invoice_recap > div.sep {
-    height: 0.02in;
-    margin-bottom: 0.05in;
-    margin-top: 0.04in;
-    width: 3.3in;
-    background-color: #000;
-    border-radius: 40in;
-  }
+    .chf {
+      width: 0.2in;
+      margin-right: 0 !important;
+    }
 
-  div.logo {
-    position:absolute;
-    top:0.60in;
-    left:0.93in;
-    width:3.09in;
-    height:0.37in;
-    border: none;
-    background:
-      no-repeat
-      left center;
-    background-image: url("data:image/png;base64,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")
-  }
-</STYLE>
-</html>
+    .price {
+      width: 0.66in;
+      text-align: right !important;
+      margin-left: 0 !important;
+    }
+
+    .recap_1 {
+      width:2in;
+    }
+
+    .recap_2 {
+      width: 0.35in;
+    }
+
+    .recap_3 {
+      width: 0.8in;
+      text-align: right;
+    }
+
+    div.lines {
+      position:relative;
+      top: 4.15in;
+      left:0.6in;
+      width:8.215in;
+    }
+
+    div.line {
+      margin-bottom: 0.05in;
+      margin-top: 0.05in;
+    }
+
+    div.line > div{
+      text-align: justify;
+      margin-left: 0.05in;
+      margin-right: 0.05in;
+      overflow: hidden;
+      font-style:normal;
+      font-weight:normal;
+      font-size:10pt;
+      font-family:Arial;
+      color:#000000;
+      display: inline-block;
+      vertical-align:top;
+    }
+
+    div.invoice_recap {
+      position:relative;
+      top:5in;
+      width: 3.3in;
+      left: 4.55in;
+      line-height:0.27in;
+      font-style:normal;
+      font-weight:normal;
+      font-size:10pt;
+      font-family:Arial;
+      color:#000000;
+      overflow: hidden;
+    }
+
+    div.line_recap {
+      display: flex;
+    }
+    div.line_recap > div {
+      display: inline-block;
+    }
+    div.invoice_recap > div.sep {
+      height: 0.02in;
+      margin-bottom: 0.05in;
+      margin-top: 0.04in;
+      width: 3.3in;
+      background-color: #000;
+      border-radius: 40in;
+    }
+
+    div.logo {
+      position:relative;
+      top:0.60in;
+      left:0.93in;
+      width:3.09in;
+      height:0.37in;
+      border: none;
+      background:
+        no-repeat
+        left center;
+      background-image: url("data:image/png;base64,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")
+    }
+  </STYLE>
+  </html>
