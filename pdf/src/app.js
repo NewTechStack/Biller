@@ -1,9 +1,10 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var wkhtmltopdf = require('wkhtmltopdf');
 
 var app = express();
 
-app.use(express.bodyParser({limit: '50mb'}));
+app.use(bodyParser.json());
 
 app.post('/', (req, res) => {
   res.setHeader('content-type', 'application/pdf');
