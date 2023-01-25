@@ -92,32 +92,32 @@
       </div>
       <div class="invoice_recap">
         <div class="line_recap">
-            <span style="flex: 0 0 2.1in;"><b>SOUS-TOTAL (HT)</b></span>
-            <span style="flex: 0 0 0.35in;"><b>CHF</b></span>
-            <span style="flex: 0 0 0.8in;text-align: right"><b>{{timesheet_sum|replace('.-', '.-<div style="display: inline-block;width: 0.085in;"></div>')}}</b></span>
+            <div class="recap_1"><b>SOUS-TOTAL (HT)</b></div>
+            <div class="recap_2"><b>CHF</b></div>
+            <div class="recap_3"><b>{{timesheet_sum|replace('.-', '.-<div style="display: inline-block;width: 0.085in;"></div>')}}</b></div>
         </div>
         <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
           <div class="sep"></div>
           <!-- {% if fees_percent != 0 %} -->
           <div class="line_recap">
-              <span style="flex: 0 0 2in;">Frais admin.({{fees_percent}}%)</span>
-              <span style="flex: 0 0 0.35in;">CHF</span>
-              <span style="flex: 0 0 0.8in;text-align: right">{{fees_price_ht|replace('.-', '.-<div style="display: inline-block;width: 0.126in;"></div>')}}</span>
+              <div class="recap_1">Frais admin.({{fees_percent}}%)</div>
+              <div class="recap_2">CHF</div>
+              <div class="recap_3">{{fees_price_ht|replace('.-', '.-<div style="display: inline-block;width: 0.126in;"></div>')}}</div  >
           </div>
           <!-- {% endif %} -->
           <!-- {% if reduction_amount != 0 %} -->
           <div class="line_recap">
-              <span style="flex: 0 0 2in;">Réduction({{reduction_amount}}{{reduction_unit}})</span>
-              <span style="flex: 0 0 0.35in;">CHF</span>
-              <span style="flex: 0 0 0.8in;text-align: right">{{reduction_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</span>
+              <div class="recap_1">Réduction({{reduction_amount}}{{reduction_unit}})</div>
+              <div class="recap_2">CHF</div>
+              <div class="recap_3">{{reduction_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</div>
           </div>
 
           <!-- {% endif %} -->
           <!-- {% if tva_amount != 0 %} -->
           <div class="line_recap">
-              <span style="flex: 0 0 2in;">TVA ({{tva_amount}}%)</span>
-              <span style="flex: 0 0 0.35in;">CHF</span>
-              <span style="flex: 0 0 0.8in;text-align: right">{{tva_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</span>
+              <div class="recap_1">TVA ({{tva_amount}}%)</div>
+              <div class="recap_2">CHF</div>
+              <div class="recap_3">{{tva_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</div>
           </div>
           <!-- {% endif %} -->
         <!-- {% endif %} -->
@@ -125,17 +125,17 @@
           <div class="sep"></div>
           <!-- {% if provision_amount != 0 %} -->
           <div class="line_recap">
-              <span style="flex: 0 0 2in;">Provision (TTC)</span>
-              <span style="flex: 0 0 0.35in;">CHF</span>
-              <span style="flex: 0 0 0.8in;text-align: right">{{provision_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</span>
+              <div class="recap_1">Provision (TTC)</div>
+              <div class="recap_2">CHF</div>
+              <div class="recap_3">{{provision_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</div>
           </div>
           <!-- {% endif %} -->
         <!-- {% endif %} -->
         <div class="sep"></div>
         <div class="line_recap">
-            <span style="flex: 0 0 2in;"><b>TOTAL</b></span>
-            <span style="flex: 0 0 0.35in;"><b>CHF</b></span>
-            <span style="flex: 0 0 0.8in;text-align: right"><b>{{total_ttc|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</b></span>
+            <div class="recap_1"><b>TOTAL</b></div>
+            <div class="recap_2"><b>CHF</b></div>
+            <div class="recap_3"><b>{{total_ttc|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</b></div>
         </div>
       </div>
   <!-- {% if qr is none %} -->
@@ -199,7 +199,7 @@
       position: relative;
       top:4.12in;
       left:0.60in;
-      width:7.215in;
+      width:8.215in;
       height:0.25in;
       background-color:rgb(156,190,209);
     }
@@ -238,6 +238,19 @@
 
     .price {
       width: 0.76in;
+    }
+
+    .recap_1 {
+      width:2in;
+    }
+
+    .recap_2 {
+      width: 0.35in;
+    }
+
+    .recap_3 {
+      width: 0.8in;
+      text-align: right;
     }
 
     div.lines {
@@ -300,7 +313,7 @@
     }
 
     div.logo {
-      position:absolute;
+      position:relative;
       top:0.60in;
       left:0.93in;
       width:3.09in;
