@@ -40,17 +40,17 @@
               <!-- {% if format.user_price == true %} -->
               TAUX
               <!-- {% endif %} -->
-          </div>
-          <div class="time">
-              <!-- {% if format.hours == true %} -->
-              HEURES
-              <!-- {% endif %} -->
-          </div>
-          <div class="price">
-              <!-- {% if format.amount == true %} -->
-              CHF
-              <!-- {% endif %} -->
-          </div>
+            </div>
+            <div class="time">
+                <!-- {% if format.hours == true %} -->
+                HEURES
+                <!-- {% endif %} -->
+            </div>
+            <div class="price">
+                <!-- {% if format.amount == true %} -->
+                CHF
+                <!-- {% endif %} -->
+            </div>
       </div>
       <div class="lines">
         <!-- {% for l in lines %} -->
@@ -70,22 +70,21 @@
                 {{ l.username }}
               <!-- {% endif %} -->
             </div>
-
             <div class="taux">
               <!-- {% if format.user_price == true %} -->
                 CHF {{l.rate}}
               <!-- {% endif %} -->
-          </div>
-          <div class="time">
-              <!-- {% if format.hours == true %} -->
-                {{l.time|replace('h0', 'h00')}}
-              <!-- {% endif %} -->
-          </div>
-          <div class="price">
-              <!-- {% if format.amount == true %} -->
-              CHF {{l.priceHT}}
-              <!-- {% endif %} -->
-          </div>
+            </div>
+            <div class="time">
+                <!-- {% if format.hours == true %} -->
+                  {{l.time|replace('h0', 'h00')}}
+                <!-- {% endif %} -->
+            </div>
+            <div class="price">
+                <!-- {% if format.amount == true %} -->
+                CHF {{l.priceHT}}
+                <!-- {% endif %} -->
+            </div>
         </div>
         <div style="width:8.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);"></div>
       <!-- {% endfor %} -->
@@ -238,6 +237,7 @@
 
     .price {
       width: 0.86in;
+      text-align: right;
     }
 
     .recap_1 {
