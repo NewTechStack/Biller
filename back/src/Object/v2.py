@@ -93,7 +93,7 @@ class BillV2():
                     "desc": timesheet["activite"],
                     "duration": timesheet["duration"],
                     "id": timesheet["timesheet_id"],
-                    "price": timesheet["rate"] if not "rate_num" in timesheet else timesheet["rate_num"],
+                    "price": timesheet["rate"],
                     "sum": timesheet["price"],
                     "user": dict(self.ru.get(timesheet["user"]).pluck(["id", "image", "lang", "first_name", "last_name"]).run())
                     }
