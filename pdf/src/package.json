@@ -6,6 +6,7 @@
   "author": "Marcel Gross <marcel.gross@kurzdigital.com>",
   "license": "UNLICENSE",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "wkhtmltopdf": "^0.3.4"
   }
