@@ -21,155 +21,88 @@
     {{name}}
   </div>
     <div class="array_header">
-      {% set left_activite = 0.1 %}
-      {% set left_user = 0.1 %}
-      {% set left_user_price = 0.1 %}
-      {% if format.date == true %}
-        <span style="left:0.15in;">DATE</span>
-        {% set wsize = 1.15 %}
-        {% set left_activite = left_activite + wsize %}
-        {% set left_user = left_user + wsize %}
-        {% set left_user_price = left_user_price + wsize %}
-      {% endif %}
-      {% if format.desc == true %}
-        <span style="left:{{left_activite}}in;">ACTIVITÉ</span>
-        {% set wsize = 1.85 %}
-        {% set left_user = left_user + wsize %}
-        {% set left_user_price = left_user_price + wsize %}
-      {% endif %}
-      {% if format.user == true %}
-        <span style="left:{{left_user}}in;">AVOCAT(S)</span>
-        {% set wsize = 1.39 %}
-        {% set left_user_price = left_user_price + wsize %}
-      {% endif %}
-      {% if format.user_price == true %}
-         <span style="left:{{left_user_price}}in;">TAUX</span>
-      {% endif %}
-      {% if format.hours == true %}
-         <span style="left:5.38in;">HEURES</span>
-      {% endif %}
-      {% if format.amount == true %}
-        <span style="left:6.215in;">CHF</span>
-      {% endif %}
+        <span style="flex: 0 0 1.15in;">DATE</span>
+        <span style="flex: 0 0 1.85in;">ACTIVITÉ</span>
+        <span style="flex: 0 0 1.39in;">AVOCAT(S)</span>
+        <span style="flex: 0 0 0.8in;background-color:red">TAUX</span>
+        <span style="flex: 0 0 0.8in;">HEURES</span>
+        <span style="flex: 0 0 0.8in;">CHF</span>
     </div>
-    <!-- {% set ns = namespace (top = 0.00) %} -->
-    <!-- {% for l in lines %} -->
-      
-      <div class="line" style="top: 4.4in; margin-top:{{ns.top}}in;">
-        <!-- {% set temp = 0.22 %} -->
-        {% if format.date == true %}
-          <span style="left:0.15in;"><b>{{l.date}}</b></span>
-        {% endif %}
-        {% if format.desc == true %}
-          <span style="left:1.25in; width: 1.7in;;">
-            <!-- {% set act_size = ((l.activite|length /25)|round(method='ceil')) %} -->
-              {{l.activite}}<br>
-            <!-- {% set temp = temp + 0.21 * (act_size - 1) %} -->
-          </span>
-        {% endif %}
-        {% if format.user == true %}
-          <span style="left:3.1in; width: 1.2in">
-            <!-- {% set user_size = ((l.username|length /16)|round(method='ceil')) %} -->
-            <!-- {% if act_size < user_size %} -->
-              <!-- {% set temp = temp + 0.21 * (user_size - 1) %} -->
-            <!-- {% endif %} -->
-            {{ l.username }}
-          </span>
-        {% endif %}
-        {% if format.user_price == true %}
-          <span style="left:4.49in;width: 1.5in;">CHF {{l.rate}}</span>
-        {% endif %}
-        {% if format.hours == true %}
-        <span style="left:5.38in;width: 1.5in;">{{l.time|replace('h0', 'h00')}}</span>
-        {% endif %}
-        {% if format.amount == true %}
-          <span style="left:6.215in;width: 1.1in;">CHF {{l.priceHT}}</span>
-        {% endif %}
-        <div style="position:absolute;width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);margin-top:{{temp}}in;"></div>
-        <!-- {% set ns.top = ns.top + 0.08 + temp %} -->
+    <div class="lines">
+      <!-- {% for l in lines %} -->
+      <div class="line">
+        <!-- {% if format.date == true %} -->
+          <span style="flex: 0 0 1.15in;"><b>{{l.date}}</b></span>
+        <!-- {% endif %}
+        {% if format.desc == true %} -->
+          <span style="flex: 0 0 1.85in;">{{l.activite}}</span>
+        <!-- {% endif %}
+        {% if format.user == true %} -->
+          <span style="flex: 0 0 1.39in;">{{ l.username }}</span>
+        <!-- {% endif %}
+        {% if format.user_price == true %} -->
+          <span style="flex: 0 0 0.8in;background-color:red">CHF {{l.rate}}</span>
+        <!-- {% endif %}
+        {% if format.hours == true %} -->
+          <span style="flex: 0 0 0.8in;">{{l.time|replace('h0', 'h00')}}</span>
+        <!-- {% endif %} -->
+        <!-- {% if format.amount == true %} -->
+          <span style="flex: 0 0 0.8in;">CHF {{l.priceHT}}</span>
+        <!-- {% endif %} -->
       </div>
-     
+      <div style="width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);"></div>
     <!-- {% endfor %} -->
-    <div class="invoice_recap" style="left:5.06in; margin-top:{{ns.top}}in">
-      <b>SOUS-TOTAL (HT)</b><br/>
+    </div>
+    <div class="invoice_recap">
+      <div class="line_recap">
+          <span style="flex: 0 0 2.1in;"><b>SOUS-TOTAL (HT)</b></span>
+          <span style="flex: 0 0 0.35in;"><b>CHF</b></span>
+          <span style="flex: 0 0 0.8in;text-align: right"><b>{{timesheet_sum|replace('.-', '.-<div style="display: inline-block;width: 0.085in;"></div>')}}</b></span>
+      </div>
       <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
-        <div style="width: 3.3in;background-color: #000; border-radius: 40in;"></div>
+        <div class="sep"></div>
         <!-- {% if fees_percent != 0 %} -->
-          Frais admin.({{fees_percent}}%)<br/>
+        <div class="line_recap">
+            <span style="flex: 0 0 2in;">Frais admin.({{fees_percent}}%)</span>
+            <span style="flex: 0 0 0.35in;">CHF</span>
+            <span style="flex: 0 0 0.8in;text-align: right">{{fees_price_ht|replace('.-', '.-<div style="display: inline-block;width: 0.126in;"></div>')}}</span>
+        </div>
         <!-- {% endif %} -->
         <!-- {% if reduction_amount != 0 %} -->
-          Réduction({{reduction_amount}}{{reduction_unit}})<br/>
+        <div class="line_recap">
+            <span style="flex: 0 0 2in;">Réduction({{reduction_amount}}{{reduction_unit}})</span>
+            <span style="flex: 0 0 0.35in;">CHF</span>
+            <span style="flex: 0 0 0.8in;text-align: right">{{reduction_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</span>
+        </div>
+
         <!-- {% endif %} -->
         <!-- {% if tva_amount != 0 %} -->
-        TVA ({{tva_amount}}%)<br/>
+        <div class="line_recap">
+            <span style="flex: 0 0 2in;">TVA ({{tva_amount}}%)</span>
+            <span style="flex: 0 0 0.35in;">CHF</span>
+            <span style="flex: 0 0 0.8in;text-align: right">{{tva_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</span>
+        </div>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
       <!-- {% if provision_amount != 0 %} -->
-        <div style="width: 3.3in;background-color: #000; border-radius: 40in;"></div>
+        <div class="sep"></div>
         <!-- {% if provision_amount != 0 %} -->
-          Provision (TTC)<br/>
+        <div class="line_recap">
+            <span style="flex: 0 0 2in;">Provision (TTC)</span>
+            <span style="flex: 0 0 0.35in;">CHF</span>
+            <span style="flex: 0 0 0.8in;text-align: right">{{provision_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</span>
+        </div>
         <!-- {% endif %} -->
       <!-- {% endif %} -->
-      <div style="width: 3.3in;background-color: #000; border-radius: 40in;margin-bottom: 0.09in;"></div>
-      <b>TOTAL</b>
+      <div class="sep"></div>
+      <div class="line_recap">
+          <span style="flex: 0 0 2in;"><b>TOTAL</b></span>
+          <span style="flex: 0 0 0.35in;"><b>CHF</b></span>
+          <span style="flex: 0 0 0.8in;text-align: right"><b>{{total_ttc|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}</b></span>
+      </div>
     </div>
-    <div class="invoice_recap" style="width:0.45in; left:6.86in; text-align: right; margin-top:{{ns.top}}in">
-      <b>CHF</b><br/>
-      <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
-        <div></div>
-        <!-- {% if fees_percent != 0 %} -->
-          CHF<br/>
-        <!-- {% endif %} -->
-        <!-- {% if reduction_amount != 0 %} -->
-          - CHF<br/>
-        <!-- {% endif %} -->
-        <!-- {% if tva_amount != 0 %} -->
-          CHF<br/>
-        <!-- {% endif %} -->
-      <!-- {% endif %} -->
-      <!-- {% if provision_amount != 0 %} -->
-        <div></div>
-        <!-- {% if provision_amount != 0 %} -->
-          - CHF<br/>
-        <!-- {% endif %} -->
-      <!-- {% endif %} -->
-      <div style="margin-bottom: 0.09in;"></div>
-      <b>CHF</b>
-    </div>
-    <div class="invoice_recap" style="width:1.5in; left:6.86in; text-align: right; margin-top:{{ns.top}}in">
-      <b>
-        {{timesheet_sum|replace('.-', '.-<div style="display: inline-block;width: 0.085in;"></div>')}}
-      </b>
-      <br/>
-      <!-- {% if fees_percent != 0 or reduction_amount != 0 or tva_amount != 0 %} -->
-        <div></div>
-        <!-- {% if fees_percent != 0 %} -->
-          {{fees_price_ht|replace('.-', '.-<div style="display: inline-block;width: 0.126in;"></div>')}}
-          <br/>
-        <!-- {% endif %} -->
-        <!-- {% if reduction_amount != 0 %} -->
-          {{reduction_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
-          <br/>
-        <!-- {% endif %} -->
-        <!-- {% if tva_amount != 0 %} -->
-          {{tva_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
-          <br/>
-        <!-- {% endif %} -->
-      <!-- {% endif %} -->
-      <!-- {% if provision_amount != 0 %} -->
-        <div></div>
-        <!-- {% if provision_amount != 0 %} -->
-          {{provision_value|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
-          <br/>
-        <!-- {% endif %} -->
-      <!-- {% endif %} -->
-      <div style="margin-bottom: 0.09in;"></div>
-      <b>
-        {{total_ttc|replace('.-', '.-<div style="display: inline-block;width: 0.108in;"></div>')}}
-      </b>
-    </div>
-{% if qr is none %}
-  <div style="position:absolute;top:8in;left:1in;width:4.00in;line-height:0.21in; margin-top:{{ns.top}}in;">
+<!-- {% if qr is none %} -->
+  <div style="position:relative;top:6in;left:1in;width:4.00in;line-height:0.21in;">
     Banque : {{bank.name}} <br/>
     Bénéficiaire : {{bank.benef.name}}<br/>
     IBAN : <b>{{bank.iban}}</b><br/>
@@ -179,11 +112,11 @@
     Délai de paiement :  {{before}} jours net<br/>
     <br/>
   </div>
-{%else %}
-  <div style="position:absolute;top:6.5in; left: 0.6in; width:8.5in; margin-top:{{ns.top}}in; overflow: hidden">
+<!-- {% else %} -->
+  <div style="position:relative;top:6.5in; left: 0.6in; width:8.5in; overflow: hidden">
     {{ qr }}
   </div>
-{% endif %}
+<!-- {% endif %} -->
 </body>
 <STYLE>
   div.address {
@@ -226,34 +159,44 @@
   }
 
   div.array_header {
-    position:absolute;
+    position: relative;
     top:4.12in;
-    left:0.90in;
+    left:0.60in;
     width:7.215in;
     height:0.25in;
     background-color:rgb(156,190,209);
+    display: flex;
   }
   div.array_header > span{
-    position: absolute;
-    width:1in;
+    flex: 1 1 1in;
+    text-align: center;
+    margin-left: 0.05in;
+    margin-right: 0.05in;
     line-height:0.24in;
     font-style:normal;
     font-weight:bold;
     font-size:11pt;
-    font-family:Be Vietnam ExtraBold;
+    font-family: Arial;
     color:#000000;
   }
 
-  div.line {
-    position:absolute;
-    left:0.90in;
+  div.lines {
+    position:relative;
+    top: 4.2in;
+    left:0.6in;
     width:7.215in;
-    height:0.23in;
+  }
+
+  div.line {
+    display: flex;
+    margin-bottom: 0.05in;
   }
 
   div.line > span{
-    position: absolute;
-    width:3in;
+    flex: 0 0 1in;
+    text-align: justify;
+    margin-left: 0.05in;
+    margin-right: 0.05in;
     overflow: hidden;
     font-style:normal;
     font-weight:normal;
@@ -263,18 +206,30 @@
   }
 
   div.invoice_recap {
-    position:absolute;
-    top:4.6in;
+    position:relative;
+    top:5in;
+    width: 3.3in;
+    left: 4.55in;
     line-height:0.27in;
     font-style:normal;
     font-weight:normal;
     font-size:10pt;
     font-family:Arial;
     color:#000000;
+    overflow: hidden;
   }
 
-  div.invoice_recap > div {
-    width: 0.1in; height: 0.02in; margin-bottom: 0.05in; margin-top: 0.04in;
+  div.line_recap {
+    display: flex;
+  }
+
+  div.invoice_recap > div.sep {
+    height: 0.02in;
+    margin-bottom: 0.05in;
+    margin-top: 0.04in;
+    width: 3.3in;
+    background-color: #000;
+    border-radius: 40in;
   }
 
   body {
