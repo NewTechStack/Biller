@@ -150,7 +150,9 @@ services:
       - ./document/src:/home/api
 
   pdfgenerator:
-    image: kurzdigital/html-to-pdf
+    build:
+      context: ./pdf/
+      dockerfile: Dockerfile
     container_name: biller-pdfgenerator
     tty: true
     restart: always
