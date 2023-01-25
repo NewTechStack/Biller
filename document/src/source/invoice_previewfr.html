@@ -21,33 +21,33 @@
     {{name}}
   </div>
     <div class="array_header">
-        <span style="flex: 0 0 1.15in;">DATE</span>
-        <span style="flex: 0 0 1.85in;">ACTIVITÉ</span>
-        <span style="flex: 0 0 1.39in;">AVOCAT(S)</span>
-        <span style="flex: 0 0 0.8in;background-color:red">TAUX</span>
-        <span style="flex: 0 0 0.8in;">HEURES</span>
-        <span style="flex: 0 0 0.8in;">CHF</span>
+        <div class="date">DATE</div>
+        <div class="activite">ACTIVITÉ</div>
+        <div class="avocat">AVOCAT(S)</div>
+        <div class="taux">TAUX</div>
+        <div class="time">HEURES</div>
+        <div class="price">CHF</div>
     </div>
     <div class="lines">
       <!-- {% for l in lines %} -->
       <div class="line">
         <!-- {% if format.date == true %} -->
-          <span style="flex: 0 0 1.15in;"><b>{{l.date}}</b></span>
+          <div class="date"><b>{{l.date}}</b></div>
         <!-- {% endif %}
         {% if format.desc == true %} -->
-          <span style="flex: 0 0 1.85in;">{{l.activite}}</span>
+          <div class="activite">{{l.activite}}</div>
         <!-- {% endif %}
         {% if format.user == true %} -->
-          <span style="flex: 0 0 1.39in;">{{ l.username }}</span>
+          <div class="avocat">{{ l.username }}</div>
         <!-- {% endif %}
         {% if format.user_price == true %} -->
-          <span style="flex: 0 0 0.8in;background-color:red">CHF {{l.rate}}</span>
+          <div class="taux">CHF {{l.rate}}</div>
         <!-- {% endif %}
         {% if format.hours == true %} -->
-          <span style="flex: 0 0 0.8in;">{{l.time|replace('h0', 'h00')}}</span>
+          <div class="time">{{l.time|replace('h0', 'h00')}}</div>
         <!-- {% endif %} -->
         <!-- {% if format.amount == true %} -->
-          <span style="flex: 0 0 0.8in;">CHF {{l.priceHT}}</span>
+          <div class="price">CHF {{l.priceHT}}</div>
         <!-- {% endif %} -->
       </div>
       <div style="width:7.215in;height:0.02in;background-color:rgba(200, 200, 200, 0.6);"></div>
@@ -165,10 +165,8 @@
     width:7.215in;
     height:0.25in;
     background-color:rgb(156,190,209);
-    display: flex;
   }
-  div.array_header > span{
-    flex: 1 1 1in;
+  div.array_header > div{
     text-align: center;
     margin-left: 0.05in;
     margin-right: 0.05in;
@@ -178,6 +176,30 @@
     font-size:11pt;
     font-family: Arial;
     color:#000000;
+    display: inline-flex;
+  }
+
+  .date {
+    width: 1.15in;
+  }
+
+  .activite {
+    width: 1.89in;
+  }
+
+  .avocat {
+    width: 1.2in;
+  }
+
+  .taux {
+    width: 0.7in;
+  }
+  .time {
+    width: 0.7in
+  }
+
+  .price {
+    width: 0.7in;
   }
 
   div.lines {
@@ -188,12 +210,10 @@
   }
 
   div.line {
-    display: flex;
     margin-bottom: 0.05in;
   }
 
-  div.line > span{
-    flex: 0 0 1in;
+  div.line > div{
     text-align: justify;
     margin-left: 0.05in;
     margin-right: 0.05in;
@@ -203,6 +223,7 @@
     font-size:10pt;
     font-family:Arial;
     color:#000000;
+    display: inline-block;
   }
 
   div.invoice_recap {
