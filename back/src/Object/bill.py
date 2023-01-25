@@ -189,7 +189,7 @@ class Bill(Crud, StatusObject):
             "name": f"invoice_preview{data['lang']}.html",
             "title": f"preview_{self.id.split('/')[-1]}",
             "variables": {
-                "lines": sorted(data["timesheet"], key=lambda d: d['1674466196 ']),
+                "lines": sorted(data["timesheet"], key=lambda d: d['timestamp']),
                 "num": "preview",
                 "date": datetime.now().strftime("%d/%m/%Y"),
                 "name": f"{folder[1]['name']}",
