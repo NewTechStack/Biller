@@ -343,7 +343,8 @@ class Bill(Crud, StatusObject):
             "duration": d[1]["duration"],
             "time": str(int(d[1]['duration'])) + "h" + str(int(d[1]['duration'] % 1 * 60)),
             "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y'),
-            "rate": self.__currency_format(float(d[1]["price"]))
+            "rate": self.__currency_format(float(d[1]["price"])),
+            "rate_num": float(d[1]["price"])
         }
         return [True, {"line": line, "timesheet_object": timesheet_object}, None]
 
