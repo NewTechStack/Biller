@@ -5,8 +5,10 @@ EXPOSE 8080
 RUN yum install -y epel-release && \
     yum install -y npm nodejs && \
     yum clean all
+    
+COPY wkhtmltox-0.12.5-1.centos7.x86_64.rpm wkhtmltox-0.12.5-1.centos7.x86_64.rpm
 
-RUN yum install -y https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+RUN yum localinstall wkhtmltox-0.12.5-1.centos7.x86_64.rpm
 
 COPY src /src
 
