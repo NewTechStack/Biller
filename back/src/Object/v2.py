@@ -370,7 +370,10 @@ class TimesheetV2():
                                     )
                             )
                         ).run()
-            folders = list(self.rf.merge(lambda folder: {
+            req = self.rf
+            if user is not None:
+                req = req.filter({"user_in_charge": user})
+            folders = list(req.merge(lambda folder: {
                     'timesheets': r.expr(timesheets).filter(
                             {'client_folder': folder['id']}
                         ).map(lambda timesheet: {
