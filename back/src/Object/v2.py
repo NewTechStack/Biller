@@ -373,7 +373,7 @@ class TimesheetV2():
                 ).run()
             )
             folders = list(self.rf.merge(lambda folder: {
-                    'timesheets': r.expr(timesheets).filter({'client_folder': folder('id')})
+                    'timesheets': r.expr(r.literal(timesheets)).filter({'client_folder': folder('id')})
                         .map(lambda timesheet: {
                             'date': timesheet['date'],
                             'desc': timesheet['desc'],
