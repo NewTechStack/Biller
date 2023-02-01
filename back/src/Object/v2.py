@@ -359,8 +359,7 @@ class TimesheetV2():
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         if res is not None:
-            folders = list(self.rf.merge(lambda folder: {
-                    'timesheets': self.rt.get(res["id"]).do(
+            timesheets = self.rt.get(res["id"]).do(
                         lambda startDoc: 
                             r.range(0, total).fold(
                                 [startDoc], lambda doc, i: 
@@ -370,7 +369,9 @@ class TimesheetV2():
                                         doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
                                     )
                             )
-                        ).filter(
+                        ).run()
+            folders = list(self.rf.merge(lambda folder: {
+                    'timesheets': timesheets.filter(
                             {'client_folder': folder['id']}
                         ).map(lambda timesheet: {
                                 'date': timesheet['date'],
