@@ -391,7 +391,7 @@ class TimesheetV2():
                                     'lastname': doc['right']['last_name']
                                 }
                             }
-                        ).coerce_to('array').default([])
+                        ).coerce_to('array')
                 }).filter(lambda folder: folder['timesheets'].count().gt(0))
                 .merge(lambda folder: {
                         'associates': folder['associate'].map(lambda associate: self.ru.get(associate['id'])
