@@ -370,7 +370,11 @@ class TimesheetV2():
                                         doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
                                     )
                             )
-                    ).filter({'client_folder': folder('id')})
+                    ).concat_map(lambda doc: r.branch(
+                        doc['client_folder'].eq(folder('id')),
+                        [doc],
+                        []
+                    ))
                         .map(lambda timesheet: {
                             'date': timesheet['date'],
                             'desc': timesheet['desc'],
