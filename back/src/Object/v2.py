@@ -299,19 +299,16 @@ class TimesheetV2():
         return [True, {"list": timesheets, "sum": sum_arr, "pagination": pagination}, None]
 
     def grouped_by_folder(self, page, number, client_id, folder_id, stime, etime, status, user):
+        extern_stats = {"op": {}, "meta": {"object": "TimesheetV2", "function": "by_folder1", "kwargs": [page, number, client_id, folder_id, stime, etime, status, user]}}
         if page < 1:
             page = 1
         page -= 1
         if number < 1:
             number = 1
         req = self.rt
+        following = "id"
         if user is not None:
             user = urllib.parse.unquote(user)
-            req = req.filter(
-                {
-                    "user": urllib.parse.unquote(user)
-                }
-            )
         if client_id is not None:
             client_id = urllib.parse.unquote(client_id)
             req = req.filter(
@@ -319,6 +316,7 @@ class TimesheetV2():
                     "client": urllib.parse.unquote(client_id)
                 }
             )
+            following = "client"
         if folder_id is not None:
             folder_id = urllib.parse.unquote(folder_id)
             req = req.filter(
@@ -326,77 +324,131 @@ class TimesheetV2():
                     "client_folder": folder_id
                 }
             )
-        if stime is not None:
-            stime = int(stime)
-            req = req.filter(
-                lambda doc:
-                    doc["date"] >= stime
-            )
-        if etime is not None:
-            etime = int(etime)
-            req = req.filter(
-                lambda doc:
-                    doc["date"] <= etime
-            )
+            if following in ["user", "user/client"]:
+                following = "user/client_folder"
+            else:
+                following = "client_folder"
         if status is not None:
             status = int(status)
             req = req.filter(
                {"status": status}
             )
-        sum_arr = {
-            "price": float(req.sum(lambda ts: ts["price"].mul(ts["duration"])).run()),
-            "duration": float(req.sum('duration').run())
-        }
-        req = req.order_by(r.desc('date'))
-        total = int(
-            req.eq_join("client_folder", self.rf).group("right").without("right").zip().ungroup().count().run()
+        if stime is not None:
+            stime = int(stime)
+            req = req.filter(r.row["date"].ge(stime))
+        if etime is not None:
+            etime = int(etime)
+            req = req.filter(r.row["date"].le(etime))
+        ts = time.time()
+        all_arr = dict(
+            req.map(
+                lambda row: {"price" : row["price"].mul(row["duration"]), "duration" : row["duration"],  "total": 1}
+            ).reduce(
+                lambda left, right: {"price" : left["price"].add(right["price"]), "duration" : left["duration"].add(right["duration"]), "total": left["total"].add(right["total"])}
+            ).default({"price" : 0, "duration" : 0, "total": 0}).run()
         )
-        req = req.eq_join(
-                "user", 
-                self.ru
-            ).without(
-                {"right": "id"}
-            ).zip().pluck(
-                ["id", "client_folder", "date", "desc", "duration", "price", "first_name", "last_name", "image"]
-            ).eq_join(
-                "client_folder", 
-                self.rf
-            ).group("right").without("right").zip().ungroup().order_by(r.desc('date')).skip(page * number).limit(number).map(
-                lambda doc:
-                    {
-                        "id": doc["group"]["id"],
-                        "client": doc["group"]["id"].split('/')[0],
-                        "associates": doc["group"]["associate"],
-                        "name": doc["group"]["name"],
-                        "user_in_charge": { "id": doc["group"]["user_in_charge"], "price": doc["group"]["user_in_charge_price"] },
-                        "timesheets": doc["reduction"]
-                    }
+        total = all_arr["total"]
+        sum_arr = {
+            "duration": all_arr["duration"] ,
+            "price": all_arr["price"]
+        }
+        res = req.max('date').default(None).run()
+        timesheets = []
+        extern_stats["op"]["page"] = (time.time() - ts) / 3
+        extern_stats["op"]["sum"] = (time.time() - ts) / 3
+        extern_stats["op"]["count"] = (time.time() - ts) / 3
+        ts = time.time()
+        if res is not None:
+            timesheets = list(
+                self.rt.get(res["id"]).do(
+                    lambda startDoc: 
+                        r.range(0, total).fold(
+                            [startDoc], lambda doc, i: 
+                                r.branch(
+                                    doc["following"][following]["is_after_id"].eq(None),
+                                    doc,
+                                    doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
+                                )
+                        )
+                ).run()
             )
+            folders = list(self.rf.merge(lambda folder: {
+                    'timesheets': r.expr(timesheets).filter({'client_folder': folder('id')})
+                        .map(lambda timesheet: {
+                            'date': timesheet['date'],
+                            'desc': timesheet['desc'],
+                            'id': timesheet['id'],
+                            'price': timesheet['price'],
+                            'duration': timesheet['duration'],
+                            'user': timesheet['user']
+                        })
+                        .eq_join('user', self.ru)
+                        .pluck(['left', {'right': ['image', 'firstname', 'lastname']}])
+                        .zip()
+                        .coerce_to('array')
+                        .default([])
+                }).filter(lambda folder: folder('timesheets').count().gt(0))
+                .merge(lambda folder: {
+                    'associates': folder('associate').map(lambda associate: self.ru.get(associate['id'])
+                        .do(lambda user: r.branch(
+                            user.ne(None),
+                            {
+                                'id': user['id'],
+                                'price': associate['price'],
+                                'firstname': user['first_name'],
+                                'lastname': user['last_name'],
+                                'image': user['image']
+                            },
+                            {
+                                'id': associate['id'],
+                                'price': associate['price'],
+                                'firstname': None,
+                                'lastname': None,
+                                'image': None
+                            }
+                        ))
+                })
+                .eq_join('user_in_charge', self.ru)
+                .map(lambda doc: {
+                    'id': doc['left']['id'],
+                    'name': doc['left']['name'],
+                    'associates': doc['left']['associates'],
+                    'client': doc['left']['id'].split('/')[0],
+                    'timesheets': doc['left']['timesheets'],
+                    'sum': None,
+                    'user_in_charge': {
+                        'id': doc['left']['user_in_charge'],
+                        'price': doc['left']['user_in_charge_price'],
+                        'firstname': doc['right']['first_name'],
+                        'lastname': doc['right']['last_name'],
+                        'image': doc['right']['image']
+                    }
+                }).merge(lambda folder: {
+                    'sum': {
+                    'duration': folder('timesheets').sum(lambda timesheet: timesheet('duration')),
+                    'price': folder('timesheets').sum(lambda timesheet: timesheet('duration').mul(timesheet['price']))
+                    }
+                }).eq_join('client', self.rc).map(lambda doc: {
+                    'id': doc['left']['id'],
+                    'name': doc['left']['name'],
+                    'associates': doc['left']['associates'],
+                    'client': {
+                    'id': doc['right']['id'],
+                    'lang': doc['right']['lang'],
+                    'name_1': doc['right']['name_1'],
+                    'name_2': doc['right']['name_2'],
+                    'type': doc['right']['type']
+                    },
+                    'timesheets': doc['left']['timesheets'],
+                    'sum': doc['left']['sum'],
+                    'user_in_charge': doc['left']['user_in_charge']
+                    }).run())
+        extern_stats["op"]["request"] = time.time() - ts
+        extern_stats["op"]["setup_request"] = 0
         max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
         max = max + 1 if max == 0 else max
         if max < page + 1:
             return [False, "Invalid pagination", 404]
-        folders = list(req.run())
-        for folder in folders:
-            folder["sum"] = {
-            "duration": 0,
-            "price": 0
-            }
-            for ts in folder["timesheets"]:
-                folder["sum"]["duration"] += ts["duration"]
-                folder["sum"]["price"] += ts["duration"] * ts["price"]
-            folder["client"] = dict(self.rc.get(folder["client"]).pluck(["id", "name_1", "name_2", "type", "lang"]).run())
-            folder["user_in_charge"]["details"] = dict(self.ru.get(folder["user_in_charge"]["id"]).pluck(["first_name", "last_name", "image"]).run())
-            associates = []
-            for associate in folder["associates"]:
-                associates.append(
-                    {
-                        "id": associate["id"],
-                        "price": associate["price"],
-                        "details": dict(self.ru.get(associate["id"]).pluck(["first_name", "last_name", "image"]).run())
-                    }
-                )
-            folder["associates"] = associates
         pagination = {
             "total": total,
             "pages": {
@@ -406,4 +458,6 @@ class TimesheetV2():
                 "actual_page": page + 1
             }
         }
+        extern_stats["total"] = sum(extern_stats["op"].values())
+        self.rt = get_conn().db("ged").table("stats").insert([extern_stats]).run()
         return [True, {"list": folders, "sum": sum_arr, "pagination": pagination}, None]
