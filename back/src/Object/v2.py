@@ -376,15 +376,9 @@ class TimesheetV2():
             folders = list(req.merge(lambda folder: {
                     'timesheets': r.expr(timesheets).filter(
                             {'client_folder': folder['id']}
-                        ).map(lambda timesheet: {
-                                'date': timesheet['date'],
-                                'desc': timesheet['desc'],
-                                'id': timesheet['id'],
-                                'price': timesheet['price'],
-                                'duration': timesheet['duration'],
-                                'user': timesheet['user']
-                            }
-                        ).eq_join('user', self.ru).map(lambda doc: {
+                        ).eq_join(
+                            'user', self.ru
+                        ).map(lambda doc: {
                                 'date': doc['left']['date'],
                                 'desc': doc['left']['desc'],
                                 'id': doc['left']['id'],
@@ -396,7 +390,8 @@ class TimesheetV2():
                                     'firstname': doc['right']['first_name'],
                                     'lastname': doc['right']['last_name']
                                 }
-                        }).coerce_to('array').default([])
+                            }
+                        ).coerce_to('array').default([])
                 }).filter(lambda folder: folder['timesheets'].count().gt(0))
                 .merge(lambda folder: {
                         'associates': folder['associate'].map(lambda associate: self.ru.get(associate['id'])
