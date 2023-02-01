@@ -370,27 +370,24 @@ class TimesheetV2():
                                         doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
                                     )
                             )
-                    ).concat_map(lambda doc: r.branch(
-                        doc['client_folder'].eq(folder('id')),
-                        [doc],
-                        []
-                    ))
-                        .map(lambda timesheet: {
-                            'date': timesheet['date'],
-                            'desc': timesheet['desc'],
-                            'id': timesheet['id'],
-                            'price': timesheet['price'],
-                            'duration': timesheet['duration'],
-                            'user': timesheet['user']
-                        })
-                        .eq_join('user', self.ru)
+                        ).filter(
+                            {'client_folder': folder['id']}
+                        ).map(lambda timesheet: {
+                                'date': timesheet['date'],
+                                'desc': timesheet['desc'],
+                                'id': timesheet['id'],
+                                'price': timesheet['price'],
+                                'duration': timesheet['duration'],
+                                'user': timesheet['user']
+                            }
+                        ).eq_join('user', self.ru)
                         .pluck(['left', {'right': ['image', 'firstname', 'lastname']}])
                         .zip()
                         .coerce_to('array')
                         .default([])
-                }).filter(lambda folder: folder('timesheets').count().gt(0))
+                }).filter(lambda folder: folder['timesheets'].count().gt(0))
                 .merge(lambda folder: {
-                        'associates': folder('associate').map(lambda associate: self.ru.get(associate['id'])
+                        'associates': folder['associate'].map(lambda associate: self.ru.get(associate['id'])
                             .do(lambda user: r.branch(
                                     user.ne(None),
                                     {
@@ -428,8 +425,8 @@ class TimesheetV2():
                     }
                 }).merge(lambda folder: {
                     'sum': {
-                    'duration': folder('timesheets').sum(lambda timesheet: timesheet('duration')),
-                    'price': folder('timesheets').sum(lambda timesheet: timesheet('duration').mul(timesheet['price']))
+                    'duration': folder['timesheets'].sum(lambda timesheet: timesheet['duration']),
+                    'price': folder['timesheets'].sum(lambda timesheet: timesheet['duration'].mul(timesheet['price']))
                     }
                 }).eq_join('client', self.rc).map(lambda doc: {
                     'id': doc['left']['id'],
