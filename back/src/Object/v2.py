@@ -385,7 +385,7 @@ class TimesheetV2():
                                 'user': timesheet['user']
                             }
                         ).eq_join('user', self.ru)
-                        .pluck(['left', {'right': ['image', 'firstname', 'lastname']}])
+                        .pluck('left', {'right': ['image', 'first_name', 'last_name']})
                         .zip()
                         .coerce_to('array')
                         .default([])
