@@ -374,7 +374,7 @@ class TimesheetV2():
             if user is not None:
                 req = req.filter({"user_in_charge": user})
             folders = list(req.merge(lambda folder: {
-                    'timesheets': r.expr(timesheets[0]).filter(
+                    'timesheets': r.expr(timesheets[0:1]).filter(
                             {'client_folder': folder['id']}
                         ).eq_join(
                             'user', self.ru
