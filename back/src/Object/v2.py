@@ -384,11 +384,19 @@ class TimesheetV2():
                                 'duration': timesheet['duration'],
                                 'user': timesheet['user']
                             }
-                        ).eq_join('user', self.ru)
-                        .pluck('left', {'right': ['image', 'first_name', 'last_name']})
-                        .zip()
-                        .coerce_to('array')
-                        .default([])
+                        ).eq_join('user', self.ru).map(lambda doc: {
+                                'date': doc['left']['date'],
+                                'desc': doc['left']['desc'],
+                                'id': doc['left']['id'],
+                                'price': doc['left']['price'],
+                                'duration': doc['left']['duration'],
+                                'user': {
+                                    'id': doc['right']['left']['user'],
+                                    'image': doc['right']['image'],
+                                    'firstname': doc['right']['first_name'],
+                                    'lastname': doc['right']['last_name']
+                                }
+                        }).coerce_to('array').default([])
                 }).filter(lambda folder: folder['timesheets'].count().gt(0))
                 .merge(lambda folder: {
                         'associates': folder['associate'].map(lambda associate: self.ru.get(associate['id'])
