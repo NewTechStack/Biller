@@ -389,26 +389,28 @@ class TimesheetV2():
                         .default([])
                 }).filter(lambda folder: folder('timesheets').count().gt(0))
                 .merge(lambda folder: {
-                    'associates': folder('associate').map(lambda associate: self.ru.get(associate['id'])
-                        .do(lambda user: r.branch(
-                            user.ne(None),
-                            {
-                                'id': user['id'],
-                                'price': associate['price'],
-                                'firstname': user['first_name'],
-                                'lastname': user['last_name'],
-                                'image': user['image']
-                            },
-                            {
-                                'id': associate['id'],
-                                'price': associate['price'],
-                                'firstname': None,
-                                'lastname': None,
-                                'image': None
-                            }
-                        ))
-                })
-                .eq_join('user_in_charge', self.ru)
+                        'associates': folder('associate').map(lambda associate: self.ru.get(associate['id'])
+                            .do(lambda user: r.branch(
+                                    user.ne(None),
+                                    {
+                                        'id': user['id'],
+                                        'price': associate['price'],
+                                        'firstname': user['first_name'],
+                                        'lastname': user['last_name'],
+                                        'image': user['image']
+                                    },
+                                    {
+                                        'id': associate['id'],
+                                        'price': associate['price'],
+                                        'firstname': None,
+                                        'lastname': None,
+                                        'image': None
+                                    }
+                                )
+                            )
+                        )
+                    }
+                ).eq_join('user_in_charge', self.ru)
                 .map(lambda doc: {
                     'id': doc['left']['id'],
                     'name': doc['left']['name'],
