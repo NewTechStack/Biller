@@ -353,7 +353,7 @@ class TimesheetV2():
             "price": all_arr["price"]
         }
         res = req.max('date').default(None).run()
-        timesheets = []
+        folders = []
         extern_stats["op"]["page"] = (time.time() - ts) / 3
         extern_stats["op"]["sum"] = (time.time() - ts) / 3
         extern_stats["op"]["count"] = (time.time() - ts) / 3
