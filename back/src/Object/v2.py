@@ -385,7 +385,7 @@ class TimesheetV2():
                                 'price': doc['left']['price'],
                                 'duration': doc['left']['duration'],
                                 'user': {
-                                    'id': doc['right']['left']['user'],
+                                    'id': doc['left']['user'],
                                     'image': doc['right']['image'],
                                     'firstname': doc['right']['first_name'],
                                     'lastname': doc['right']['last_name']
