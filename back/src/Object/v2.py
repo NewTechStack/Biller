@@ -454,4 +454,12 @@ class TimesheetV2():
         extern_stats["op"]["setup_request"] = 0
         extern_stats["total"] = sum(extern_stats["op"].values())
         self.rt = get_conn().db("ged").table("stats").insert([extern_stats]).run()
-        return [True, {"list": folders, "sum": sum_arr}, None]
+        return [True, {"list": folders, "sum": sum_arr, "pagination": {
+            "total": len(folders),
+            "pages": {
+                "min": 1,
+                "max": len(folders),
+                "per_page": len(folders),
+                "actual_page": 1
+            }
+        }}, None]
