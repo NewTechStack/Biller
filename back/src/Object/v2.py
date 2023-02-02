@@ -334,6 +334,7 @@ class TimesheetV2():
         if etime is not None:
             etime = int(etime)
             req = req.filter(r.row["date"].le(etime))
+        print(stime, etime, folder_id, client_id)
         ts = time.time()
         all_arr = dict(
             req.map(
