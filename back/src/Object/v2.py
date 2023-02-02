@@ -356,7 +356,12 @@ class TimesheetV2():
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         if res is not None:
-            timesheets = self.rt.get(res["id"]).do(
+            t = self.rt.get(res["id"])
+            if status is not None:
+                t = t.filter(
+                   {"status": status}
+                )
+            timesheets = t.filter({"status": 0}).do(
                         lambda startDoc: 
                             r.range(0, total).fold(
                                 [startDoc], lambda doc, i: 
@@ -366,7 +371,7 @@ class TimesheetV2():
                                         doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
                                     )
                             )
-                        ).filter(r.row["date"].le(etime)).filter(r.row["date"].ge(stime)).run()
+                        ).run()
             req = self.rf
             if user is not None:
                 req = req.filter({"user_in_charge": user})
