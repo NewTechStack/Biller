@@ -324,10 +324,7 @@ class TimesheetV2():
                     "client_folder": folder_id
                 }
             )
-            if following in ["user", "user/client"]:
-                following = "user/client_folder"
-            else:
-                following = "client_folder"
+            following = "client_folder"
         if status is not None:
             status = int(status)
             req = req.filter(
@@ -369,7 +366,7 @@ class TimesheetV2():
                                         doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
                                     )
                             )
-                        ).run()
+                        ).filter(r.row["date"].le(etime)).filter(r.row["date"].ge(stime)).run()
             req = self.rf
             if user is not None:
                 req = req.filter({"user_in_charge": user})
