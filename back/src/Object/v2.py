@@ -212,9 +212,6 @@ class TimesheetV2():
                 following = "client_folder"
         if status is not None:
             status = int(status)
-            req = req.filter(
-               {"status": status}
-            )
         if stime is not None:
             stime = int(stime)
             req = req.filter(r.row["date"].ge(stime))
@@ -263,7 +260,12 @@ class TimesheetV2():
                                     doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
                                 )
                         )
-                ).eq_join( 
+                )
+            if status is not None:
+                timesheets = timesheets.filter(
+                   {"status": status}
+                )
+            timesheets = timesheets.eq_join( 
                     "client_folder", self.rf 
                 ).without(
                     {"right": "id"}
@@ -327,9 +329,6 @@ class TimesheetV2():
             following = "client_folder"
         if status is not None:
             status = int(status)
-            req = req.filter(
-               {"status": status}
-            )
         if stime is not None:
             stime = int(stime)
             req = req.filter(r.row["date"].ge(stime))
@@ -356,12 +355,7 @@ class TimesheetV2():
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         if res is not None:
-            t = self.rt
-            if status is not None:
-                t = t.filter(
-                   {"status": status}
-                )
-            timesheets = t.do(
+            timesheets = self.rt.get(res["id"]).do(
                         lambda startDoc: 
                             r.range(0, total).fold(
                                 [startDoc], lambda doc, i: 
@@ -371,7 +365,12 @@ class TimesheetV2():
                                         doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
                                     )
                             )
-                        ).run()
+                        )
+            if status is not None:
+                timesheets = timesheets.filter(
+                   {"status": status}
+                )
+            timesheets = timesheets.run()
             req = self.rf
             if user is not None:
                 req = req.filter({"user_in_charge": user})
