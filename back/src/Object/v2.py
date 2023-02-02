@@ -369,7 +369,8 @@ class TimesheetV2():
                 timesheets = timesheets.filter(
                    {"status": status}
                 )
-            timesheets = timesheets.run()
+            timesheets = list(timesheets.run())
+            print(len(timesheets))
             req = self.rf
             if user is not None:
                 req = req.filter({"user_in_charge": user})
