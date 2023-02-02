@@ -340,7 +340,7 @@ class TimesheetV2():
             req.map(
                 lambda row: {"price" : row["price"].mul(row["duration"]), "duration" : row["duration"],  "total": 1}
             ).default({"price" : 0, "duration" : 0,  "total": 0}).reduce(
-                lambda left, right: {"price" : left["price"].add(right["price"].default(0)), "duration" : left["duration"].default(0).add(right["duration"].default(0)), "total": left["total"].add(right["total"].default(0))}
+                lambda left, right: {"price" : left["price"].add(right["price"]), "duration" : left["duration"].add(right["duration"]), "total": left["total"].add(right["total"])}
             ).default({"price" : 0, "duration" : 0,  "total": 0}).run()
         )
         total = all_arr["total"]
