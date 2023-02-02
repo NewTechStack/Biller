@@ -369,7 +369,7 @@ class TimesheetV2():
                 timesheets = timesheets.filter(
                    {"status": status}
                 )
-            timesheets = list(timesheets.run())
+            timesheets = list(timesheets.run(), total)
             print(len(timesheets))
             req = self.rf
             if user is not None:
