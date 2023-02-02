@@ -356,12 +356,12 @@ class TimesheetV2():
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         if res is not None:
-            t = self.rt.get(res["id"])
+            t = self.rt
             if status is not None:
                 t = t.filter(
                    {"status": status}
                 )
-            timesheets = t.filter({"status": 0}).do(
+            timesheets = t.do(
                         lambda startDoc: 
                             r.range(0, total).fold(
                                 [startDoc], lambda doc, i: 
