@@ -341,7 +341,7 @@ class TimesheetV2():
                 lambda row: {"price" : row["price"].mul(row["duration"]), "duration" : row["duration"],  "total": 1}
             ).reduce(
                 lambda left, right: {"price" : left["price"].add(right["price"]), "duration" : left["duration"].add(right["duration"]), "total": left["total"].add(right["total"])}
-            ).default({"price" : 0, "duration" : 0, "total": 0}).run()
+            ).run()
         )
         total = all_arr["total"]
         sum_arr = {
