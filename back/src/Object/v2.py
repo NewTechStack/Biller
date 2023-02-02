@@ -339,9 +339,9 @@ class TimesheetV2():
         all_arr = dict(
             req.map(
                 lambda row: {"price" : row["price"].mul(row["duration"]), "duration" : row["duration"],  "total": 1}
-            ).default({"price" : 0, "duration" : 0,  "total": 1}).reduce(
+            ).reduce(
                 lambda left, right: {"price" : left["price"].add(right["price"].default(0)), "duration" : left["duration"].default(0).add(right["duration"].default(0)), "total": left["total"].add(right["total"].default(0))}
-            ).run()
+            ).default({"price" : 0, "duration" : 0,  "total": 0}).run()
         )
         total = all_arr["total"]
         sum_arr = {
@@ -370,7 +370,7 @@ class TimesheetV2():
                 timesheets = timesheets.filter(
                    {"status": status}
                 )
-            timesheets = list(timesheets.run())
+            timesheets = list(timesheets.pluck(["date", "desc", "id", "price", "duration", "user"]).run())
             print(len(timesheets), total)
             req = self.rf
             if user is not None:
