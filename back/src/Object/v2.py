@@ -386,9 +386,9 @@ class TimesheetV2():
                                 'duration': doc['left']['duration'],
                                 'user': {
                                     'id': doc['left']['user'],
-                                    'image': doc['right']['image'],
-                                    'firstname': doc['right']['first_name'],
-                                    'lastname': doc['right']['last_name']
+                                    'image': doc['right']['image'].default(None),
+                                    'firstname': doc['right']['first_name'].default(None),
+                                    'lastname': doc['right']['last_name'].default(None)
                                 }
                             }
                         ).coerce_to('array')
@@ -398,11 +398,11 @@ class TimesheetV2():
                             .do(lambda user: r.branch(
                                     user.ne(None),
                                     {
-                                        'id': user['id'],
+                                        'id': associate['id'],
                                         'price': associate['price'],
-                                        'firstname': user['first_name'],
-                                        'lastname': user['last_name'],
-                                        'image': user['image']
+                                        'firstname': user['first_name'].default(None),
+                                        'lastname': user['last_name'].default(None),
+                                        'image': user['image'].default(None)
                                     },
                                     {
                                         'id': associate['id'],
@@ -426,9 +426,9 @@ class TimesheetV2():
                     'user_in_charge': {
                         'id': doc['left']['user_in_charge'],
                         'price': doc['left']['user_in_charge_price'],
-                        'firstname': doc['right']['first_name'],
-                        'lastname': doc['right']['last_name'],
-                        'image': doc['right']['image']
+                        'firstname': doc['right']['first_name'].default(None),
+                        'lastname': doc['right']['last_name'].default(None),
+                        'image': doc['right']['image'].default(None)
                     }
                 }).merge(lambda folder: {
                     'sum': {
@@ -440,11 +440,11 @@ class TimesheetV2():
                     'name': doc['left']['name'],
                     'associates': doc['left']['associates'],
                     'client': {
-                    'id': doc['right']['id'],
-                    'lang': doc['right']['lang'],
-                    'name_1': doc['right']['name_1'],
-                    'name_2': doc['right']['name_2'],
-                    'type': doc['right']['type']
+                    'id': doc['left']['client'],
+                    'lang': doc['right']['lang'].default(None),
+                    'name_1': doc['right']['name_1'].default(None),
+                    'name_2': doc['right']['name_2'].default(None),
+                    'type': doc['right']['type'].default(None)
                     },
                     'timesheets': doc['left']['timesheets'],
                     'sum': doc['left']['sum'],
@@ -452,19 +452,6 @@ class TimesheetV2():
                     }).run())
         extern_stats["op"]["request"] = time.time() - ts
         extern_stats["op"]["setup_request"] = 0
-        max = math.floor(total / number + 1) if total % number != 0 else int(total/number)
-        max = max + 1 if max == 0 else max
-        if max < page + 1:
-            return [False, "Invalid pagination", 404]
-        pagination = {
-            "total": total,
-            "pages": {
-                "min": 1,
-                "max": max,
-                "per_page": number,
-                "actual_page": page + 1
-            }
-        }
         extern_stats["total"] = sum(extern_stats["op"].values())
         self.rt = get_conn().db("ged").table("stats").insert([extern_stats]).run()
-        return [True, {"list": folders, "sum": sum_arr, "pagination": pagination}, None]
+        return [True, {"list": folders, "sum": sum_arr}, None]
