@@ -249,8 +249,7 @@ class TimesheetV2():
         ts = time.time()
         to_scroll = number - 1 if (page + 1) * number <= total else total - page * number - 1
         if res is not None:
-            timesheets = list(
-                self.rt.get(res["id"]).do(
+            timesheets = self.rt.get(res["id"]).do(
                     lambda startDoc: 
                         r.range(0, to_scroll).fold(
                             [startDoc], lambda doc, i: 
@@ -265,7 +264,7 @@ class TimesheetV2():
                 timesheets = timesheets.filter(
                    {"status": status}
                 )
-            timesheets = timesheets.eq_join( 
+            timesheets = list(timesheets.eq_join( 
                     "client_folder", self.rf 
                 ).without(
                     {"right": "id"}
