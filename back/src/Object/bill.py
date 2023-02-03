@@ -178,7 +178,7 @@ class Bill(Crud, StatusObject):
             data["price"]["HT"] += ret[1]["line"]["price_HT"]
             timesheet_objects.append(ret[1]["timesheet_object"])
         temp_res = self.__calc_timesheets(timesheets, data)["lines"]
-        print(temp_res)
+        print(temp_res == lines)
         print("timesheets", time.time() - ts)
         ret = self.__calc__fees(data)
         if ret[0] is False:
@@ -339,7 +339,7 @@ class Bill(Crud, StatusObject):
                 "TVA": data["TVA"],
                 "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2),
                 "activite": timesheet["desc"],
-                "username": timesheet["first_name"] + " " + timesheet["last_name"],
+                "username": timesheet["last_name"] + " " + timesheet["first_name"],
                 "user": timesheet["user"],
                 "timestamp": timesheet["date"],
                 "duration": timesheet["duration"],
