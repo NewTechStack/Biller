@@ -178,7 +178,8 @@ class Bill(Crud, StatusObject):
             data["price"]["HT"] += ret[1]["line"]["price_HT"]
             timesheet_objects.append(ret[1]["timesheet_object"])
         temp_res = self.__calc_timesheets(timesheets, data)["lines"]
-        print(temp_res == lines)
+        print(temp_res)
+        print(lines)
         print("timesheets", time.time() - ts)
         ret = self.__calc__fees(data)
         if ret[0] is False:
