@@ -358,6 +358,7 @@ class TimesheetV2():
         if res is not None:
             print(total)
             timesheets = list(req.order_by('date').pluck(["date", "desc", "id", "price", "duration", "user"]).run())
+            print(len(timesheets))
             folders = list(self.rf.merge(lambda folder: {
                     'timesheets': r.expr(timesheets).filter(
                             {'client_folder': folder['id']}
