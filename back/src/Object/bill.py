@@ -7,6 +7,7 @@ import requests
 import uuid
 from datetime import datetime
 import json
+import time
 
 class Bill(Crud, StatusObject):
     def __init__(self, id = None):
@@ -119,6 +120,7 @@ class Bill(Crud, StatusObject):
         return [True, data, None]
 
     def __invoice(self, data):
+        ts1 = time.time()
         folder_id = self.id.rsplit('/', 1)[0]
         folder = Folder(folder_id).get()
         if folder[1] is None:
@@ -164,6 +166,7 @@ class Bill(Crud, StatusObject):
         data["provisions"] = prov
         data["price"] = {"HT": 0.0, "taxes": 0.0, "total": 0.0}
         lines = []
+        ts = time.time()
         for t_id in timesheets:
             ret = self.__calc_timesheet(f"{folder_id}/{t_id}", data)
             if ret[0] is False:
@@ -171,6 +174,7 @@ class Bill(Crud, StatusObject):
             lines.append(ret[1]["line"])
             data["price"]["HT"] += ret[1]["line"]["price_HT"]
             timesheet_objects.append(ret[1]["timesheet_object"])
+        print("timesheets", time.time() - ts)
         ret = self.__calc__fees(data)
         if ret[0] is False:
             return ret
@@ -239,6 +243,7 @@ class Bill(Crud, StatusObject):
         data["url"] = self.__generate_fact(data)
         self.__status_object_set(3, provision_objects)
         self.__status_object_set(1, timesheet_objects)
+        print(time.time() - ts1)
         return [True, data, None]
 
     def __status_object_set(self, status, object_list):
