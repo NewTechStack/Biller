@@ -348,7 +348,7 @@ class Bill(Crud, StatusObject):
                 "rate": self.__currency_format(float(timesheet["price"])),
                 "rate_num": float(timesheet["price"])
             }
-            lines.apend(line)
+            lines.append(line)
         print("new", time.time() - ts)
         return {"lines": lines}
         
