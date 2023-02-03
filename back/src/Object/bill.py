@@ -20,6 +20,12 @@ class Bill(Crud, StatusObject):
         bill_id = str(uuid.uuid4())
         self.id = f"{client_id}/{folder_id}/{bill_id}"
         return [True, {}, None]
+    
+    def update(self):
+        d = self.get()
+        if len(d[1]) > 0:
+            if 'save' in d[1][0]:
+                self.edit(d[1][0]['save'])
 
     def edit(self, data):
         data['id'] = self.id
