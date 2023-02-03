@@ -63,7 +63,6 @@ class Sso:
             )
         )
         data = json.loads(response.text)
-        print(data)
         token = data['data']['usrtoken']
         ret = self.__decode(token)
         if ret[0] is True:
