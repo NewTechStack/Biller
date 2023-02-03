@@ -21,6 +21,7 @@ class Bill(Crud, StatusObject):
 
     def edit(self, data):
         data['id'] = self.id
+        data['save'] = json.loads(json.dumps(data))
         self.before_delete()
         if not "lang" in data or data["lang"] not in ["fr", "en"]:
             return [False, "Invalid 'lang', 'fr' or 'en' only", 400]
@@ -242,7 +243,9 @@ class Bill(Crud, StatusObject):
         }
         data["url"] = self.__generate_fact(data)
         self.__status_object_set(3, provision_objects)
+        ts = time.time()
         self.__status_object_set(1, timesheet_objects)
+        print("timesheets objects", time.time() - ts)
         print(time.time() - ts1)
         return [True, data, None]
 
