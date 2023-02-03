@@ -34,7 +34,7 @@ class StatusObject:
         self._push({'status': status})
         return [True, {'status': status}, None]
 
-    def status_trigger(self, status):
+    def status_trigger(self, status, status_data):
         return
 
     def status_under_2(self):
