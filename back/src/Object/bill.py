@@ -326,12 +326,13 @@ class Bill(Crud, StatusObject):
         self.ru = get_conn().db("ged").table("user")
         ts = time.time()
         lines = []
-        timesheets = list(self.rt.get_all().filter({"status": 0}).filter(r.row["price"].gt(0)).eq_join("user", self.ru).zip().run())
+        timsheets_id = [f"{data['client_folder']}/{t}" for t in timesheets_id]
+        timesheets = list(self.rt.get_all(timsheets_id).filter({"status": 0}).filter(r.row["price"].gt(0)).eq_join("user", self.ru).zip().run())
         for timesheet in timesheets:
             price_HT =  self.__HT_price(timesheet["price"] * timesheet["duration"])
             taxes = self.__taxe(price_HT, data["TVA"])
             line = {
-                "timesheet_id": timsheet["id"],
+                "timesheet_id": timsheet["id"].split("/")[-1],
                 "price_HT": round(price_HT, 2),
                 "priceHT": self.__currency_format(round(price_HT, 2)),
                 "taxes": round(taxes, 2),
