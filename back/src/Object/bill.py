@@ -321,13 +321,13 @@ class Bill(Crud, StatusObject):
     def __percentage(self, total, percentage):
         return total * percentage / 100
     
-    def __calc_timesheets(self, timsheets_id, data):
+    def __calc_timesheets(self, timesheets_id, data):
         self.rt = get_conn().db("ged").table("timesheet")
         self.ru = get_conn().db("ged").table("user")
         ts = time.time()
         lines = []
-        timsheets_id = [f"{data['client_folder']}/{t}" for t in timesheets_id]
-        timesheets = list(self.rt.get_all(timsheets_id).filter({"status": 0}).filter(r.row["price"].gt(0)).eq_join("user", self.ru).zip().run())
+        timesheets_id = [f"{data['client_folder']}/{t}" for t in timesheets_id]
+        timesheets = list(self.rt.get_all(timesheets_id).filter({"status": 0}).filter(r.row["price"].gt(0)).eq_join("user", self.ru).zip().run())
         for timesheet in timesheets:
             price_HT =  self.__HT_price(timesheet["price"] * timesheet["duration"])
             taxes = self.__taxe(price_HT, data["TVA"])
