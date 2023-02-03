@@ -310,6 +310,7 @@ class TimesheetV2():
         following = "id"
         if user is not None:
             user = urllib.parse.unquote(user)
+            req = req.eq_join("client_folder", self.rf).zip().filter({"user_in_charge": user})
         if client_id is not None:
             client_id = urllib.parse.unquote(client_id)
             req = req.filter(
@@ -333,8 +334,7 @@ class TimesheetV2():
             req = req.filter(r.row["date"].ge(stime))
         if etime is not None:
             etime = int(etime)
-            req = req.filter(r.row["date"].le(etime))
-        print(stime, etime, folder_id, client_id)
+            req = req.filter(r.row["date"].le(etime)
         ts = time.time()
         all_arr = dict(
             req.map(
