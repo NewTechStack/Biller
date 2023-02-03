@@ -175,6 +175,7 @@ class Bill(Crud, StatusObject):
             lines.append(ret[1]["line"])
             data["price"]["HT"] += ret[1]["line"]["price_HT"]
             timesheet_objects.append(ret[1]["timesheet_object"])
+        print(self.__calc_timesheets(f"{folder_id}/{t_id}", data)["lines"] == lines)
         print("timesheets", time.time() - ts)
         ret = self.__calc__fees(data)
         if ret[0] is False:
@@ -316,7 +317,35 @@ class Bill(Crud, StatusObject):
 
     def __percentage(self, total, percentage):
         return total * percentage / 100
-
+    
+    def __calc_timesheets(self, timsheets_id, data):
+        ts = time.time()
+        lines = []
+        timesheets = list(self.rt.get_all().filter({"status": 0}).filter(r.row["price"].gt(0)).eq_join("user", self.ru).zip().run())
+        for timesheet in timesheets:
+            price_HT =  self.__HT_price(timesheet["price"] * timesheet["duration"])
+            taxes = self.__taxe(price_HT, data["TVA"])
+            line = {
+                "timesheet_id": timsheet["id"],
+                "price_HT": round(price_HT, 2),
+                "priceHT": self.__currency_format(round(price_HT, 2)),
+                "taxes": round(taxes, 2),
+                "TVA": data["TVA"],
+                "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2),
+                "activite": timesheet["desc"],
+                "username": timesheet["first_name"] + " " + timesheet["last_name"],
+                "user": timesheet["user"],
+                "timestamp": timesheet["date"],
+                "duration": timesheet["duration"],
+                "time": str(int(timesheet['duration'])) + "h" + str(int(timesheet['duration'] % 1 * 60)),
+                "date": datetime.utcfromtimestamp(timesheet["date"]).strftime('%d/%m/%Y'),
+                "rate": self.__currency_format(float(timesheet["price"])),
+                "rate_num": float(timesheet["price"])
+            }
+            lines.apend(line)
+        print("new", time.time() - ts)
+        return {"lines": lines}
+        
     def __calc_timesheet(self, timsheet_id, data):
         timesheet_object = Timesheet(timsheet_id)
         d = timesheet_object.get()
