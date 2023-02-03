@@ -140,7 +140,7 @@ class Bill(Crud, StatusObject):
             return [False, "Duplicates in 'timesheet' list", 400]
         if not "format" in data or not isinstance( data["format"], list) or not all(x in ["date","desc","hours","user","user_price","amount"] for x in data["format"]):
             return [False, "Invalid in 'format' list", 400]
-        provision_objects = []
+        provision_list = []
         timesheet_objects = []
         prov = []
         if "provisions" in data and isinstance(data["provisions"], list) and all([isinstance(x, str) for x in data['provisions']]):
@@ -148,7 +148,7 @@ class Bill(Crud, StatusObject):
                 prov_id = f"{folder_id}/{prov_id}"
                 bill_object = Bill(prov_id)
                 bill = bill_object.get()
-                provision_objects.append(bill_object)
+                provision_list.append(prov_id)
                 if bill[1] is None or bill[1]["bill_type"] != "provision":
                     return [False, f"Invalid provision id: '{prov_id}'", 404]
                 if bill[1]["status"] in [0, 1]:
@@ -172,6 +172,7 @@ class Bill(Crud, StatusObject):
         timesheets_computed = self.__calc_timesheets(timesheets, data)
         lines = timesheets_computed["lines"]
         data["price"]["HT"] += timesheets_computed["price_HT"]
+        timesheets_list = timesheets_computed["ids"]
         print("timesheets", time.time() - ts)
         ret = self.__calc__fees(data)
         if ret[0] is False:
@@ -239,16 +240,15 @@ class Bill(Crud, StatusObject):
             }
         }
         data["url"] = self.__generate_fact(data)
-        self.__status_object_set(3, provision_objects)
+        self.__status_object_set(3, "bill", provision_list)
         ts = time.time()
-        self.__status_object_set(1, timesheet_objects)
+        self.__status_object_set(1, "timesheet", timesheets_list)
         print("timesheets objects", time.time() - ts)
-        print(time.time() - ts1)
+        print("total1", time.time() - ts1)
         return [True, data, None]
 
-    def __status_object_set(self, status, object_list):
-        for i in object_list:
-            i.set_status(status)
+    def __status_object_set(self, status, table, id_list):
+        get_conn().db("ged").table(table).get_all(r.args(id_list)).update({'status': status}).run()
         return None
 
     def before_delete(self):
@@ -259,10 +259,10 @@ class Bill(Crud, StatusObject):
           return [True, None, None]
         if "provisions" in data:
             for i in data["provisions"]:
-                self.__status_object_set(2, [Bill(i["provision_id"])])
+                self.__status_object_set(2, "bill", [i["provision_id"]])
         if "timesheet" in data:
             for i in data["timesheet"]:
-                self.__status_object_set(0, [Timesheet(i["timesheet_id"])])
+                self.__status_object_set(0, "timesheet", [i["timesheet_id"]])
         return [True, data, None]
 
     def status_trigger(self, status):
@@ -275,10 +275,10 @@ class Bill(Crud, StatusObject):
         if status == 2:
             if "provisions" in data:
                 for i in data["provisions"]:
-                    self.__status_object_set(4, [Bill(i["provision_id"])])
+                    self.__status_object_set(4, "bill", [i["provision_id"]])
             if "lines" in data:
                 for i in data["lines"]:
-                    self.__status_object_set(2, [Timesheet(i["timesheet_id"])])
+                    self.__status_object_set(2, "timesheet", [i["timesheet_id"]])
         if status == 1:
             if "template" in data:
                 data["template"]["name"] = data["template"]["name"].replace("_preview", "")
@@ -343,7 +343,7 @@ class Bill(Crud, StatusObject):
             }
             lines.append(line)
             price_HT += line["price_HT"]
-        return {"lines": lines, "price_HT": price_HT}
+        return {"lines": lines, "price_HT": price_HT, "ids": timesheets_id}
         
     def __calc_timesheet(self, timsheet_id, data):
         timesheet_object = Timesheet(timsheet_id)
