@@ -329,6 +329,7 @@ class TimesheetV2():
             following = "client_folder"
         if status is not None:
             status = int(status)
+            req = req.filter({"status": status})
         if stime is not None:
             stime = int(stime)
             req = req.filter(r.row["date"].ge(stime))
@@ -355,21 +356,7 @@ class TimesheetV2():
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         if res is not None:
-            timesheets = self.rt.get(res["id"]).do(
-                        lambda startDoc: 
-                            r.range(0, total - 1).fold(
-                                [startDoc], lambda doc, i: 
-                                    r.branch(
-                                        doc["following"][following]["is_after_id"].eq(None),
-                                        doc,
-                                        doc.add([self.rt.get(doc[i]["following"][following]["is_after_id"])])
-                                    )
-                            )
-                        )
-            if status is not None:
-                timesheets = timesheets.filter(
-                   {"status": status}
-                )
+            timesheets = req.order_by('date')
             timesheets = list(timesheets.pluck(["date", "desc", "id", "price", "duration", "user"]).run())
             folders = list(self.rf.merge(lambda folder: {
                     'timesheets': r.expr(timesheets).filter(
