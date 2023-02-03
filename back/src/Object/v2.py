@@ -356,8 +356,8 @@ class TimesheetV2():
         extern_stats["op"]["count"] = (time.time() - ts) / 3
         ts = time.time()
         if res is not None:
-            timesheets = req.order_by('date')
-            timesheets = list(timesheets.pluck(["date", "desc", "id", "price", "duration", "user"]).run())
+            print(total)
+            timesheets = list(req.order_by('date').pluck(["date", "desc", "id", "price", "duration", "user"]).run())
             folders = list(self.rf.merge(lambda folder: {
                     'timesheets': r.expr(timesheets).filter(
                             {'client_folder': folder['id']}
