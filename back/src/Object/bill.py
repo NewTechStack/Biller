@@ -21,7 +21,7 @@ class Bill(Crud, StatusObject):
         self.id = f"{client_id}/{folder_id}/{bill_id}"
         return [True, {}, None]
     
-    def update(self):
+    def update_from_save(self):
         d = self.get()
         if len(d[1]) > 0:
             if 'save' in d[1][0]:
