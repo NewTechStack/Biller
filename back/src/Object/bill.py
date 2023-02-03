@@ -178,7 +178,6 @@ class Bill(Crud, StatusObject):
         lines = timesheets_computed["lines"]
         data["price"]["HT"] += timesheets_computed["price_HT"]
         timesheets_list = timesheets_computed["ids"]
-        print("timesheets", time.time() - ts)
         ret = self.__calc__fees(data)
         if ret[0] is False:
             return ret
@@ -248,8 +247,6 @@ class Bill(Crud, StatusObject):
         self.__status_object_set(3, "bill", provision_list)
         ts = time.time()
         self.__status_object_set(1, "timesheet", timesheets_list)
-        print("timesheets objects", time.time() - ts)
-        print("total1", time.time() - ts1)
         return [True, data, None]
 
     def __status_object_set(self, status, table, id_list):
