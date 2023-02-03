@@ -43,7 +43,6 @@ class Timesheet(Crud, StatusObject):
         if ret[1] is not None:
             if ret[1]['status'] > 0 and 'status_data' in ret[1]:
                 if 'bill' in ret[1]['status_data']:
-                    print("updating bill", ret[1]['status_data']["bill"])
                     Bill(ret[1]['status_data']["bill"]).update_from_save()
         return ret
                     
