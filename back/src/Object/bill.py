@@ -265,7 +265,7 @@ class Bill(Crud, StatusObject):
                 self.__status_object_set(0, "timesheet", [i["timesheet_id"]])
         return [True, data, None]
 
-    def status_trigger(self, status):
+    def status_trigger(self, status, status_data):
         ret = self.get()
         if ret[1] is None:
             retun [False, "error", 500]
