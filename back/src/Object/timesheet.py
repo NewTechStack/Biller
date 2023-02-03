@@ -41,6 +41,7 @@ class Timesheet(Crud, StatusObject):
                 self.insert_from_chain(input["date"], f[0], f[1])
         ret = self.get()
         if len(ret[1]) > 0:
+            print(ret[1])
             if ret[1][0]['status'] > 0 and 'status_data' in ret[1][0]:
                 if 'bill' in ret[1][0]['status_data']:
                     print("updating bill", ret[1][0]['status_data']["bill"])
