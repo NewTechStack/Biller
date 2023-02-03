@@ -248,7 +248,7 @@ class Bill(Crud, StatusObject):
         return [True, data, None]
 
     def __status_object_set(self, status, table, id_list):
-        get_conn().db("ged").table(table).get_all(r.args(id_list)).update({'status': status}).run()
+        get_conn().db("ged").table(table).get_all(r.args(id_list)).update({'status': status, 'status_data': {"bill": self.id}}).run()
         return None
 
     def before_delete(self):
@@ -265,7 +265,7 @@ class Bill(Crud, StatusObject):
                 self.__status_object_set(0, "timesheet", [i["timesheet_id"]])
         return [True, data, None]
 
-    def status_trigger(self, status, status_data):
+    def status_trigger(self, status, status_data = None):
         ret = self.get()
         if ret[1] is None:
             retun [False, "error", 500]
