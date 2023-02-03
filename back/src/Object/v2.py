@@ -357,7 +357,7 @@ class TimesheetV2():
         ts = time.time()
         if res is not None:
             print(total)
-            timesheets = list(req.pluck(["date", "desc", "id", "price", "duration", "user"]).run())
+            timesheets = list(req.pluck(["client_folder", "date", "desc", "id", "price", "duration", "user"]).run())
             print(len(timesheets))
             folders = list(self.rf.merge(lambda folder: {
                     'timesheets': r.expr(timesheets).filter(
