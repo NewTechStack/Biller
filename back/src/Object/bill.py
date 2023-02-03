@@ -168,18 +168,10 @@ class Bill(Crud, StatusObject):
                 )
         data["provisions"] = prov
         data["price"] = {"HT": 0.0, "taxes": 0.0, "total": 0.0}
-        lines = []
-        ts = time.time()
-        for t_id in timesheets:
-            ret = self.__calc_timesheet(f"{folder_id}/{t_id}", data)
-            if ret[0] is False:
-                return ret
-            lines.append(ret[1]["line"])
-            data["price"]["HT"] += ret[1]["line"]["price_HT"]
-            timesheet_objects.append(ret[1]["timesheet_object"])
-        temp_res = self.__calc_timesheets(timesheets, data)["lines"]
-        print(temp_res)
-        print(lines)
+        ts = time.time()            
+        timesheets_computed = self.__calc_timesheets(timesheets, data)
+        lines = timesheets_computed["lines"]
+        data["price"]["HT"] += timesheets_computed["price_HT"]
         print("timesheets", time.time() - ts)
         ret = self.__calc__fees(data)
         if ret[0] is False:
@@ -325,9 +317,9 @@ class Bill(Crud, StatusObject):
     def __calc_timesheets(self, timesheets_id, data):
         self.rt = get_conn().db("ged").table("timesheet")
         self.ru = get_conn().db("ged").table("user")
-        ts = time.time()
         lines = []
         timesheets_id = [f"{data['client_folder']}/{t}" for t in timesheets_id]
+        price_HT = 0
         timesheets = list(self.rt.get_all(r.args(timesheets_id)).filter({"status": 0}).filter(r.row["price"].gt(0)).eq_join("user", self.ru).without({"right": {"id":True}}).zip().run())
         for timesheet in timesheets:
             price_HT =  self.__HT_price(timesheet["price"] * timesheet["duration"])
@@ -350,8 +342,8 @@ class Bill(Crud, StatusObject):
                 "rate_num": float(timesheet["price"])
             }
             lines.append(line)
-        print("new", time.time() - ts)
-        return {"lines": lines}
+            price_HT += line["price_HT"]
+        return {"lines": lines, "price_HT": price_HT}
         
     def __calc_timesheet(self, timsheet_id, data):
         timesheet_object = Timesheet(timsheet_id)
