@@ -36,11 +36,17 @@ class Timesheet(Crud, StatusObject):
             [{"user": input["user"], "client_folder": input["client_folder"]}, "user/client_folder"]
             
         ]
-        for f in filter_array:
-            self.insert_from_chain(input["date"], f[0], f[1])
-        return self.get()
-        
-    
+        if not self.exist()[0]:
+            for f in filter_array:
+                self.insert_from_chain(input["date"], f[0], f[1])
+        ret = self.get()
+        if len(ret[1]) > 0:
+            if ret[1][0]['status'] > 0 and 'status_data' in ret[1][0]:
+                if 'bill' in ret[1][0]['status_data']:
+                    print("updating bill", ret[1][0]['status_data']["bill"])
+                    Bill(ret[1][0]['status_data']["bill"]).update_from_save()
+        return ret
+                    
     def insert_from_chain(self, date, actual_filter = {}, following = "id"):
         res = self.red.filter(actual_filter).filter(r.row["id"].ne(self.id)).filter(r.row["date"].ge(date)).min("date").default(None).run()
         if res is not None:
