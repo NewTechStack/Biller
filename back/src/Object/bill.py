@@ -22,9 +22,9 @@ class Bill(Crud, StatusObject):
     
     def update_from_save(self):
         d = self.get()
-        if len(d[1]) > 0:
-            if 'save' in d[1][0]:
-                self.edit(d[1][0]['save'])
+        if d[1] is not None:
+            if 'save' in d[1]:
+                self.edit(d[1]['save'])
 
     def edit(self, data):
         data['id'] = self.id
