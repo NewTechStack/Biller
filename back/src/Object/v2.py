@@ -371,11 +371,7 @@ class TimesheetV2():
                    {"status": status}
                 )
             timesheets = list(timesheets.pluck(["date", "desc", "id", "price", "duration", "user"]).run())
-            print(len(timesheets), total)
-            req = self.rf
-            if user is not None:
-                req = req.filter({"user_in_charge": user})
-            folders = list(req.merge(lambda folder: {
+            folders = list(self.rf.merge(lambda folder: {
                     'timesheets': r.expr(timesheets).filter(
                             {'client_folder': folder['id']}
                         ).eq_join(
