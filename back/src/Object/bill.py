@@ -9,6 +9,8 @@ from datetime import datetime
 import json
 import time
 
+from .rethink import get_conn, r
+
 class Bill(Crud, StatusObject):
     def __init__(self, id = None):
         Crud.__init__(self, id, 'bill')
@@ -319,6 +321,8 @@ class Bill(Crud, StatusObject):
         return total * percentage / 100
     
     def __calc_timesheets(self, timsheets_id, data):
+        self.rt = get_conn().db("ged").table("timesheet")
+        self.ru = get_conn().db("ged").table("user")
         ts = time.time()
         lines = []
         timesheets = list(self.rt.get_all().filter({"status": 0}).filter(r.row["price"].gt(0)).eq_join("user", self.ru).zip().run())
