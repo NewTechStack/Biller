@@ -12,7 +12,7 @@ class StatusObject:
         else:
             self.trigger = []
 
-    def change_status(self, status):
+    def change_status(self, status, status_data = None):
         if status not in [1, 2]:
             return [False, f"Status '{status}' not in range(0, 4)", 400]
         ret = self.get()
@@ -25,7 +25,7 @@ class StatusObject:
         if int(ret[1]["status"]) == status:
             return [False, "No status update", 401]
         if status in self.trigger:
-            ret = self.status_trigger(status)
+            ret = self.status_trigger(status, status_data)
             if not ret[0]:
                 return ret
         return self.set_status(status)
