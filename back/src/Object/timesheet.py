@@ -40,12 +40,11 @@ class Timesheet(Crud, StatusObject):
             for f in filter_array:
                 self.insert_from_chain(input["date"], f[0], f[1])
         ret = self.get()
-        if len(ret[1]) > 0:
-            print(ret[1])
-            if ret[1][0]['status'] > 0 and 'status_data' in ret[1][0]:
-                if 'bill' in ret[1][0]['status_data']:
-                    print("updating bill", ret[1][0]['status_data']["bill"])
-                    Bill(ret[1][0]['status_data']["bill"]).update_from_save()
+        if ret[1] is not None:
+            if ret[1]['status'] > 0 and 'status_data' in ret[1]:
+                if 'bill' in ret[1]['status_data']:
+                    print("updating bill", ret[1]['status_data']["bill"])
+                    Bill(ret[1]['status_data']["bill"]).update_from_save()
         return ret
                     
     def insert_from_chain(self, date, actual_filter = {}, following = "id"):
