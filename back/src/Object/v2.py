@@ -357,7 +357,7 @@ class TimesheetV2():
         if res is not None:
             timesheets = self.rt.get(res["id"]).do(
                         lambda startDoc: 
-                            r.range(0, total).fold(
+                            r.range(0, total - 1).fold(
                                 [startDoc], lambda doc, i: 
                                     r.branch(
                                         doc["following"][following]["is_after_id"].eq(None),
