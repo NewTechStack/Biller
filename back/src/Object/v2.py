@@ -393,8 +393,8 @@ class TimesheetV2():
                                     {
                                         'id': associate['id'],
                                         'price': associate['price'],
-                                        'firstname': None,
-                                        'lastname': None,
+                                        'firstname': "Ancien Utilisateur",
+                                        'lastname': "",
                                         'image': None
                                     }
                                 )
