@@ -350,45 +350,6 @@ class Bill(Crud, StatusObject):
             lines.append(line)
             price_HT += line["price_HT"]
         return {"lines": lines, "price_HT": price_HT, "ids": timesheets_id}
-        
-    def __calc_timesheet(self, timsheet_id, data):
-        timesheet_object = Timesheet(timsheet_id)
-        d = timesheet_object.get()
-        if d[1] is None:
-            return [False, f"Invalid timesheet id: '{timsheet_id}'", 404]
-        if "price" not in d[1] or not any([isinstance(d[1]["price"], x) for x in [int, float]]):
-            return [False, f"Invalid price in timesheet: '{timsheet_id}'", 400]
-        if d[1]["status"] == 1:
-            return [False, f"Timesheet '{timsheet_id}' already in a unpaid bill", 400]
-        if d[1]["status"] == 2:
-            return [False, f"Timesheet already in a paid bill", 400]
-        if d[1]["status"] != 0:
-            return [False, f"Timesheet error", 500]
-        price_HT =  self.__HT_price(d[1]["price"] * d[1]["duration"])
-        taxes = self.__taxe(price_HT, data["TVA"])
-        user = User(d[1]["user"]).get()[1]
-        if user is None:
-            user = "/"
-        else:
-            user = f"{user['last_name']} {user['first_name']}"
-        line = {
-            "timesheet_id": timsheet_id,
-            "price_HT": round(price_HT, 2),
-            "priceHT": self.__currency_format(round(price_HT, 2)),
-            "taxes": round(taxes, 2),
-            "TVA": data["TVA"],
-            "price": round(self.__TTC_price(price_HT, data["TVA"]) , 2),
-            "activite": d[1]["desc"],
-            "username": user,
-            "user": d[1]["user"],
-            "timestamp": d[1]["date"],
-            "duration": d[1]["duration"],
-            "time": str(int(d[1]['duration'])) + "h" + str(int(d[1]['duration'] % 1 * 60)),
-            "date": datetime.utcfromtimestamp(d[1]["date"]).strftime('%d/%m/%Y'),
-            "rate": self.__currency_format(float(d[1]["price"])),
-            "rate_num": float(d[1]["price"])
-        }
-        return [True, {"line": line, "timesheet_object": timesheet_object}, None]
 
     def __calc__fees(self, data):
         if "fees" in data:
