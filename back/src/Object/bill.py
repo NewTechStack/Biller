@@ -332,7 +332,7 @@ class Bill(Crud, StatusObject):
             price_HT =  self.__HT_price(timesheet["price"] * timesheet["duration"])
             taxes = self.__taxe(price_HT, data["TVA"])
             line = {
-                "timesheet_id": timsheet["id"].split("/")[-1],
+                "timesheet_id": timesheet["id"].split("/")[-1],
                 "price_HT": round(price_HT, 2),
                 "priceHT": self.__currency_format(round(price_HT, 2)),
                 "taxes": round(taxes, 2),
