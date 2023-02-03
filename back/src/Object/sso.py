@@ -6,7 +6,7 @@ from tinydb import TinyDB, Query
 
 db = TinyDB('/db.json')
 sso_front = "https://sso.rocketbonds.fr"
-sso_back = "https://api.sso.newtechstack.fr"
+sso_back = "https://api.sso.rocketbonds.fr"
 apitoken = "c36b7c1d813e4839aa111f09784da16b"
 registry_id = "89ec2369-35c1-4e0a-a48e-64a4d3ce988f"
 
@@ -76,7 +76,7 @@ class Sso:
         self.user = res[1]["data"]["payload"]
         return [True, {}, None]
 
-    def __decode(self, token, get_data = False):
+    def __decode(self, token, get_data = False, try_serie = 0):
         url = f"{sso_back}/extern/public"
         payload = json.dumps({
           "apitoken": apitoken,
@@ -86,6 +86,12 @@ class Sso:
         }
         response = requests.request("POST", url, headers=headers, data=payload)
         public_key = json.loads(response.text)['data']['public_key']
+        try:
+            public_key = json.loads(response.text)['data']['public_key']
+        except:
+            if try_serie > 20:
+                return [False, "Request delayed", 500]
+            return self.__decode(token, get_data, try_serie + 1)
         try:
             data = jwt.decode(
                 token,
